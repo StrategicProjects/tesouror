@@ -1,0 +1,209 @@
+url: https://strategicprojects.github.io/tesouror/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  includes:
+    in_header: |
+      <link rel="stylesheet" href="extra.css">
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/StrategicProjects/tesouror
+      aria-label: GitHub repository
+    articles:
+      text: Articles
+      menu:
+        - text: "Getting started"
+          href: articles/getting-started.html
+        - text: "---"
+        - text: "API guides"
+        - text: "SICONFI – Fiscal data"
+          href: articles/siconfi.html
+        - text: "CUSTOS – Federal costs"
+          href: articles/custos.html
+        - text: "SADIPEM – Public debt"
+          href: articles/sadipem.html
+        - text: "SIORG – Organizational structure"
+          href: articles/siorg.html
+        - text: "Transferências Constitucionais"
+          href: articles/transferencias.html
+        - text: "SIOPE – Education spending"
+          href: articles/siope.html
+        - text: "---"
+        - text: "All articles"
+          href: articles/index.html
+
+reference:
+  - title: "SICONFI – English interface"
+    desc: >
+      Fiscal reports, entities, and accounting matrices.
+      English-named functions with English parameter names.
+    contents:
+      - get_entities
+      - get_annexes
+      - get_annual_accounts
+      - get_delivery_status
+      - get_budget_report
+      - get_fiscal_report
+      - get_msc_equity
+      - get_msc_budget
+      - get_msc_control
+
+  - title: "SICONFI – Portuguese interface"
+    desc: >
+      Functions with Portuguese names matching the SICONFI API parameters.
+    contents:
+      - get_entes
+      - get_anexos
+      - get_dca
+      - get_extrato
+      - get_rreo
+      - get_rgf
+      - get_msc_patrimonial
+      - get_msc_orcamentaria
+      - get_msc_controle
+
+  - title: "CUSTOS – English interface"
+    desc: >
+      Federal government cost data with English parameter names.
+    contents:
+      - get_costs_active_staff
+      - get_costs_retired_staff
+      - get_costs_pensioners
+      - get_costs_other
+      - get_costs_depreciation
+      - get_costs_transfers
+
+  - title: "CUSTOS – Portuguese interface"
+    desc: >
+      Federal government cost data with Portuguese parameter names.
+    contents:
+      - get_custos_pessoal_ativo
+      - get_custos_pessoal_inativo
+      - get_custos_pensionistas
+      - get_custos_demais
+      - get_custos_depreciacao
+      - get_custos_transferencias
+
+  - title: "SADIPEM – English interface"
+    desc: >
+      Public debt and credit operations with English parameter names.
+    contents:
+      - get_debt_requests
+      - get_pvl_status
+      - get_credit_release_schedule
+      - get_credit_payment_schedule
+      - get_credit_exchange_rate
+      - get_debt_capacity
+      - get_debt_payment_schedule
+
+  - title: "SADIPEM – Portuguese interface"
+    desc: >
+      Public debt and credit operations with Portuguese parameter names.
+    contents:
+      - get_pvl
+      - get_pvl_tramitacao
+      - get_opc_cronograma_liberacoes
+      - get_opc_cronograma_pagamentos
+      - get_opc_taxa_cambio
+      - get_res_cdp
+      - get_res_cronograma_pagamentos
+
+  - title: "SIORG – Dictionaries"
+    desc: >
+      Lookup tables for federal government organizational structure.
+      Use these SIORG codes as organizacao_n1/n2/n3 in CUSTOS functions.
+    contents:
+      - get_siorg_orgaos
+      - get_siorg_organizations
+
+  - title: "SIORG – Structure"
+    desc: >
+      Organizational structure and unit details from SIORG.
+    contents:
+      - get_siorg_estrutura
+      - get_siorg_structure
+      - get_siorg_unidade
+      - get_siorg_unit
+
+  - title: "Transferências – Dictionaries"
+    desc: >
+      Lookup tables for the Transferências API. These return the numeric
+      codes used by the Treasury's internal systems (NOT IBGE codes).
+      Always query these first to obtain valid codes for other functions.
+    contents:
+      - get_tc_transfer_types
+      - get_tc_states
+      - get_tc_municipalities
+      - get_tc_transferencias
+      - get_tc_estados
+      - get_tc_municipios
+
+  - title: "Transferências – English interface"
+    desc: >
+      Constitutional transfers to states and municipalities.
+    contents:
+      - get_tc_by_state
+      - get_tc_by_state_detail
+      - get_tc_by_municipality
+      - get_tc_by_municipality_detail
+
+  - title: "Transferências – Portuguese interface"
+    desc: >
+      Transferências constitucionais para estados e municípios.
+    contents:
+      - get_tc_por_estados
+      - get_tc_por_estados_detalhe
+      - get_tc_por_municipio
+      - get_tc_por_municipio_detalhe
+
+  - title: "Utilities"
+    desc: "Cache management and helpers"
+    contents:
+      - tesouror_clear_cache
+
+  - title: "SIOPE – English interface"
+    desc: >
+      Education spending data from SIOPE (FNDE/MEC).
+      English-named functions with English parameter names.
+    contents:
+      - get_siope_general_data
+      - get_siope_officials
+      - get_siope_expenses
+      - get_siope_expenses_by_function
+      - get_siope_indicators
+      - get_siope_supplementary
+      - get_siope_revenues
+      - get_siope_compensation
+
+  - title: "SIOPE – Portuguese interface"
+    desc: >
+      Dados de gastos com educação do SIOPE (FNDE/MEC).
+    contents:
+      - get_siope_dados_gerais
+      - get_siope_responsaveis
+      - get_siope_despesas
+      - get_siope_despesas_funcao
+      - get_siope_indicadores
+      - get_siope_info_complementares
+      - get_siope_receitas
+      - get_siope_remuneracao
+
+articles:
+  - title: "Getting started"
+    contents:
+      - getting-started
+  - title: "API guides"
+    contents:
+      - siconfi
+      - custos
+      - sadipem
+      - siorg
+      - transferencias
+      - siope
