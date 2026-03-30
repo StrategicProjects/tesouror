@@ -35,6 +35,9 @@ navbar:
           href: articles/transferencias.html
         - text: "SIOPE – Education spending"
           href: articles/siope.html
+        - text: "-- Applications --"
+        - text: "Transferências Constitucionais para Municípios de Pernambuco"
+          href: articles/transferencias_pernambuco.html
         - text: "---"
         - text: "All articles"
           href: articles/index.html
@@ -207,3 +210,4 @@ articles:
       - siorg
       - transferencias
       - siope
+      - transferencias_pernambuco
