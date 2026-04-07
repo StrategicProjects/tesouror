@@ -451,7 +451,7 @@ ggplot(tc_anual_pc, aes(ano, per_capita)) +
     labels = label_number(big.mark = ".", decimal.mark = ","),
     breaks = scales::breaks_pretty(n = 10)) +
   labs(title = "Transferências Per Capita: Total PE ao Longo do Tempo",
-       subtitle = "R$ por habitante/ano", x = NULL, y = "R$ per capita") +
+       subtitle = "R$ por habitante/ano", x = "Ano", y = "R$ per capita") +
   tema_tc
 ```
 
