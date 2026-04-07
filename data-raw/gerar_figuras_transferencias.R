@@ -63,7 +63,7 @@ tc_pe_raw <- get_tc_by_municipality_detail(
 # 2. Malha e lookup
 # ──────────────────────────────────────────────────────────────────────────────
 
-pe_sf <- read_rds(system.file("data", "pernambuco_sf.rds", package = "tesouror"))
+pe_sf <- read_rds(system.file("extdata", "pernambuco_sf.rds", package = "tesouror"))
 
 pe_lookup <- pe_sf |>
   st_drop_geometry() |>

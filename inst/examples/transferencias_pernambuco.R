@@ -40,7 +40,7 @@ tc_pe_raw <- get_tc_by_municipality_detail(
   )
 
 # 1.3 Malha municipal de PE com regiões de desenvolvimento e população
-pe_sf <- read_rds(system.file("data", "pernambuco_sf.rds", package = "tesouror"))
+pe_sf <- read_rds(system.file("extdata", "pernambuco_sf.rds", package = "tesouror"))
 
 # Tabela auxiliar sem geometria para joins rápidos
 pe_lookup <- pe_sf |>
