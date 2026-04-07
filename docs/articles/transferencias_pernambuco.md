@@ -31,7 +31,6 @@ library(tesouror)
 library(tidyverse)
 library(patchwork)
 library(sf)
-library(forecast)
 library(scales)
 library(ggrepel)
 library(MetBrewer)
@@ -86,21 +85,6 @@ pe_lookup <- pe_sf |>
   mutate(co_ibge = as.integer(ibge7))
 
 pe_lookup |> count(rd, sort = TRUE)
-#> # A tibble: 12 × 2
-#>    rd                          n
-#>    <chr>                   <int>
-#>  1 Agreste Central            26
-#>  2 Agreste Meridional         26
-#>  3 Mata Sul                   24
-#>  4 Agreste Setentrional       19
-#>  5 Mata Norte                 19
-#>  6 Sertão do Pajeú            17
-#>  7 Metropolitana              15
-#>  8 Sertão do Araripe          10
-#>  9 Sertão Central              8
-#> 10 Sertão de Itaparica         7
-#> 11 Sertão do Moxotó            7
-#> 12 Sertão do São Francisco     7
 ```
 
 ## 2. Categorização das transferências
@@ -303,7 +287,7 @@ p1 / p2 + plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
 ```
 
-![](transferencias_pernambuco_files/figure-html/composicao_anual-1.png)
+![](../reference/figures/transferencias-01-composicao-anual.png)
 
 ### 5.2 Séries mensais das principais categorias
 
@@ -330,7 +314,7 @@ tc_mensal_cat |>
   scale_x_date(date_labels = "%Y", date_breaks = "1 year") +
   scale_y_continuous(labels = label_number(big.mark = ".", decimal.mark = ",")) +
   labs(title = "Principais Séries Mensais por Categoria",
-       subtitle = "Valores nominais em R$ milhões", 
+       subtitle = "Valores nominais em R$ milhões",
        x = "Ano", y = "Transferências em R$ milhões") +
   tema_tc +
   theme(legend.position = "none",
@@ -338,7 +322,7 @@ tc_mensal_cat |>
         strip.text = element_text(color = "white", face = "bold"))
 ```
 
-![](transferencias_pernambuco_files/figure-html/series_mensais-1.png)
+![](../reference/figures/transferencias-02-series-mensais.png)
 
 ### 5.3 Top 10 municípios por volume absoluto
 
@@ -374,7 +358,7 @@ ggplot(top10_abs, aes(valor_total / 1e6, fct_reorder(municipio, valor_total))) +
   theme(panel.grid.major.y = element_blank())
 ```
 
-![](transferencias_pernambuco_files/figure-html/top10_absoluto-1.png)
+![](../reference/figures/transferencias-03-top10-absoluto.png)
 
 ## 6. Análise per capita
 
@@ -416,7 +400,7 @@ p_bot <- ggplot(bot10_pc, aes(valor_per_capita, fct_reorder(stringr::str_wrap(mu
   ) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.35))) +
   scale_y_discrete(expand = c(0, 0)) +
-  labs(title = "Bottom 10: Menor per capita", 
+  labs(title = "Bottom 10: Menor per capita",
        x = "R$ por habitante", y = NULL) +
   tema_tc + theme(plot.title = element_text(size = 9))  +
   theme(panel.grid.major.y = element_blank())
@@ -428,7 +412,7 @@ p_top + p_bot +
   )
 ```
 
-![](transferencias_pernambuco_files/figure-html/percapita_ranking-1.png)
+![](../reference/figures/transferencias-04-percapita-ranking.png)
 
 ### 6.2 Evolução per capita ao longo do tempo
 
@@ -455,7 +439,7 @@ ggplot(tc_anual_pc, aes(ano, per_capita)) +
   tema_tc
 ```
 
-![](transferencias_pernambuco_files/figure-html/percapita_serie-1.png)
+![](../reference/figures/transferencias-05-percapita-serie.png)
 
 ### 6.3 Mapas: absoluto vs per capita
 
@@ -500,7 +484,7 @@ ggplot() +
   tema_mapa
 ```
 
-![](transferencias_pernambuco_files/figure-html/mapa_absoluto-1.png)
+![](../reference/figures/transferencias-06-mapa-absoluto.png)
 
 ``` r
 
@@ -520,7 +504,7 @@ ggplot() +
   tema_mapa
 ```
 
-![](transferencias_pernambuco_files/figure-html/mapa_percapita-1.png)
+![](../reference/figures/transferencias-07-mapa-percapita.png)
 
 ### 6.4 Mapa de referência: Regiões de Desenvolvimento
 
@@ -552,7 +536,7 @@ ggplot(rd_bordas_proj) +
   tema_mapa + theme(legend.position = "none")
 ```
 
-![](transferencias_pernambuco_files/figure-html/mapa_rds-1.png)
+![](../reference/figures/transferencias-08-mapa-rds.png)
 
 ## 7. Análise por Região de Desenvolvimento
 
@@ -574,14 +558,14 @@ ggplot(tc_rd_anual, aes(ano, valor_bi, fill = rd)) +
   geom_col(width = 0.7) +
   scale_fill_manual(values = cores_rd) +
   scale_y_continuous(labels = label_number(suffix = " bi", decimal.mark = ","),
-                     breaks = scales::breaks_pretty(n = 10), 
+                     breaks = scales::breaks_pretty(n = 10),
                      expand = c(0, 0)) +
   labs(title = "Transferências por Região de Desenvolvimento",
        subtitle = "Valores nominais anuais, em R$ bilhões", x = NULL, y = "R$") +
   tema_tc + guides(fill = guide_legend(nrow = 3, byrow = TRUE))
 ```
 
-![](transferencias_pernambuco_files/figure-html/rd_serie-1.png)
+![](../reference/figures/transferencias-09-rd-serie.png)
 
 ### 7.2 Composição por categoria dentro de cada RD
 
@@ -598,14 +582,14 @@ ggplot(tc_rd_cat, aes(valor_mi, fct_reorder(rd, valor_mi, .fun = sum), fill = ca
   scale_fill_manual(values = cores_cat) +
   scale_x_continuous(
     labels = label_number(big.mark = ".", decimal.mark = ","),
-    breaks = scales::breaks_pretty(n = 10), 
+    breaks = scales::breaks_pretty(n = 10),
     expand = c(0,0)) +
   labs(title = glue("Composição por RD — {ultimo_ano}"),
        subtitle = "R$ milhões, por categoria de transferência", x = "R$ milhões", y = NULL) +
   tema_tc
 ```
 
-![](transferencias_pernambuco_files/figure-html/rd_composicao-1.png)
+![](../reference/figures/transferencias-10-rd-composicao.png)
 
 ### 7.3 Per capita por RD
 
@@ -641,7 +625,7 @@ ggplot(tc_rd_pc, aes(per_capita, fct_reorder(rd, per_capita))) +
   theme(panel.grid.major.y = element_blank())
 ```
 
-![](transferencias_pernambuco_files/figure-html/rd_percapita-1.png)
+![](../reference/figures/transferencias-11-rd-percapita.png)
 
 ### 7.4 Evolução per capita por RD
 
@@ -678,7 +662,7 @@ ggplot(tc_rd_pc_serie, aes(ano, per_capita, color = rd)) +
   guides(color = guide_legend(nrow = 3, byrow = TRUE))
 ```
 
-![](transferencias_pernambuco_files/figure-html/rd_percapita_serie-1.png)
+![](../reference/figures/transferencias-12-rd-percapita-serie.png)
 
 ### 7.5 Mapa per capita por RD
 
@@ -708,7 +692,7 @@ ggplot() +
   tema_mapa
 ```
 
-![](transferencias_pernambuco_files/figure-html/mapa_rd_percapita-1.png)
+![](../reference/figures/transferencias-13-mapa-rd-percapita.png)
 
 ## 8. Mapas por categoria de transferência
 
@@ -740,7 +724,7 @@ ggplot(tc_cat_geo) +
   tema_mapa + theme(strip.text = element_text(face = "bold", size = 9))
 ```
 
-![](transferencias_pernambuco_files/figure-html/mapas_categoria-1.png)
+![](../reference/figures/transferencias-14-mapas-categoria.png)
 
 ## Considerações finais
 
@@ -769,49 +753,3 @@ ggplot(tc_cat_geo) +
   <http://www2.condepefidem.pe.gov.br>
 - MetBrewer — Paletas de cores:
   <https://github.com/BlakeRMills/MetBrewer>
-
-&nbsp;
-
-    #> R version 4.5.2 (2025-10-31)
-    #> Platform: aarch64-apple-darwin20
-    #> Running under: macOS Tahoe 26.4
-    #> 
-    #> Matrix products: default
-    #> BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-    #> LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
-    #> 
-    #> locale:
-    #> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-    #> 
-    #> time zone: America/Recife
-    #> tzcode source: internal
-    #> 
-    #> attached base packages:
-    #> [1] stats     graphics  grDevices utils     datasets  methods   base     
-    #> 
-    #> other attached packages:
-    #>  [1] glue_1.8.0      MetBrewer_0.2.0 ggrepel_0.9.6   scales_1.4.0   
-    #>  [5] forecast_9.0.1  sf_1.0-24       patchwork_1.3.2 lubridate_1.9.5
-    #>  [9] forcats_1.0.1   stringr_1.6.0   dplyr_1.2.0     purrr_1.2.1    
-    #> [13] readr_2.1.6     tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.2  
-    #> [17] tidyverse_2.0.0 tesouror_0.1.0 
-    #> 
-    #> loaded via a namespace (and not attached):
-    #>  [1] gtable_0.3.6       xfun_0.56          bslib_0.10.0       httr2_1.2.2       
-    #>  [5] htmlwidgets_1.6.4  lattice_0.22-9     tzdb_0.5.0         vctrs_0.7.1       
-    #>  [9] tools_4.5.2        generics_0.1.4     parallel_4.5.2     proxy_0.4-29      
-    #> [13] pkgconfig_2.0.3    KernSmooth_2.23-26 RColorBrewer_1.1-3 S7_0.2.1          
-    #> [17] desc_1.4.3         lifecycle_1.0.5    compiler_4.5.2     farver_2.1.2      
-    #> [21] textshaping_1.0.4  janitor_2.2.1      snakecase_0.11.1   htmltools_0.5.9   
-    #> [25] class_7.3-23       sass_0.4.10        yaml_2.3.12        pillar_1.11.1     
-    #> [29] pkgdown_2.2.0      jquerylib_0.1.4    classInt_0.4-11    cachem_1.1.0      
-    #> [33] wk_0.9.5           nlme_3.1-168       fracdiff_1.5-3     tidyselect_1.2.1  
-    #> [37] digest_0.6.39      stringi_1.8.7      labeling_0.4.3     fastmap_1.2.0     
-    #> [41] grid_4.5.2         colorspace_2.1-2   cli_3.6.5          magrittr_2.0.4    
-    #> [45] utf8_1.2.6         dichromat_2.0-0.1  e1071_1.7-17       withr_3.0.2       
-    #> [49] rappdirs_0.3.4     timechange_0.4.0   rmarkdown_2.30     otel_0.2.0        
-    #> [53] timeDate_4052.112  zoo_1.8-15         ragg_1.5.0         hms_1.1.4         
-    #> [57] urca_1.3-4         evaluate_1.0.5     knitr_1.51         viridisLite_0.4.3 
-    #> [61] s2_1.1.9           rlang_1.1.7        Rcpp_1.1.1         DBI_1.2.3         
-    #> [65] rstudioapi_0.18.0  jsonlite_2.0.0     R6_2.6.1           systemfonts_1.3.1 
-    #> [69] fs_1.6.6           units_1.0-0

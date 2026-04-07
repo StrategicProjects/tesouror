@@ -14,6 +14,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse    = TRUE,
   comment     = "#>",
+  eval        = FALSE,
   fig.width   = 10,
   fig.height  = 6,
   dpi         = 150,
@@ -21,6 +22,14 @@ knitr::opts_chunk$set(
   message     = FALSE,
   out.width   = "100%"
 )
+
+# Caminho para as figuras pré-geradas (funciona tanto no source tree
+# quanto no pacote instalado)
+fig_path <- function(name) {
+  installed <- system.file("figures", name, package = "tesouror", mustWork = FALSE)
+  if (nzchar(installed)) return(installed)
+  file.path("..", "man", "figures", name)
+}
 ```
 
 ## Introdução
@@ -51,7 +60,6 @@ library(tesouror)
 library(tidyverse)
 library(patchwork)
 library(sf)
-library(forecast)
 library(scales)
 library(ggrepel)
 library(MetBrewer)
@@ -64,7 +72,7 @@ A função `get_tc_by_municipality_detail()` retorna os repasses com
 granularidade de subtipo (ex: `FUNDEB/FPM`, `Royalties/ANP`). Buscamos a
 série completa de 2015 a 2026 para todos os municípios de Pernambuco.
 
-```{r dados, cache = TRUE}
+```{r dados}
 tipos   <- get_tc_transfer_types()
 estados <- get_tc_states()
 
@@ -300,6 +308,10 @@ p1 / p2 + plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
 ```
 
+```{r fig-composicao-anual, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-01-composicao-anual.png"))
+```
+
 ### 5.2 Séries mensais das principais categorias
 
 A sazonalidade é marcante: dezembro e julho concentram repasses
@@ -324,12 +336,16 @@ tc_mensal_cat |>
   scale_x_date(date_labels = "%Y", date_breaks = "1 year") +
   scale_y_continuous(labels = label_number(big.mark = ".", decimal.mark = ",")) +
   labs(title = "Principais Séries Mensais por Categoria",
-       subtitle = "Valores nominais em R$ milhões", 
+       subtitle = "Valores nominais em R$ milhões",
        x = "Ano", y = "Transferências em R$ milhões") +
   tema_tc +
   theme(legend.position = "none",
         strip.background = element_rect(fill = "black", color = NA),
         strip.text = element_text(color = "white", face = "bold"))
+```
+
+```{r fig-series-mensais, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-02-series-mensais.png"))
 ```
 
 ### 5.3 Top 10 municípios por volume absoluto
@@ -363,6 +379,10 @@ ggplot(top10_abs, aes(valor_total / 1e6, fct_reorder(municipio, valor_total))) +
   scale_y_discrete(expand = c(0, 0)) +
   tema_tc +
   theme(panel.grid.major.y = element_blank())
+```
+
+```{r fig-top10-absoluto, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-03-top10-absoluto.png"))
 ```
 
 ## 6. Análise per capita
@@ -404,7 +424,7 @@ p_bot <- ggplot(bot10_pc, aes(valor_per_capita, fct_reorder(stringr::str_wrap(mu
   ) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.35))) +
   scale_y_discrete(expand = c(0, 0)) +
-  labs(title = "Bottom 10: Menor per capita", 
+  labs(title = "Bottom 10: Menor per capita",
        x = "R$ por habitante", y = NULL) +
   tema_tc + theme(plot.title = element_text(size = 9))  +
   theme(panel.grid.major.y = element_blank())
@@ -414,7 +434,10 @@ p_top + p_bot +
     title    = "Transferências Constitucionais Per Capita",
     subtitle = "R$ por habitante"
   )
+```
 
+```{r fig-percapita-ranking, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-04-percapita-ranking.png"))
 ```
 
 ### 6.2 Evolução per capita ao longo do tempo
@@ -439,6 +462,10 @@ ggplot(tc_anual_pc, aes(ano, per_capita)) +
   labs(title = "Transferências Per Capita: Total PE ao Longo do Tempo",
        subtitle = "R$ por habitante/ano", x = "Ano", y = "R$ per capita") +
   tema_tc
+```
+
+```{r fig-percapita-serie, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-05-percapita-serie.png"))
 ```
 
 ### 6.3 Mapas: absoluto vs per capita
@@ -482,6 +509,10 @@ ggplot() +
   tema_mapa
 ```
 
+```{r fig-mapa-absoluto, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-06-mapa-absoluto.png"))
+```
+
 ```{r mapa_percapita, fig.height = 7}
 ggplot() +
   geom_sf(data = tc_geo_cont |> filter(!is.na(valor_per_capita)),
@@ -497,6 +528,10 @@ ggplot() +
        subtitle = glue("Total {ultimo_ano} (R$ por habitante)"),
        caption = "Malha: IBGE | População: SICONFI") +
   tema_mapa
+```
+
+```{r fig-mapa-percapita, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-07-mapa-percapita.png"))
 ```
 
 ### 6.4 Mapa de referência: Regiões de Desenvolvimento
@@ -528,6 +563,10 @@ ggplot(rd_bordas_proj) +
   tema_mapa + theme(legend.position = "none")
 ```
 
+```{r fig-mapa-rds, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-08-mapa-rds.png"))
+```
+
 ## 7. Análise por Região de Desenvolvimento
 
 ### 7.1 Série temporal por RD
@@ -547,11 +586,15 @@ ggplot(tc_rd_anual, aes(ano, valor_bi, fill = rd)) +
   geom_col(width = 0.7) +
   scale_fill_manual(values = cores_rd) +
   scale_y_continuous(labels = label_number(suffix = " bi", decimal.mark = ","),
-                     breaks = scales::breaks_pretty(n = 10), 
+                     breaks = scales::breaks_pretty(n = 10),
                      expand = c(0, 0)) +
   labs(title = "Transferências por Região de Desenvolvimento",
        subtitle = "Valores nominais anuais, em R$ bilhões", x = NULL, y = "R$") +
   tema_tc + guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+```
+
+```{r fig-rd-serie, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-09-rd-serie.png"))
 ```
 
 ### 7.2 Composição por categoria dentro de cada RD
@@ -568,11 +611,15 @@ ggplot(tc_rd_cat, aes(valor_mi, fct_reorder(rd, valor_mi, .fun = sum), fill = ca
   scale_fill_manual(values = cores_cat) +
   scale_x_continuous(
     labels = label_number(big.mark = ".", decimal.mark = ","),
-    breaks = scales::breaks_pretty(n = 10), 
+    breaks = scales::breaks_pretty(n = 10),
     expand = c(0,0)) +
   labs(title = glue("Composição por RD — {ultimo_ano}"),
        subtitle = "R$ milhões, por categoria de transferência", x = "R$ milhões", y = NULL) +
   tema_tc
+```
+
+```{r fig-rd-composicao, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-10-rd-composicao.png"))
 ```
 
 ### 7.3 Per capita por RD
@@ -606,6 +653,10 @@ ggplot(tc_rd_pc, aes(per_capita, fct_reorder(rd, per_capita))) +
   ) +
   tema_tc +
   theme(panel.grid.major.y = element_blank())
+```
+
+```{r fig-rd-percapita, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-11-rd-percapita.png"))
 ```
 
 ### 7.4 Evolução per capita por RD
@@ -642,6 +693,10 @@ ggplot(tc_rd_pc_serie, aes(ano, per_capita, color = rd)) +
   guides(color = guide_legend(nrow = 3, byrow = TRUE))
 ```
 
+```{r fig-rd-percapita-serie, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-12-rd-percapita-serie.png"))
+```
+
 ### 7.5 Mapa per capita por RD
 
 ```{r mapa_rd_percapita, fig.height = 7}
@@ -667,6 +722,10 @@ ggplot() +
        subtitle = glue("{ultimo_ano} — R$ por habitante/ano"),
        caption = "Fonte: Tesouro Nacional/tesouror | CONDEPE/FIDEM") +
   tema_mapa
+```
+
+```{r fig-mapa-rd-percapita, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-13-mapa-rd-percapita.png"))
 ```
 
 ## 8. Mapas por categoria de transferência
@@ -698,6 +757,10 @@ ggplot(tc_cat_geo) +
   tema_mapa + theme(strip.text = element_text(face = "bold", size = 9))
 ```
 
+```{r fig-mapas-categoria, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics(fig_path("transferencias-14-mapas-categoria.png"))
+```
+
 ## Considerações finais
 
 - **FPM e FUNDEB dominam**: juntos representam mais de 80% do total,
@@ -724,7 +787,3 @@ ggplot(tc_cat_geo) +
   <http://www2.condepefidem.pe.gov.br>
 - MetBrewer — Paletas de cores:
   <https://github.com/BlakeRMills/MetBrewer>
-
-```{r session, echo = FALSE}
-sessionInfo()
-```
