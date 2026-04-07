@@ -19,3 +19,5 @@
   API](https://strategicprojects.github.io/tesouror/articles/transferencias.md):
 - [SIOPE API – Education spending
   data](https://strategicprojects.github.io/tesouror/articles/siope.md):
+- [Transferências Constitucionais para Municípios de
+  Pernambuco](https://strategicprojects.github.io/tesouror/articles/transferencias_pernambuco.md):
