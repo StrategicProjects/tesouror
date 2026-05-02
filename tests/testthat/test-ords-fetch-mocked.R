@@ -76,6 +76,28 @@ test_that("ords_fetch_all respects max_rows by truncating after the page", {
   expect_equal(out$anexo, c("A1", "A2"))
 })
 
+test_that("ords_fetch_all returns partial result when a later page fails", {
+  skip_if_no_httptest2()
+  local_fast_retry()
+
+  page1 <- mock_ords_response(
+    items = list(list(anexo = "P1A"), list(anexo = "P1B")),
+    has_more = TRUE, offset = 0L, limit = 2L
+  )
+  # Page 2: 5 consecutive 5xx exhausts the retry budget
+  page2_500 <- mock_error_response(status_code = 500L, message = "boom")
+
+  out <- httr2::with_mocked_responses(
+    list(page1, page2_500, page2_500, page2_500, page2_500, page2_500),
+    suppressMessages(get_anexos(use_cache = FALSE, page_size = 2))
+  )
+
+  expect_equal(nrow(out), 2L)               # only page 1 survived
+  expect_equal(out$anexo, c("P1A", "P1B"))
+  expect_true(isTRUE(attr(out, "partial")))
+  expect_match(attr(out, "last_page_error"), "HTTP status")
+})
+
 test_that("ords_fetch_all caches and replays without hitting the network", {
   skip_if_no_httptest2()
   local_fast_retry()

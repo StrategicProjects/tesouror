@@ -83,8 +83,12 @@ custos_params <- function(ano = NULL, mes = NULL, natureza_juridica = NULL,
 #'   called. Useful for debugging or testing in a browser. Defaults to
 #'   `FALSE`.
 #' @param page_size Integer. Number of rows per API page. Defaults to
-#'   `1000` (the server default of 250 is too slow; 5000 may cause
-#'   timeouts). Adjust as needed.
+#'   `500`. The CUSTOS backend is slow on broad queries: smaller pages
+#'   are more robust against HTTP 504 timeouts at the cost of a few
+#'   extra round-trips. The server default of 250 is conservative;
+#'   1000+ may time out. If the package returns
+#'   `attr(result, "partial") = TRUE`, lower this further or add a
+#'   `mes` filter.
 #' @param max_rows Numeric. Maximum number of rows to return. Defaults
 #'   to `Inf` (all rows). Useful for quick tests with large datasets
 #'   (e.g., `max_rows = 100`).
@@ -115,7 +119,7 @@ get_custos_pessoal_ativo <- function(ano = NULL, mes = NULL,
                                      organizacao_n1 = NULL,
                                      organizacao_n2 = NULL,
                                      organizacao_n3 = NULL,
-                                     use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                     use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/pessoal_ativo", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -142,12 +146,12 @@ get_custos_pessoal_ativo <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_active_staff(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_active_staff <- function(year = NULL, month = NULL,
                                    legal_nature = NULL,
                                    org_level1 = NULL, org_level2 = NULL,
-                                   org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                   org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_pessoal_ativo(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,
@@ -187,7 +191,7 @@ get_custos_pessoal_inativo <- function(ano = NULL, mes = NULL,
                                        organizacao_n1 = NULL,
                                        organizacao_n2 = NULL,
                                        organizacao_n3 = NULL,
-                                       use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                       use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/pessoal_inativo", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -198,12 +202,12 @@ get_custos_pessoal_inativo <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_retired_staff(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_retired_staff <- function(year = NULL, month = NULL,
                                     legal_nature = NULL,
                                     org_level1 = NULL, org_level2 = NULL,
-                                    org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                    org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_pessoal_inativo(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,
@@ -242,7 +246,7 @@ get_custos_pensionistas <- function(ano = NULL, mes = NULL,
                                     organizacao_n1 = NULL,
                                     organizacao_n2 = NULL,
                                     organizacao_n3 = NULL,
-                                    use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                    use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/pensionistas", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -253,12 +257,12 @@ get_custos_pensionistas <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_pensioners(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_pensioners <- function(year = NULL, month = NULL,
                                  legal_nature = NULL,
                                  org_level1 = NULL, org_level2 = NULL,
-                                 org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                 org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_pensionistas(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,
@@ -297,7 +301,7 @@ get_custos_demais <- function(ano = NULL, mes = NULL,
                                organizacao_n1 = NULL,
                                organizacao_n2 = NULL,
                                organizacao_n3 = NULL,
-                               use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                               use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/demais", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -308,12 +312,12 @@ get_custos_demais <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_other(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_other <- function(year = NULL, month = NULL,
                             legal_nature = NULL,
                             org_level1 = NULL, org_level2 = NULL,
-                            org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                            org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_demais(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,
@@ -352,7 +356,7 @@ get_custos_depreciacao <- function(ano = NULL, mes = NULL,
                                    organizacao_n1 = NULL,
                                    organizacao_n2 = NULL,
                                    organizacao_n3 = NULL,
-                                   use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                   use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/depreciacao", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -363,12 +367,12 @@ get_custos_depreciacao <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_depreciation(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_depreciation <- function(year = NULL, month = NULL,
                                    legal_nature = NULL,
                                    org_level1 = NULL, org_level2 = NULL,
-                                   org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                   org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_depreciacao(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,
@@ -407,7 +411,7 @@ get_custos_transferencias <- function(ano = NULL, mes = NULL,
                                       organizacao_n1 = NULL,
                                       organizacao_n2 = NULL,
                                       organizacao_n3 = NULL,
-                                      use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                      use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   params <- custos_params(ano, mes, natureza_juridica,
                           organizacao_n1, organizacao_n2, organizacao_n3)
   custos_fetch_all("/transferencias", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
@@ -418,12 +422,12 @@ get_custos_transferencias <- function(ano = NULL, mes = NULL,
 #' @usage get_costs_transfers(year = NULL, month = NULL,
 #'   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
 #'   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-#'   page_size = 1000, max_rows = Inf)
+#'   page_size = 500, max_rows = Inf)
 #' @export
 get_costs_transfers <- function(year = NULL, month = NULL,
                                 legal_nature = NULL,
                                 org_level1 = NULL, org_level2 = NULL,
-                                org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 1000L, max_rows = Inf) {
+                                org_level3 = NULL, use_cache = TRUE, verbose = FALSE, page_size = 500L, max_rows = Inf) {
   get_custos_transferencias(
     ano = year, mes = month, natureza_juridica = legal_nature,
     organizacao_n1 = org_level1, organizacao_n2 = org_level2,

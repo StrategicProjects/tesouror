@@ -14,14 +14,14 @@ get_custos_pessoal_inativo(
   organizacao_n3 = NULL,
   use_cache = TRUE,
   verbose = FALSE,
-  page_size = 1000L,
+  page_size = 500L,
   max_rows = Inf
 )
 
 get_costs_retired_staff(year = NULL, month = NULL,
   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-  page_size = 1000, max_rows = Inf)
+  page_size = 500, max_rows = Inf)
 }
 \arguments{
 \item{ano}{Integer. Year of the record. Optional.}
@@ -53,8 +53,12 @@ called. Useful for debugging or testing in a browser. Defaults to
 \code{FALSE}.}
 
 \item{page_size}{Integer. Number of rows per API page. Defaults to
-\code{1000} (the server default of 250 is too slow; 5000 may cause
-timeouts). Adjust as needed.}
+\code{500}. The CUSTOS backend is slow on broad queries: smaller pages
+are more robust against HTTP 504 timeouts at the cost of a few
+extra round-trips. The server default of 250 is conservative;
+1000+ may time out. If the package returns
+\code{attr(result, "partial") = TRUE}, lower this further or add a
+\code{mes} filter.}
 
 \item{max_rows}{Numeric. Maximum number of rows to return. Defaults
 to \code{Inf} (all rows). Useful for quick tests with large datasets

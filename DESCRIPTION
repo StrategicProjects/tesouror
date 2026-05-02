@@ -1,6 +1,6 @@
 Package: tesouror
 Title: Access Brazilian National Treasury Open Data APIs
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
     person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),

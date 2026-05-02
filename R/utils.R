@@ -325,7 +325,17 @@ tnr_request <- function(url, params = list(), use_cache = TRUE,
     } else if (status == 404L) {
       "The endpoint or entity was not found. Check your parameters."
     } else if (status %in% c(502L, 503L, 504L)) {
-      "Server timeout. Try a smaller page_size or retry later."
+      if (api_name == "CUSTOS") {
+        paste0(
+          "Server timeout. The CUSTOS backend is slow on broad queries. ",
+          "Try (a) adding a `mes` filter (e.g. `mes = 6`) and/or ",
+          "(b) reducing `page_size` (e.g. 250). ",
+          "If pagination fails mid-way, the package now returns a partial ",
+          "result with attr(result, 'partial') = TRUE."
+        )
+      } else {
+        "Server timeout. Try a smaller page_size or retry later."
+      }
     } else if (status >= 500L) {
       "Server error. The API may be temporarily unavailable."
     } else if (status == 429L) {
@@ -404,6 +414,7 @@ ords_fetch_all <- function(base_url, endpoint, params = list(),
   )
 
   # -- Subsequent pages --------------------------------------------------------
+  partial_error <- NULL  # populated if a page fails after retries
   while (has_more && total_rows < max_rows) {
     page <- page + 1L
 
@@ -415,10 +426,26 @@ ords_fetch_all <- function(base_url, endpoint, params = list(),
     next_params <- c(params, list(offset = next_offset))
 
     cli::cli_alert("Fetching {.field {api_name}{endpoint}} page {.val {page}}...")
-    body <- tnr_request(url, next_params, use_cache = use_cache,
-                        api_name = api_name, verbose = verbose)
-    items <- body[["items"]]
+    body <- tryCatch(
+      tnr_request(url, next_params, use_cache = use_cache,
+                  api_name = api_name, verbose = verbose),
+      error = function(e) e
+    )
 
+    # Mid-pagination failure: keep what we already have and signal partial.
+    if (inherits(body, "error")) {
+      partial_error <- conditionMessage(body)
+      cli::cli_alert_warning(
+        "Page {.val {page}} failed; returning partial result of {.val {total_rows}} rows from {.val {page - 1L}} page{?s}."
+      )
+      cli::cli_alert_info(
+        "Inspect with {.code attr(result, 'partial')} and {.code attr(result, 'last_page_error')}."
+      )
+      page <- page - 1L  # last successful page
+      break
+    }
+
+    items <- body[["items"]]
     if (is.null(items) || length(items) == 0) break
 
     all_items[[page]] <- items
@@ -455,10 +482,19 @@ ords_fetch_all <- function(base_url, endpoint, params = list(),
     cli::cli_alert_success(
       "Done: {.val {nrow(result)}} rows (truncated to max_rows)."
     )
+  } else if (!is.null(partial_error)) {
+    cli::cli_alert_warning(
+      "Done (PARTIAL): {.val {nrow(result)}} rows from {.val {page}} page{?s}."
+    )
   } else {
     cli::cli_alert_success(
       "Done: {.val {nrow(result)}} rows total ({.val {page}} page{?s})."
     )
+  }
+
+  if (!is.null(partial_error)) {
+    attr(result, "partial") <- TRUE
+    attr(result, "last_page_error") <- partial_error
   }
 
   result
@@ -619,7 +655,7 @@ siconfi_fetch_all <- function(endpoint, params = list(), use_cache = TRUE,
 
 #' @noRd
 custos_fetch_all <- function(endpoint, params = list(), use_cache = TRUE,
-                             verbose = FALSE, page_size = 1000L,
+                             verbose = FALSE, page_size = 500L,
                              max_rows = Inf) {
   ords_fetch_all(custos_base_url(), endpoint, params,
                  use_cache = use_cache, api_name = "CUSTOS",
