@@ -41,7 +41,7 @@ parameters in the official API documentation:
 <a href="https://apidatalake.tesouro.gov.br/docs/sadipem/">SADIPEM</a>,
 <a href="https://api.siorg.economia.gov.br/">SIORG</a>, and
 <a href="https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs">Transferências Constitucionais</a>, and
-<a href="https://www.fnde.gov.br/olinda-ide/servico/DADOS_ABERTOS_SIOPE/versao/v1/aplicacao#!/recursos">SIOPE</a>.
+SIOPE (FNDE/MEC).
 </td></tr></table>
 
 ## Installation

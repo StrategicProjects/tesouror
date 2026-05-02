@@ -784,6 +784,6 @@ knitr::include_graphics(fig_path("transferencias-14-mapas-categoria.png"))
 - Tesouro Nacional — API de Transferências Constitucionais:
   <https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs>
 - CONDEPE/FIDEM — Regiões de Desenvolvimento de Pernambuco:
-  <http://www2.condepefidem.pe.gov.br>
+  <https://www.condepefidem.pe.gov.br>
 - MetBrewer — Paletas de cores:
   <https://github.com/BlakeRMills/MetBrewer>

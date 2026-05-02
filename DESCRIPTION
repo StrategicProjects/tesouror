@@ -1,6 +1,6 @@
 Package: tesouror
 Title: Access Brazilian National Treasury Open Data APIs
-Version: 0.1.0.9000
+Version: 0.2.0
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
     person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
@@ -21,12 +21,12 @@ Description: Provides a unified interface to access open data from the
     <https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs>
     for constitutional transfers to states and municipalities; SIORG
     <https://estruturaorganizacional.dados.gov.br> for federal
-    organizational structure; and SIOPE
-    <https://www.fnde.gov.br/olinda-ide/servico/DADOS_ABERTOS_SIOPE/versao/v1/aplicacao>
-    for education spending data from FNDE/MEC. Features automatic
-    pagination, in-memory caching, retry logic, and tidy output.
+    organizational structure; and SIOPE (FNDE/MEC) for education
+    spending data. Features automatic pagination, in-memory caching,
+    retry logic, and tidy output.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Language: en-US
 Depends: R (>= 4.1.0)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
