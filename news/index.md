@@ -66,6 +66,20 @@
 - Added a hard `Depends: R (>= 4.1.0)` to reflect the use of the native
   pipe (`|>`) inside the package.
 
+- **UF abbreviation guard for Transferencias.**
+  [`get_tc_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md),
+  [`get_tc_por_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados.md),
+  [`get_tc_por_estados_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados_detalhe.md),
+  [`get_tc_por_municipio()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md),
+  and
+  [`get_tc_por_municipio_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md)
+  now abort with an actionable error if a two-letter Brazilian UF
+  abbreviation (e.g., `"PE"`) is passed where a numeric Treasury state
+  code is expected. Previously the upstream API returned HTTP 500 after
+  a long retry budget; the new check fires before any network call and
+  points the user to
+  [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md).
+
 ## tesouror 0.1.0
 
 ### New package

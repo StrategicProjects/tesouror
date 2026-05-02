@@ -60,7 +60,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="other-0-1-0-9000">Other<a class="anchor" aria-label="anchor" href="#other-0-1-0-9000"></a></h3>
-<ul><li>Added a hard <code>Depends: R (&gt;= 4.1.0)</code> to reflect the use of the native pipe (<code>|&gt;</code>) inside the package.</li>
+<ul><li><p>Added a hard <code>Depends: R (&gt;= 4.1.0)</code> to reflect the use of the native pipe (<code>|&gt;</code>) inside the package.</p></li>
+<li><p><strong>UF abbreviation guard for Transferencias.</strong> <code><a href="../reference/get_tc_municipios.html">get_tc_municipios()</a></code>, <code><a href="../reference/get_tc_por_estados.html">get_tc_por_estados()</a></code>, <code><a href="../reference/get_tc_por_estados_detalhe.html">get_tc_por_estados_detalhe()</a></code>, <code><a href="../reference/get_tc_por_municipio.html">get_tc_por_municipio()</a></code>, and <code><a href="../reference/get_tc_por_municipio_detalhe.html">get_tc_por_municipio_detalhe()</a></code> now abort with an actionable error if a two-letter Brazilian UF abbreviation (e.g., <code>"PE"</code>) is passed where a numeric Treasury state code is expected. Previously the upstream API returned HTTP 500 after a long retry budget; the new check fires before any network call and points the user to <code><a href="../reference/get_tc_estados.html">get_tc_estados()</a></code>.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
