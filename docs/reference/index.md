@@ -33,6 +33,40 @@ functions with English parameter names.
   [`get_msc_control()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md)
   : Get MSC control accounts data
 
+## SICONFI – Batch fetchers (fault-tolerant)
+
+Loop over every municipality of a Brazilian state with fault tolerance.
+Failures are captured in `attr(result, "failed")` and entities that have
+not homologated the report in `attr(result, "no_data")`, instead of
+aborting the whole call.
+
+- [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md)
+  [`get_budget_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md)
+  : Get RREO data for all municipalities of a Brazilian state
+- [`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md)
+  [`get_annual_accounts_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md)
+  : Get DCA data for all municipalities of a Brazilian state
+- [`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
+  [`get_fiscal_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
+  : Get RGF data for all municipalities of a Brazilian state
+
+## SICONFI – RREO tidy layer
+
+Reconcile the drifting RREO labels (appendix names, column suffixes,
+Roman-numeral account codes) across fiscal years and produce year-stable
+indicators ready for longitudinal analysis.
+
+- [`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md)
+  : Return the bundled RREO layout reference table
+
+- [`rreo_normalize_columns()`](https://strategicprojects.github.io/tesouror/reference/rreo_normalize_columns.md)
+  :
+
+  Normalize the `coluna` field of a RREO tibble across years
+
+- [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
+  : Tidy a RREO tibble by topic, reconciling layout drift across years
+
 ## SICONFI – Portuguese interface
 
 Functions with Portuguese names matching the SICONFI API parameters.

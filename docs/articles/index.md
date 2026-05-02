@@ -5,6 +5,11 @@
 - [Getting started with
   tesouror](https://strategicprojects.github.io/tesouror/articles/getting-started.md):
 
+### How-to
+
+- [RREO longitudinal — handling layout drift across
+  years](https://strategicprojects.github.io/tesouror/articles/rreo-longitudinal.md):
+
 ### API guides
 
 - [SICONFI API – Fiscal

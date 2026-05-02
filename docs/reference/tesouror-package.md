@@ -11,10 +11,9 @@ for public debt and credit operations; Transferencias Constitucionais
 <https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs>
 for constitutional transfers to states and municipalities; SIORG
 <https://estruturaorganizacional.dados.gov.br> for federal
-organizational structure; and SIOPE
-<https://www.fnde.gov.br/olinda-ide/servico/DADOS_ABERTOS_SIOPE/versao/v1/aplicacao>
-for education spending data from FNDE/MEC. Features automatic
-pagination, in-memory caching, retry logic, and tidy output.
+organizational structure; and SIOPE (FNDE/MEC) for education spending
+data. Features automatic pagination, in-memory caching, retry logic, and
+tidy output.
 
 ## See also
 
