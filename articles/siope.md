@@ -201,9 +201,11 @@ indicadores_ne <- purrr::map_dfr(nordeste, function(uf) {
 The SIOPE API uses an OData-style URL pattern different from the other
 APIs in this package. Internally, the package builds URLs like:
 
-    https://www.fnde.gov.br/olinda-ide/servico/DADOS_ABERTOS_SIOPE/versao/v1/odata/
-      Dados_Gerais_Siope(Ano_Consulta=@Ano_Consulta,Num_Peri=@Num_Peri,Sig_UF=@Sig_UF)
+    {base}/Dados_Gerais_Siope(Ano_Consulta=@Ano_Consulta,Num_Peri=@Num_Peri,Sig_UF=@Sig_UF)
       ?@Ano_Consulta=2023&@Num_Peri=6&@Sig_UF='PE'&$format=json
+
+where `{base}` is the FNDE/MEC SIOPE OData root, available from
+`tesouror:::siope_base_url()`.
 
 You don’t need to worry about this — just pass the parameters and the
 package handles the rest. Use `verbose = TRUE` to see the full URL:
