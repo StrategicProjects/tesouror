@@ -1,5 +1,71 @@
 # Changelog
 
+## tesouror 0.1.0.9000 (development version)
+
+### New features
+
+- **Fault-tolerant batch fetchers for SICONFI**. New helpers
+  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
+  [`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md),
+  and
+  [`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
+  (plus English aliases
+  [`get_budget_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
+  [`get_annual_accounts_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md),
+  [`get_fiscal_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md))
+  fetch data for every municipality of a Brazilian state in a single
+  call. They loop over the underlying SICONFI endpoint per municipality
+  and tolerate per-entity failures: when an individual call cannot be
+  recovered after the five-attempt retry budget, the failure is recorded
+  and the loop continues. Failed calls are returned via
+  `attr(result, "failed")` (a tibble with `iteration`, `id`, `error`).
+  The `on_error` argument controls behaviour: `"warn"` (default),
+  `"stop"`, or `"silent"`. This addresses the fault-tolerance and
+  missing-municipality concerns reported in
+  [rsiconfi#2](https://github.com/tchiluanda/rsiconfi/issues/2) and
+  [rsiconfi#3](https://github.com/tchiluanda/rsiconfi/issues/3).
+
+- **Distinct reporting for empty responses**. The SICONFI API replies
+  HTTP 200 with zero rows when an entity has not homologated a given
+  report (a common cause of “missing municipalities” complaints). The
+  new batch fetchers expose these cases via `attr(result, "no_data")` (a
+  tibble with `iteration`, `id`), separate from technical failures in
+  `attr(result, "failed")`.
+
+- **Layout-aware RREO tidy layer**. New functions
+  [`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md),
+  [`rreo_normalize_columns()`](https://strategicprojects.github.io/tesouror/reference/rreo_normalize_columns.md),
+  and
+  [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
+  reconcile SICONFI’s drifting column and account labels across fiscal
+  years. The bundled `inst/extdata/rreo_layout.csv` knows that, for
+  example, the federal RGPS appendix moved from `RREO-Anexo 04.3 - RGPS`
+  (≤2022) to `RREO-Anexo 04.4 - RGPS` (2023+) and that account names
+  with shifting Roman numerals (`"... (VII) = (III - VI)"`) are matched
+  on a stable stem.
+  [`rreo_normalize_columns()`](https://strategicprojects.github.io/tesouror/reference/rreo_normalize_columns.md)
+  adds a `coluna_padrao` (year-stripped) and a `coluna_ano` (the year
+  that appeared in the suffix, or `NA`), letting users distinguish a
+  current-year column from a comparative previous-year column.
+  `tidy_rreo(data, topic = "previdencia")` returns a year-stable
+  indicator column ready for longitudinal analysis, collapsing the
+  manual `paste0(... ifelse(year >= 2021, "", " / "), ...)` workarounds
+  that were the workhorse for issue
+  [rsiconfi#4](https://github.com/tchiluanda/rsiconfi/issues/4).
+  Currently ships rules for federal previdência (RGPS, RPPS civis, FCDF,
+  militares); contributions for additional topics are welcome. See the
+  new vignette
+  [`vignette("rreo-longitudinal")`](https://strategicprojects.github.io/tesouror/articles/rreo-longitudinal.md)
+  for an end-to-end walkthrough.
+
+- **New dependency**: `stringi (>= 1.7.0)` (for portable diacritic
+  stripping; already a transitive dependency via `stringr`).
+
+### Other
+
+- Added a hard `Depends: R (>= 4.1.0)` to reflect the use of the native
+  pipe (`|>`) inside the package.
+
 ## tesouror 0.1.0
 
 ### New package

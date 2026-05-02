@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,9 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/getting-started.html">Getting started</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>How-to</h6></li>
+    <li><a class="dropdown-item" href="articles/rreo-longitudinal.html">RREO longitudinal — handling layout drift across years</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>API guides</h6></li>
     <li><a class="dropdown-item" href="articles/siconfi.html">SICONFI – Fiscal data</a></li>
@@ -85,44 +88,44 @@
 <col width="33%">
 <col width="33%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">API</th>
 <th align="left">Data</th>
 <th align="left">Functions</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left"><strong>SICONFI</strong></td>
 <td align="left">Fiscal reports (RREO, RGF, DCA, MSC), entities</td>
 <td align="left">
 <code><a href="reference/get_rreo.html">get_rreo()</a></code>, <code><a href="reference/get_rgf.html">get_rgf()</a></code>, <code><a href="reference/get_dca.html">get_dca()</a></code>, …</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>CUSTOS</strong></td>
 <td align="left">Federal government costs</td>
 <td align="left">
 <code><a href="reference/get_custos_pessoal_ativo.html">get_custos_pessoal_ativo()</a></code>, …</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><strong>SADIPEM</strong></td>
 <td align="left">Public debt &amp; credit operations (PVL)</td>
 <td align="left">
 <code><a href="reference/get_pvl.html">get_pvl()</a></code>, <code>get_opc_*()</code>, <code>get_res_*()</code>
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>SIORG</strong></td>
 <td align="left">Federal organizational structure (dictionary for CUSTOS)</td>
 <td align="left">
 <code><a href="reference/get_siorg_orgaos.html">get_siorg_orgaos()</a></code>, <code><a href="reference/get_siorg_estrutura.html">get_siorg_estrutura()</a></code>
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><strong>Transferências</strong></td>
 <td align="left">Constitutional transfers to states/municipalities</td>
 <td align="left"><code>get_tc_*()</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>SIOPE</strong></td>
 <td align="left">Education spending (FNDE/MEC)</td>
 <td align="left">
@@ -232,28 +235,28 @@
 <pre><code>https://apidatalake.tesouro.gov.br/ords/siconfi/tt/</code></pre>
 <p>Provides fiscal reports (RREO, RGF, DCA), accounting matrices (MSC), and a government entity registry. Maintained by STN (Secretaria do Tesouro Nacional).</p>
 <table class="table">
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">ORDS (<code>hasMore</code>/<code>offset</code>), automatic</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Default page size</td>
 <td align="left">Server default (5,000 rows)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff (3s, 6s, 9s…)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><code>max_rows</code></td>
 <td align="left">Supported</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Functions</td>
 <td align="left">18 (9 PT + 9 EN)</td>
 </tr>
@@ -270,33 +273,33 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">ORDS (<code>hasMore</code>/<code>offset</code>), automatic</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Default page size</td>
 <td align="left">
 <strong>1,000 rows</strong> (server default of 250 is too slow; 5,000 causes timeouts)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff (3s, 6s, 9s…)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><code>max_rows</code></td>
 <td align="left">Supported</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">SIORG code padding</td>
 <td align="left">Automatic (<code>244</code> → <code>"000244"</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Functions</td>
 <td align="left">12 (6 PT + 6 EN)</td>
 </tr>
@@ -312,28 +315,28 @@
 <pre><code>https://apidatalake.tesouro.gov.br/ords/sadipem/tt/</code></pre>
 <p>Public debt verification letters (PVL), credit operations, payment schedules, exchange rates, and debt capacity results.</p>
 <table class="table">
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">ORDS (<code>hasMore</code>/<code>offset</code>), automatic</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Default page size</td>
 <td align="left">Server default (5,000 rows)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><code>max_rows</code></td>
 <td align="left">Supported</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Functions</td>
 <td align="left">14 (7 PT + 7 EN)</td>
 </tr>
@@ -350,24 +353,24 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">None (single response)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Multi-value params</td>
 <td align="left">Accepts vectors (<code>c(1,2)</code>) or colon-separated strings (<code>"1:2"</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Functions</td>
 <td align="left">14 (7 PT + 7 EN)</td>
 </tr>
@@ -380,20 +383,20 @@
 <pre><code>https://estruturaorganizacional.dados.gov.br/</code></pre>
 <p>Federal organizational structure: ministries, autarchies, foundations, and their internal hierarchy. Used as a dictionary to look up SIORG codes for CUSTOS API queries.</p>
 <table class="table">
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">None (single response, JSON-based)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Functions</td>
 <td align="left">6 (3 PT + 3 EN)</td>
 </tr>
@@ -410,40 +413,40 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Detail</th>
 <th align="left">Value</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left">Pagination</td>
 <td align="left">OData (<code>$top</code>/<code>$skip</code>), automatic</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Default page size</td>
 <td align="left"><strong>1,000 rows</strong></td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left">Retries</td>
 <td align="left">5 attempts, progressive backoff</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><code>max_rows</code></td>
 <td align="left">Supported</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><code>filter</code></td>
 <td align="left">OData <code>$filter</code> for server-side filtering (e.g., <code>"NOM_MUNI eq 'Recife'"</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><code>orderby</code></td>
 <td align="left">OData <code>$orderby</code> for server-side sorting</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><code>select</code></td>
 <td align="left">OData <code>$select</code> to choose specific columns</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left">Functions</td>
 <td align="left">16 (8 PT + 8 EN)</td>
 </tr>
@@ -461,37 +464,37 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th align="left">Feature</th>
 <th align="left">Details</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left"><strong>Caching</strong></td>
 <td align="left">In-memory per session. Clear with <code><a href="reference/tesouror_clear_cache.html">tesouror_clear_cache()</a></code>.</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>Retries</strong></td>
 <td align="left">5 attempts with progressive backoff (3s, 6s, 9s, 12s, 15s) on HTTP 500/502/503/504/429 and connection failures. HTTP 400/404 are <strong>not</strong> retried.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><strong><code>verbose</code> mode</strong></td>
 <td align="left">Per-call (<code>verbose = TRUE</code>) or global (<code>options(tesouror.verbose = TRUE)</code>). Prints full API URL for every request.</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>Column cleaning</strong></td>
 <td align="left">
 <code><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names()</a></code> applied to all responses (consistent snake_case).</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><strong>Bilingual</strong></td>
 <td align="left">Every function has Portuguese (API-native) and English-named aliases.</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><strong>Output</strong></td>
 <td align="left">Tidy tibbles with whitespace trimming.</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><strong>Error messages</strong></td>
 <td align="left">Friendly, actionable messages with URL and hints. HTTP 400 errors suggest checking column names.</td>
 </tr>

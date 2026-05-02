@@ -115,12 +115,15 @@ equity/asset account data.
 Other SICONFI:
 [`get_anexos()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md),
 [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md),
+[`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md),
 [`get_entes()`](https://strategicprojects.github.io/tesouror/reference/get_entes.md),
 [`get_extrato()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md),
 [`get_msc_controle()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md),
 [`get_msc_orcamentaria()`](https://strategicprojects.github.io/tesouror/reference/get_msc_orcamentaria.md),
 [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md),
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
+[`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md),
+[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md),
+[`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md)
 
 ## Examples
 

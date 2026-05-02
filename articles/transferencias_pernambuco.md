@@ -26,6 +26,7 @@ análise cobre:
 ## Pacotes
 
 ``` r
+
 library(tesouror)
 library(tidyverse)
 library(patchwork)
@@ -45,6 +46,7 @@ retorna os repasses com granularidade de subtipo (ex: `FUNDEB/FPM`,
 municípios de Pernambuco.
 
 ``` r
+
 tipos   <- get_tc_transfer_types()
 estados <- get_tc_states()
 
@@ -70,6 +72,7 @@ O pacote inclui a malha municipal de PE com Regiões de Desenvolvimento,
 macrorregiões e população (Censo 2022):
 
 ``` r
+
 pe_sf <- read_rds(system.file("data", "pernambuco_sf.rds", package = "tesouror"))
 
 pe_lookup <- pe_sf |>
@@ -89,15 +92,16 @@ pe_lookup |> count(rd, sort = TRUE)
 O endpoint `_detail` retorna nomes no formato `PRINCIPAL/subtipo`.
 Normalizamos para o nome principal e agrupamos em 5 categorias:
 
-| Categoria                         | Transferências incluídas                                | Lógica                                        |
-|:----------------------------------|:--------------------------------------------------------|:----------------------------------------------|
-| **Fundos de Participação**        | FPM, FPM 1%                                             | Principal receita corrente municipal          |
-| **Educação**                      | FUNDEB, AJUSTE FUNDEB                                   | Financiamento da educação básica              |
-| **Compensações Tributárias**      | CIDE, IOF-Ouro, ITR, LC 87/96, LC 176/2020, LC 201/2023 | Ressarcimento por desonerações                |
-| **Royalties e Recursos Naturais** | Royalties, Cessão Onerosa                               | Exploração de petróleo, gás e minerais        |
-| **Transferências Especiais**      | FEX, AFM/AFE, LC 173/2020                               | Auxílios emergenciais e programas específicos |
+| Categoria | Transferências incluídas | Lógica |
+|:---|:---|:---|
+| **Fundos de Participação** | FPM, FPM 1% | Principal receita corrente municipal |
+| **Educação** | FUNDEB, AJUSTE FUNDEB | Financiamento da educação básica |
+| **Compensações Tributárias** | CIDE, IOF-Ouro, ITR, LC 87/96, LC 176/2020, LC 201/2023 | Ressarcimento por desonerações |
+| **Royalties e Recursos Naturais** | Royalties, Cessão Onerosa | Exploração de petróleo, gás e minerais |
+| **Transferências Especiais** | FEX, AFM/AFE, LC 173/2020 | Auxílios emergenciais e programas específicos |
 
 ``` r
+
 ordem_cat <- c(
   "Fundos de Participação",
   "Educação",
@@ -150,6 +154,7 @@ tc_pe <- tc_pe_raw |>
 ## 3. Preparação dos dados geográficos
 
 ``` r
+
 tc_pe <- tc_pe |>
   left_join(pe_lookup, by = "co_ibge")
 
@@ -189,6 +194,7 @@ Usamos paletas do `MetBrewer` para consistência visual: Hokusai3 para as
 Desenvolvimento.
 
 ``` r
+
 pal_cat   <- met.brewer("Hokusai3", 5)
 cores_cat <- set_names(pal_cat, ordem_cat)
 
@@ -251,6 +257,7 @@ Fundos de Participação e Educação dominam, respondendo por mais de 80%
 do total. O crescimento nominal é contínuo ao longo da série.
 
 ``` r
+
 tc_anual_cat <- tc_pe |>
   group_by(ano, categoria) |>
   summarise(valor = sum(valor, na.rm = TRUE), .groups = "drop") |>
@@ -288,6 +295,7 @@ A sazonalidade é marcante: dezembro e julho concentram repasses
 extraordinários (decêndios adicionais de FPM e complementação FUNDEB).
 
 ``` r
+
 tc_mensal_cat <- tc_pe |>
   group_by(data, categoria) |>
   summarise(valor = sum(valor, na.rm = TRUE), .groups = "drop") |>
@@ -321,6 +329,7 @@ tc_mensal_cat |>
 Os maiores centros urbanos da RMR lideram em valores absolutos.
 
 ``` r
+
 top10_abs <- tc_mun_total |>
   mutate(ano = as.integer(ano)) |>
   filter(ano == ultimo_ano) |>
@@ -360,6 +369,7 @@ FPM favorece municípios com menor população.
 ### 6.1 Top 10 e Bottom 10 per capita
 
 ``` r
+
 top10_pc <- tc_mun_total |>
   mutate(ano = as.integer(ano)) |>
   filter(ano == ultimo_ano, !is.na(valor_per_capita)) |>
@@ -407,6 +417,7 @@ p_top + p_bot +
 ### 6.2 Evolução per capita ao longo do tempo
 
 ``` r
+
 tc_anual_pc <- tc_mun_total |>
   filter(!is.na(populacao)) |>
   group_by(ano) |>
@@ -437,6 +448,7 @@ destacam. A escala logarítmica no absoluto é essencial: Recife recebe
 ~50x mais que municípios pequenos.
 
 ``` r
+
 tc_geo_cont <- tc_geo |> filter(municipio != "Fernando de Noronha")
 bbox <- st_bbox(tc_geo_cont)
 
@@ -453,6 +465,7 @@ centroides_pc <- tc_geo_cont |>
 ```
 
 ``` r
+
 ggplot() +
   geom_sf(data = tc_geo_cont, aes(fill = valor_total / 1e6),
           color = "grey70", linewidth = 0.05) +
@@ -474,6 +487,7 @@ ggplot() +
 ![](../reference/figures/transferencias-06-mapa-absoluto.png)
 
 ``` r
+
 ggplot() +
   geom_sf(data = tc_geo_cont |> filter(!is.na(valor_per_capita)),
           aes(fill = valor_per_capita), color = "grey70", linewidth = 0.05) +
@@ -495,6 +509,7 @@ ggplot() +
 ### 6.4 Mapa de referência: Regiões de Desenvolvimento
 
 ``` r
+
 rd_bordas_proj <- rd_bordas |> st_transform(31985)
 bbox_bordas    <- st_bbox(rd_bordas_proj)
 
@@ -531,6 +546,7 @@ A Metropolitana concentra o maior volume, seguida pelo Agreste Central
 (polo de Caruaru) e Mata Sul.
 
 ``` r
+
 tc_rd <- tc_pe |> filter(!is.na(rd))
 
 tc_rd_anual <- tc_rd |>
@@ -554,6 +570,7 @@ ggplot(tc_rd_anual, aes(ano, valor_bi, fill = rd)) +
 ### 7.2 Composição por categoria dentro de cada RD
 
 ``` r
+
 tc_rd_cat <- tc_rd |>
   filter(ano == ultimo_ano) |>
   group_by(rd, categoria) |>
@@ -580,6 +597,7 @@ As RDs do Sertão (Moxotó, Pajeú, Araripe) recebem significativamente
 mais per capita que a Metropolitana.
 
 ``` r
+
 rd_pop <- pe_lookup |> group_by(rd) |> summarise(populacao = sum(populacao))
 
 tc_rd_pc <- tc_rd |>
@@ -616,6 +634,7 @@ ao longo da década — o mecanismo redistributivo não está reduzindo a
 disparidade per capita.
 
 ``` r
+
 tc_rd_pc_serie <- tc_rd |>
   group_by(ano, rd) |>
   summarise(valor_total = sum(valor, na.rm = TRUE), .groups = "drop") |>
@@ -648,6 +667,7 @@ ggplot(tc_rd_pc_serie, aes(ano, per_capita, color = rd)) +
 ### 7.5 Mapa per capita por RD
 
 ``` r
+
 tc_rd_pc_geo <- rd_bordas |>
   left_join(tc_rd_pc, by = c("regiao_de_desenvolvimento" = "rd"))
 
@@ -681,6 +701,7 @@ como os Royalties se concentram em poucos municípios, enquanto o FPM tem
 distribuição mais homogênea.
 
 ``` r
+
 tc_cat_geo <- tc_mun_ano |>
   filter(ano == ultimo_ano) |>
   right_join(pe_sf |> mutate(co_ibge = as.integer(ibge7)) |> select(co_ibge, geometry),

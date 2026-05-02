@@ -4,14 +4,14 @@
 Treasury (Tesouro Nacional) open data APIs. It covers five major data
 sources:
 
-| API                | Data                                                     | Functions                                                                                                                                                                                                                                                 |
-|:-------------------|:---------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **SICONFI**        | Fiscal reports (RREO, RGF, DCA, MSC), entities           | [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md), [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md), [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md), … |
-| **CUSTOS**         | Federal government costs                                 | [`get_custos_pessoal_ativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md), …                                                                                                                                     |
-| **SADIPEM**        | Public debt & credit operations (PVL)                    | [`get_pvl()`](https://strategicprojects.github.io/tesouror/reference/get_pvl.md), `get_opc_*()`, `get_res_*()`                                                                                                                                            |
-| **SIORG**          | Federal organizational structure (dictionary for CUSTOS) | [`get_siorg_orgaos()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_orgaos.md), [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md)                                              |
-| **Transferências** | Constitutional transfers to states/municipalities        | `get_tc_*()`                                                                                                                                                                                                                                              |
-| **SIOPE**          | Education spending (FNDE/MEC)                            | [`get_siope_dados_gerais()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md), [`get_siope_despesas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md), …                                 |
+| API | Data | Functions |
+|:---|:---|:---|
+| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md), [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md), [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md), … |
+| **CUSTOS** | Federal government costs | [`get_custos_pessoal_ativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md), … |
+| **SADIPEM** | Public debt & credit operations (PVL) | [`get_pvl()`](https://strategicprojects.github.io/tesouror/reference/get_pvl.md), `get_opc_*()`, `get_res_*()` |
+| **SIORG** | Federal organizational structure (dictionary for CUSTOS) | [`get_siorg_orgaos()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_orgaos.md), [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md) |
+| **Transferências** | Constitutional transfers to states/municipalities | `get_tc_*()` |
+| **SIOPE** | Education spending (FNDE/MEC) | [`get_siope_dados_gerais()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md), [`get_siope_despesas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md), … |
 
 All functions return tidy tibbles and have both **Portuguese** (matching
 API parameter names) and **English** aliases.
@@ -21,6 +21,7 @@ API parameter names) and **English** aliases.
 ## Installation
 
 ``` r
+
 # From CRAN (when available):
 install.packages("tesouror")
 
@@ -31,6 +32,7 @@ install.packages("tesouror")
 ## Quick start
 
 ``` r
+
 library(tesouror)
 
 # List government entities
@@ -89,6 +91,7 @@ exactly the same. The cache-clearing function is now
 [`tesouror_clear_cache()`](https://strategicprojects.github.io/tesouror/reference/tesouror_clear_cache.md):
 
 ``` r
+
 tesouror_clear_cache()
 ```
 
@@ -129,14 +132,14 @@ Cost data for active/retired staff, pensioners, depreciation, transfers,
 and other costs. Broken down by organization hierarchy (SIORG codes) and
 demographics.
 
-| Detail             | Value                                                                     |
-|:-------------------|:--------------------------------------------------------------------------|
-| Pagination         | ORDS (`hasMore`/`offset`), automatic                                      |
-| Default page size  | **1,000 rows** (server default of 250 is too slow; 5,000 causes timeouts) |
-| Retries            | 5 attempts, progressive backoff (3s, 6s, 9s…)                             |
-| `max_rows`         | Supported                                                                 |
-| SIORG code padding | Automatic (`244` → `"000244"`)                                            |
-| Functions          | 12 (6 PT + 6 EN)                                                          |
+| Detail | Value |
+|:---|:---|
+| Pagination | ORDS (`hasMore`/`offset`), automatic |
+| Default page size | **1,000 rows** (server default of 250 is too slow; 5,000 causes timeouts) |
+| Retries | 5 attempts, progressive backoff (3s, 6s, 9s…) |
+| `max_rows` | Supported |
+| SIORG code padding | Automatic (`244` → `"000244"`) |
+| Functions | 12 (6 PT + 6 EN) |
 
 > **Warning**: The CUSTOS API is slow. Always filter by
 > `organizacao_n1` + `organizacao_n2` (or `org_level1` + `org_level2`)
@@ -166,12 +169,12 @@ Constitutional transfers (FPE, FPM, FUNDEB, etc.) to states and
 municipalities. Uses Treasury-internal codes (**not** IBGE codes) — use
 the dictionary functions to look them up.
 
-| Detail             | Value                                                           |
-|:-------------------|:----------------------------------------------------------------|
-| Pagination         | None (single response)                                          |
-| Retries            | 5 attempts, progressive backoff                                 |
+| Detail | Value |
+|:---|:---|
+| Pagination | None (single response) |
+| Retries | 5 attempts, progressive backoff |
 | Multi-value params | Accepts vectors (`c(1,2)`) or colon-separated strings (`"1:2"`) |
-| Functions          | 14 (7 PT + 7 EN)                                                |
+| Functions | 14 (7 PT + 7 EN) |
 
 ### SIORG — Organizational Structure
 
@@ -194,16 +197,16 @@ codes for CUSTOS API queries.
 Education spending data from FNDE/MEC: revenues, expenses, indicators,
 staff compensation, and declaration officials. Uses an OData-style API.
 
-| Detail            | Value                                                                      |
-|:------------------|:---------------------------------------------------------------------------|
-| Pagination        | OData (`$top`/`$skip`), automatic                                          |
-| Default page size | **1,000 rows**                                                             |
-| Retries           | 5 attempts, progressive backoff                                            |
-| `max_rows`        | Supported                                                                  |
-| `filter`          | OData `$filter` for server-side filtering (e.g., `"NOM_MUNI eq 'Recife'"`) |
-| `orderby`         | OData `$orderby` for server-side sorting                                   |
-| `select`          | OData `$select` to choose specific columns                                 |
-| Functions         | 16 (8 PT + 8 EN)                                                           |
+| Detail | Value |
+|:---|:---|
+| Pagination | OData (`$top`/`$skip`), automatic |
+| Default page size | **1,000 rows** |
+| Retries | 5 attempts, progressive backoff |
+| `max_rows` | Supported |
+| `filter` | OData `$filter` for server-side filtering (e.g., `"NOM_MUNI eq 'Recife'"`) |
+| `orderby` | OData `$orderby` for server-side sorting |
+| `select` | OData `$select` to choose specific columns |
+| Functions | 16 (8 PT + 8 EN) |
 
 > **Tip**: Use `filter` to narrow results on the server before
 > downloading. Column names in `filter`/`select`/`orderby` must use the
@@ -212,15 +215,15 @@ staff compensation, and declaration officials. Uses an OData-style API.
 
 ### Common features (all APIs)
 
-| Feature             | Details                                                                                                                                           |
-|:--------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Caching**         | In-memory per session. Clear with [`tesouror_clear_cache()`](https://strategicprojects.github.io/tesouror/reference/tesouror_clear_cache.md).     |
-| **Retries**         | 5 attempts with progressive backoff (3s, 6s, 9s, 12s, 15s) on HTTP 500/502/503/504/429 and connection failures. HTTP 400/404 are **not** retried. |
-| **`verbose` mode**  | Per-call (`verbose = TRUE`) or global (`options(tesouror.verbose = TRUE)`). Prints full API URL for every request.                                |
-| **Column cleaning** | [`janitor::clean_names()`](https://sfirke.github.io/janitor/reference/clean_names.html) applied to all responses (consistent snake_case).         |
-| **Bilingual**       | Every function has Portuguese (API-native) and English-named aliases.                                                                             |
-| **Output**          | Tidy tibbles with whitespace trimming.                                                                                                            |
-| **Error messages**  | Friendly, actionable messages with URL and hints. HTTP 400 errors suggest checking column names.                                                  |
+| Feature | Details |
+|:---|:---|
+| **Caching** | In-memory per session. Clear with [`tesouror_clear_cache()`](https://strategicprojects.github.io/tesouror/reference/tesouror_clear_cache.md). |
+| **Retries** | 5 attempts with progressive backoff (3s, 6s, 9s, 12s, 15s) on HTTP 500/502/503/504/429 and connection failures. HTTP 400/404 are **not** retried. |
+| **`verbose` mode** | Per-call (`verbose = TRUE`) or global (`options(tesouror.verbose = TRUE)`). Prints full API URL for every request. |
+| **Column cleaning** | [`janitor::clean_names()`](https://sfirke.github.io/janitor/reference/clean_names.html) applied to all responses (consistent snake_case). |
+| **Bilingual** | Every function has Portuguese (API-native) and English-named aliases. |
+| **Output** | Tidy tibbles with whitespace trimming. |
+| **Error messages** | Friendly, actionable messages with URL and hints. HTTP 400 errors suggest checking column names. |
 
 ## License
 

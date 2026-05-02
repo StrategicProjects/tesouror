@@ -13,16 +13,16 @@ compensation related to public education spending.
 
 ## Available functions
 
-| Portuguese                                                                                                                   | English                                                                                                                   | Description                              |
-|:-----------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
-| [`get_siope_dados_gerais()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md)               | [`get_siope_general_data()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md)            | General data (demographics, GDP, totals) |
-| [`get_siope_responsaveis()`](https://strategicprojects.github.io/tesouror/reference/get_siope_responsaveis.md)               | [`get_siope_officials()`](https://strategicprojects.github.io/tesouror/reference/get_siope_responsaveis.md)               | Officials responsible for declarations   |
-| [`get_siope_despesas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md)                       | [`get_siope_expenses()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md)                    | Education expenses                       |
-| [`get_siope_despesas_funcao()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas_funcao.md)         | [`get_siope_expenses_by_function()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas_funcao.md) | Expenses by government function          |
-| [`get_siope_indicadores()`](https://strategicprojects.github.io/tesouror/reference/get_siope_indicadores.md)                 | [`get_siope_indicators()`](https://strategicprojects.github.io/tesouror/reference/get_siope_indicadores.md)               | Education spending indicators            |
-| [`get_siope_info_complementares()`](https://strategicprojects.github.io/tesouror/reference/get_siope_info_complementares.md) | [`get_siope_supplementary()`](https://strategicprojects.github.io/tesouror/reference/get_siope_info_complementares.md)    | Supplementary information                |
-| [`get_siope_receitas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_receitas.md)                       | [`get_siope_revenues()`](https://strategicprojects.github.io/tesouror/reference/get_siope_receitas.md)                    | Education revenues                       |
-| [`get_siope_remuneracao()`](https://strategicprojects.github.io/tesouror/reference/get_siope_remuneracao.md)                 | [`get_siope_compensation()`](https://strategicprojects.github.io/tesouror/reference/get_siope_remuneracao.md)             | Staff compensation                       |
+| Portuguese | English | Description |
+|:---|:---|:---|
+| [`get_siope_dados_gerais()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md) | [`get_siope_general_data()`](https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.md) | General data (demographics, GDP, totals) |
+| [`get_siope_responsaveis()`](https://strategicprojects.github.io/tesouror/reference/get_siope_responsaveis.md) | [`get_siope_officials()`](https://strategicprojects.github.io/tesouror/reference/get_siope_responsaveis.md) | Officials responsible for declarations |
+| [`get_siope_despesas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md) | [`get_siope_expenses()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.md) | Education expenses |
+| [`get_siope_despesas_funcao()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas_funcao.md) | [`get_siope_expenses_by_function()`](https://strategicprojects.github.io/tesouror/reference/get_siope_despesas_funcao.md) | Expenses by government function |
+| [`get_siope_indicadores()`](https://strategicprojects.github.io/tesouror/reference/get_siope_indicadores.md) | [`get_siope_indicators()`](https://strategicprojects.github.io/tesouror/reference/get_siope_indicadores.md) | Education spending indicators |
+| [`get_siope_info_complementares()`](https://strategicprojects.github.io/tesouror/reference/get_siope_info_complementares.md) | [`get_siope_supplementary()`](https://strategicprojects.github.io/tesouror/reference/get_siope_info_complementares.md) | Supplementary information |
+| [`get_siope_receitas()`](https://strategicprojects.github.io/tesouror/reference/get_siope_receitas.md) | [`get_siope_revenues()`](https://strategicprojects.github.io/tesouror/reference/get_siope_receitas.md) | Education revenues |
+| [`get_siope_remuneracao()`](https://strategicprojects.github.io/tesouror/reference/get_siope_remuneracao.md) | [`get_siope_compensation()`](https://strategicprojects.github.io/tesouror/reference/get_siope_remuneracao.md) | Staff compensation |
 
 ## Required parameters
 
@@ -63,6 +63,7 @@ has a 4th required parameter: `mes` / `month` (1-12).
 ### Filtering by municipality
 
 ``` r
+
 # SLOW: downloads all 185 municipalities, then filters locally
 dados_pe <- get_siope_general_data(year = 2023, period = 6, state = "PE")
 recife <- dplyr::filter(dados_pe, nom_muni == "Recife")
@@ -86,21 +87,22 @@ The `filter` parameter uses OData v4 syntax. Column names must use the
 **original API names** (uppercase), not the cleaned snake_case names.
 Use `verbose = TRUE` on a `max_rows = 1` call to inspect column names.
 
-| Operator                                                                | Meaning            | Example                                          |
-|:------------------------------------------------------------------------|:-------------------|:-------------------------------------------------|
-| `eq`                                                                    | Equals             | `"NOM_MUNI eq 'Recife'"`                         |
-| `ne`                                                                    | Not equals         | `"TIPO ne 'Estado'"`                             |
-| `gt`, `ge`                                                              | Greater (or equal) | `"NUM_POPU gt 100000"`                           |
-| `lt`, `le`                                                              | Less (or equal)    | `"NUM_POPU le 50000"`                            |
-| `and`                                                                   | Logical AND        | `"NOM_MUNI eq 'Recife' and TIPO eq 'Município'"` |
-| `or`                                                                    | Logical OR         | `"NOM_MUNI eq 'Recife' or NOM_MUNI eq 'Olinda'"` |
-| [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html) | Substring match    | `"contains(NOM_MUNI, 'Porto')"`                  |
+| Operator | Meaning | Example |
+|:---|:---|:---|
+| `eq` | Equals | `"NOM_MUNI eq 'Recife'"` |
+| `ne` | Not equals | `"TIPO ne 'Estado'"` |
+| `gt`, `ge` | Greater (or equal) | `"NUM_POPU gt 100000"` |
+| `lt`, `le` | Less (or equal) | `"NUM_POPU le 50000"` |
+| `and` | Logical AND | `"NOM_MUNI eq 'Recife' and TIPO eq 'Município'"` |
+| `or` | Logical OR | `"NOM_MUNI eq 'Recife' or NOM_MUNI eq 'Olinda'"` |
+| [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html) | Substring match | `"contains(NOM_MUNI, 'Porto')"` |
 
 ### Selecting specific columns
 
 Use `select` to request only the columns you need (reduces payload):
 
 ``` r
+
 # Only municipality name and declared value
 resumo <- get_siope_expenses(
   year = 2023, period = 6, state = "PE",
@@ -114,6 +116,7 @@ resumo <- get_siope_expenses(
 > valid column names, run a quick test:
 >
 > ``` r
+>
 > sample <- get_siope_expenses(
 >   year = 2023, period = 6, state = "PE", max_rows = 1
 > )
@@ -124,6 +127,7 @@ resumo <- get_siope_expenses(
 ### Sorting results
 
 ``` r
+
 # Sort by population descending
 dados <- get_siope_general_data(
   year = 2023, period = 6, state = "PE",
@@ -134,6 +138,7 @@ dados <- get_siope_general_data(
 ### Compensation data with filters
 
 ``` r
+
 # Staff compensation for Agrestina, only "Efetivo" professionals
 rem <- get_siope_compensation(
   year = 2024, period = 1, month = 1, state = "PE",
@@ -144,6 +149,7 @@ rem <- get_siope_compensation(
 ## Examples
 
 ``` r
+
 library(tesouror)
 library(dplyr)
 
@@ -170,6 +176,7 @@ remuneracao_ba <- get_siope_compensation(
 ### Quick test with max_rows
 
 ``` r
+
 # Grab just 10 rows to inspect the structure
 sample <- get_siope_general_data(
   year = 2023, period = 6, state = "PE", max_rows = 10
@@ -180,6 +187,7 @@ glimpse(sample)
 ### Combining states
 
 ``` r
+
 # Fetch multiple states and combine
 nordeste <- c("AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE")
 
@@ -201,6 +209,7 @@ You don’t need to worry about this — just pass the parameters and the
 package handles the rest. Use `verbose = TRUE` to see the full URL:
 
 ``` r
+
 get_siope_general_data(year = 2023, period = 6, state = "PE", verbose = TRUE)
 #> ℹ API call: https://www.fnde.gov.br/olinda-ide/servico/...
 ```

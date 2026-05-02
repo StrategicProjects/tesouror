@@ -19,14 +19,14 @@ All functions use the `get_tc_` prefix. All filter parameters use
 obtain the codes. Multiple values are separated by colons (`:`) — e.g.,
 `p_estado = "1:2"` for Acre and Alagoas.
 
-| Portuguese                                                                                                                 | English                                                                                                                     | Description                        |
-|:---------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------|:-----------------------------------|
-| [`get_tc_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md)               | [`get_tc_transfer_types()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md)                | List transfer types and codes      |
-| [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md)                             | [`get_tc_states()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md)                               | List states and codes              |
-| [`get_tc_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md)                       | [`get_tc_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md)                    | Search municipalities              |
-| [`get_tc_por_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados.md)                     | [`get_tc_by_state()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados.md)                         | Transfers by state                 |
-| [`get_tc_por_estados_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados_detalhe.md)     | [`get_tc_by_state_detail()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados_detalhe.md)          | Detailed transfers by state        |
-| [`get_tc_por_municipio()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md)                 | [`get_tc_by_municipality()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md)                | Transfers by municipality          |
+| Portuguese | English | Description |
+|:---|:---|:---|
+| [`get_tc_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md) | [`get_tc_transfer_types()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md) | List transfer types and codes |
+| [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) | [`get_tc_states()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) | List states and codes |
+| [`get_tc_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md) | [`get_tc_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md) | Search municipalities |
+| [`get_tc_por_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados.md) | [`get_tc_by_state()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados.md) | Transfers by state |
+| [`get_tc_por_estados_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados_detalhe.md) | [`get_tc_by_state_detail()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_estados_detalhe.md) | Detailed transfers by state |
+| [`get_tc_por_municipio()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md) | [`get_tc_by_municipality()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md) | Transfers by municipality |
 | [`get_tc_por_municipio_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md) | [`get_tc_by_municipality_detail()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md) | Detailed transfers by municipality |
 
 ## Examples
@@ -37,6 +37,7 @@ All filter parameters use numeric codes internal to this API (they are
 **not** IBGE codes). Always look up codes first.
 
 ``` r
+
 library(tesouror)
 
 # Transfer types — returns codigo + nome
@@ -58,6 +59,7 @@ mun_pe
 ### State-level transfers
 
 ``` r
+
 # Use the state code obtained from get_tc_states()
 pe_code <- estados$codigo[estados$nome == "Pernambuco"]
 
@@ -91,6 +93,7 @@ tc_det <- get_tc_by_state_detail(
 ### Municipality-level transfers
 
 ``` r
+
 # Look up municipality codes
 pe_code <- estados$codigo[estados$nome == "Pernambuco"]
 mun_pe <- get_tc_municipalities(state_code = pe_code)
@@ -109,16 +112,16 @@ tc_recife <- get_tc_by_municipality_detail(
 
 ## Parameter mapping
 
-| Portuguese        | English         | Description                                                                                                                                            |
-|:------------------|:----------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `p_estado`        | `state_code`    | Numeric state code(s) from [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) (Treasury code, NOT IBGE)    |
-| `p_municipio`     | `municipality`  | Numeric municipality code(s) from [`get_tc_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md) (Treasury code) |
-| `p_ano`           | `year`          | Year(s)                                                                                                                                                |
-| `p_mes`           | `month`         | Month(s)                                                                                                                                               |
-| `p_transferencia` | `transfer_type` | Transfer type code(s) from [`get_tc_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md)                |
-| `p_sn_detalhar`   | `detailed`      | Include detail breakdown                                                                                                                               |
-| `p_nome`          | `name`          | Municipality name search (partial match)                                                                                                               |
-| `p_uf`            | `state_code`    | Numeric state code from [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) (for municipality lookup)       |
+| Portuguese | English | Description |
+|:---|:---|:---|
+| `p_estado` | `state_code` | Numeric state code(s) from [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) (Treasury code, NOT IBGE) |
+| `p_municipio` | `municipality` | Numeric municipality code(s) from [`get_tc_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_tc_municipios.md) (Treasury code) |
+| `p_ano` | `year` | Year(s) |
+| `p_mes` | `month` | Month(s) |
+| `p_transferencia` | `transfer_type` | Transfer type code(s) from [`get_tc_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md) |
+| `p_sn_detalhar` | `detailed` | Include detail breakdown |
+| `p_nome` | `name` | Municipality name search (partial match) |
+| `p_uf` | `state_code` | Numeric state code from [`get_tc_estados()`](https://strategicprojects.github.io/tesouror/reference/get_tc_estados.md) (for municipality lookup) |
 
 All multi-value parameters accept either a colon-separated string
 (`"1:2:3"`) or an R vector (`c(1, 2, 3)`).

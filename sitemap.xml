@@ -5,6 +5,7 @@
 <url><loc>https://strategicprojects.github.io/tesouror/articles/custos.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/articles/getting-started.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/articles/index.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/articles/rreo-longitudinal.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/articles/sadipem.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/articles/siconfi.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/articles/siope.html</loc></url>
@@ -22,6 +23,7 @@
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_inativo.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_custos_transferencias.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_dca.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_entes.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_extrato.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_msc_controle.html</loc></url>
@@ -35,7 +37,9 @@
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_res_cdp.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_res_cronograma_pagamentos.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_rgf.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_rreo.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_siope_dados_gerais.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_siope_despesas.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_siope_despesas_funcao.html</loc></url>
@@ -55,7 +59,10 @@
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/index.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/rreo_layout.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/rreo_normalize_columns.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/tesouror-package.html</loc></url>
 <url><loc>https://strategicprojects.github.io/tesouror/reference/tesouror_clear_cache.html</loc></url>
+<url><loc>https://strategicprojects.github.io/tesouror/reference/tidy_rreo.html</loc></url>
 </urlset>
 

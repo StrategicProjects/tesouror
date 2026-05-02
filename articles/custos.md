@@ -30,27 +30,27 @@ without arguments to retrieve the full dataset.
 
 ## Available functions
 
-| Portuguese                                                                                                             | English                                                                                                             | Description         |
-|:-----------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:--------------------|
-| [`get_custos_pessoal_ativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md)     | [`get_costs_active_staff()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md)    | Active staff costs  |
+| Portuguese | English | Description |
+|:---|:---|:---|
+| [`get_custos_pessoal_ativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md) | [`get_costs_active_staff()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md) | Active staff costs |
 | [`get_custos_pessoal_inativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_inativo.md) | [`get_costs_retired_staff()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_inativo.md) | Retired staff costs |
-| [`get_custos_pensionistas()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pensionistas.md)       | [`get_costs_pensioners()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pensionistas.md)       | Pensioner costs     |
-| [`get_custos_demais()`](https://strategicprojects.github.io/tesouror/reference/get_custos_demais.md)                   | [`get_costs_other()`](https://strategicprojects.github.io/tesouror/reference/get_custos_demais.md)                  | Other costs         |
-| [`get_custos_depreciacao()`](https://strategicprojects.github.io/tesouror/reference/get_custos_depreciacao.md)         | [`get_costs_depreciation()`](https://strategicprojects.github.io/tesouror/reference/get_custos_depreciacao.md)      | Depreciation costs  |
-| [`get_custos_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_custos_transferencias.md)   | [`get_costs_transfers()`](https://strategicprojects.github.io/tesouror/reference/get_custos_transferencias.md)      | Transfer costs      |
+| [`get_custos_pensionistas()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pensionistas.md) | [`get_costs_pensioners()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pensionistas.md) | Pensioner costs |
+| [`get_custos_demais()`](https://strategicprojects.github.io/tesouror/reference/get_custos_demais.md) | [`get_costs_other()`](https://strategicprojects.github.io/tesouror/reference/get_custos_demais.md) | Other costs |
+| [`get_custos_depreciacao()`](https://strategicprojects.github.io/tesouror/reference/get_custos_depreciacao.md) | [`get_costs_depreciation()`](https://strategicprojects.github.io/tesouror/reference/get_custos_depreciacao.md) | Depreciation costs |
+| [`get_custos_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_custos_transferencias.md) | [`get_costs_transfers()`](https://strategicprojects.github.io/tesouror/reference/get_custos_transferencias.md) | Transfer costs |
 
 ## Parameter mapping
 
 All six functions share the same optional filters:
 
-| Portuguese (API)    | English        | Description                                                                                                                                           |
-|:--------------------|:---------------|:------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `ano`               | `year`         | Year of the record                                                                                                                                    |
-| `mes`               | `month`        | Month (1-12)                                                                                                                                          |
-| `natureza_juridica` | `legal_nature` | Legal nature: 1=Public Company, 2=Foundation, 3=Direct Admin, 4=Autarchy, 6=Mixed Economy                                                             |
-| `organizacao_n1`    | `org_level1`   | Top-level SIORG code (Ministry). See [`get_siorg_orgaos()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_orgaos.md). Auto-padded. |
-| `organizacao_n2`    | `org_level2`   | Second-level SIORG code. See [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md). Auto-padded.   |
-| `organizacao_n3`    | `org_level3`   | Third-level SIORG code. See [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md). Auto-padded.    |
+| Portuguese (API) | English | Description |
+|:---|:---|:---|
+| `ano` | `year` | Year of the record |
+| `mes` | `month` | Month (1-12) |
+| `natureza_juridica` | `legal_nature` | Legal nature: 1=Public Company, 2=Foundation, 3=Direct Admin, 4=Autarchy, 6=Mixed Economy |
+| `organizacao_n1` | `org_level1` | Top-level SIORG code (Ministry). See [`get_siorg_orgaos()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_orgaos.md). Auto-padded. |
+| `organizacao_n2` | `org_level2` | Second-level SIORG code. See [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md). Auto-padded. |
+| `organizacao_n3` | `org_level3` | Third-level SIORG code. See [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md). Auto-padded. |
 
 SIORG codes are automatically zero-padded: you can pass `244`, `"244"`,
 or `"000244"` — all produce the same query.
@@ -58,6 +58,7 @@ or `"000244"` — all produce the same query.
 ## Examples
 
 ``` r
+
 library(tesouror)
 library(dplyr)
 
@@ -93,17 +94,17 @@ sample <- get_costs_active_staff(
 
 The CUSTOS API returns organization hierarchy down to 6 levels:
 
-| Column                                    | Description                                |
-|:------------------------------------------|:-------------------------------------------|
-| `co_organizacao_n0` / `ds_organizacao_n0` | Top authority (e.g., Presidência)          |
-| `co_organizacao_n1` / `ds_organizacao_n1` | Ministry level                             |
-| `co_organizacao_n2` / `ds_organizacao_n2` | Entity/secretariat                         |
-| `co_organizacao_n3` / `ds_organizacao_n3` | Department                                 |
-| `co_organizacao_n4` to `n6`               | Deeper sub-units (`"-9"` = not applicable) |
-| `an_lanc` / `me_lanc`                     | Year and month of the accounting entry     |
-| `ds_area_atuacao`                         | Area: `"FINALISTICA"` or `"SUPORTE"`       |
-| `ds_escolaridade`                         | Education level of the staff member        |
-| `ds_faixa_etaria`                         | Age range                                  |
-| `in_sexo`                                 | Sex: `"F"` or `"M"`                        |
-| `in_forca_trabalho`                       | Workforce count                            |
-| `va_custo_de_pessoal`                     | Cost value (R\$)                           |
+| Column | Description |
+|:---|:---|
+| `co_organizacao_n0` / `ds_organizacao_n0` | Top authority (e.g., Presidência) |
+| `co_organizacao_n1` / `ds_organizacao_n1` | Ministry level |
+| `co_organizacao_n2` / `ds_organizacao_n2` | Entity/secretariat |
+| `co_organizacao_n3` / `ds_organizacao_n3` | Department |
+| `co_organizacao_n4` to `n6` | Deeper sub-units (`"-9"` = not applicable) |
+| `an_lanc` / `me_lanc` | Year and month of the accounting entry |
+| `ds_area_atuacao` | Area: `"FINALISTICA"` or `"SUPORTE"` |
+| `ds_escolaridade` | Education level of the staff member |
+| `ds_faixa_etaria` | Age range |
+| `in_sexo` | Sex: `"F"` or `"M"` |
+| `in_forca_trabalho` | Workforce count |
+| `va_custo_de_pessoal` | Cost value (R\$) |

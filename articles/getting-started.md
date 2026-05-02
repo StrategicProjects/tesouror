@@ -6,14 +6,14 @@ The `tesouror` package provides a unified R interface to the Brazilian
 National Treasury (Tesouro Nacional) open data APIs. It covers six major
 data sources:
 
-| API                | Data                                                     | Prefix                              |
-|:-------------------|:---------------------------------------------------------|:------------------------------------|
-| **SICONFI**        | Fiscal reports (RREO, RGF, DCA, MSC), entities           | `get_`                              |
-| **CUSTOS**         | Federal government costs                                 | `get_custos_` / `get_costs_`        |
-| **SADIPEM**        | Public debt & credit operations                          | `get_pvl` / `get_opc_` / `get_res_` |
-| **SIORG**          | Federal organizational structure (dictionary for CUSTOS) | `get_siorg_`                        |
-| **Transferências** | Constitutional transfers to states/municipalities        | `get_tc_`                           |
-| **SIOPE**          | Education spending (FNDE/MEC)                            | `get_siope_`                        |
+| API | Data | Prefix |
+|:---|:---|:---|
+| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | `get_` |
+| **CUSTOS** | Federal government costs | `get_custos_` / `get_costs_` |
+| **SADIPEM** | Public debt & credit operations | `get_pvl` / `get_opc_` / `get_res_` |
+| **SIORG** | Federal organizational structure (dictionary for CUSTOS) | `get_siorg_` |
+| **Transferências** | Constitutional transfers to states/municipalities | `get_tc_` |
+| **SIOPE** | Education spending (FNDE/MEC) | `get_siope_` |
 
 All functions return tidy tibbles, use in-memory caching, and have both
 Portuguese-named (matching the API) and English-named versions.
@@ -21,6 +21,7 @@ Portuguese-named (matching the API) and English-named versions.
 ## Installation
 
 ``` r
+
 # From CRAN (when available):
 install.packages("tesouror")
 
@@ -31,6 +32,7 @@ install.packages("tesouror")
 ## Quick examples
 
 ``` r
+
 library(tesouror)
 
 # List all government entities
@@ -75,6 +77,7 @@ means repeated calls with the same parameters are instantaneous. To
 clear the cache:
 
 ``` r
+
 tesouror_clear_cache()
 ```
 
@@ -85,6 +88,7 @@ API parameter names, while the English version uses descriptive English
 names:
 
 ``` r
+
 # Portuguese (API-native)
 get_dca(an_exercicio = 2022, id_ente = 17)
 
@@ -108,6 +112,7 @@ Every function has a `verbose` parameter that prints the full API URL
 being called. This is useful for debugging or testing in a browser/curl:
 
 ``` r
+
 # Per call:
 get_costs_active_staff(year = 2023, month = 6, org_level1 = 244, verbose = TRUE)
 #> ℹ API call: https://apidatalake.tesouro.gov.br/ords/custos/tt/pessoal_ativo?ano=2023&mes=6&organizacao_n1=000244&limit=1000
@@ -124,6 +129,7 @@ ORDS-based APIs (SICONFI, CUSTOS, SADIPEM) return paginated results. The
 `page_size` parameter controls how many rows per page:
 
 ``` r
+
 # CUSTOS defaults to 1000 rows/page (server default is only 250)
 custos <- get_costs_active_staff(
   year = 2023, org_level1 = 244, org_level2 = 249

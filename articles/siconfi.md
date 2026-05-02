@@ -10,17 +10,17 @@ accounting balances matrices (MSC).
 
 ## Available functions
 
-| Portuguese                                                                                                 | English                                                                                              | Description                          |
-|:-----------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------|:-------------------------------------|
-| [`get_entes()`](https://strategicprojects.github.io/tesouror/reference/get_entes.md)                       | [`get_entities()`](https://strategicprojects.github.io/tesouror/reference/get_entes.md)              | List of government entities          |
-| [`get_anexos()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)                     | [`get_annexes()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)              | Report appendix reference table      |
-| [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)                           | [`get_annual_accounts()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)         | Annual accounts (DCA)                |
-| [`get_extrato()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)                   | [`get_delivery_status()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)     | Report delivery status               |
-| [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)                         | [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)          | Budget execution report (RREO)       |
-| [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)                           | [`get_fiscal_report()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)           | Fiscal management report (RGF)       |
-| [`get_msc_patrimonial()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)   | [`get_msc_equity()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)  | MSC equity accounts (classes 1-4)    |
+| Portuguese | English | Description |
+|:---|:---|:---|
+| [`get_entes()`](https://strategicprojects.github.io/tesouror/reference/get_entes.md) | [`get_entities()`](https://strategicprojects.github.io/tesouror/reference/get_entes.md) | List of government entities |
+| [`get_anexos()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md) | [`get_annexes()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md) | Report appendix reference table |
+| [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md) | [`get_annual_accounts()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md) | Annual accounts (DCA) |
+| [`get_extrato()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md) | [`get_delivery_status()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md) | Report delivery status |
+| [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md) | [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md) | Budget execution report (RREO) |
+| [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md) | [`get_fiscal_report()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md) | Fiscal management report (RGF) |
+| [`get_msc_patrimonial()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md) | [`get_msc_equity()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md) | MSC equity accounts (classes 1-4) |
 | [`get_msc_orcamentaria()`](https://strategicprojects.github.io/tesouror/reference/get_msc_orcamentaria.md) | [`get_msc_budget()`](https://strategicprojects.github.io/tesouror/reference/get_msc_orcamentaria.md) | MSC budgetary accounts (classes 5-6) |
-| [`get_msc_controle()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md)         | [`get_msc_control()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md)    | MSC control accounts (classes 7-8)   |
+| [`get_msc_controle()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md) | [`get_msc_control()`](https://strategicprojects.github.io/tesouror/reference/get_msc_controle.md) | MSC control accounts (classes 7-8) |
 
 ## Parameter mapping
 
@@ -45,6 +45,7 @@ accounting balances matrices (MSC).
 ### Entity lookup
 
 ``` r
+
 library(tesouror)
 library(dplyr)
 
@@ -58,6 +59,7 @@ estados <- entes |> filter(esfera == "E")
 ### RREO – Budget Execution
 
 ``` r
+
 # RREO Anexo 01 for Tocantins, 6th bimester of 2022
 rreo <- get_budget_report(
   fiscal_year = 2022, period = 6,
@@ -70,6 +72,7 @@ rreo <- get_budget_report(
 ### RGF – Fiscal Management
 
 ``` r
+
 # RGF Anexo 01 for the executive branch of Tocantins
 rgf <- get_fiscal_report(
   fiscal_year = 2022, periodicity = "Q", period = 3,
@@ -81,12 +84,14 @@ rgf <- get_fiscal_report(
 ### DCA – Annual Accounts
 
 ``` r
+
 dca <- get_annual_accounts(fiscal_year = 2022, entity_id = 17)
 ```
 
 ### MSC – Accounting Balances Matrix
 
 ``` r
+
 # Equity accounts (class 1) for December 2022
 msc <- get_msc_equity(
   entity_id = 17, year = 2022, month = 12,
