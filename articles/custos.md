@@ -14,19 +14,23 @@ without arguments to retrieve the full dataset.
 ## Performance warning
 
 > **The CUSTOS API is slow.** Its server default is only 250 rows per
-> page (the package increases this to 1000), but unfiltered queries can
-> still return hundreds of thousands of rows across many pages, with
-> frequent HTTP 504 timeouts. **Always filter your queries** by at
-> least:
+> page; the package raises this to 500 by default (lowered from 1000 in
+> 0.2.1 after the upstream load balancer started cutting broader
+> queries). Even with 500-row pages, unfiltered queries routinely hit
+> HTTP 504 timeouts. **Always filter your queries** by at least:
 >
-> - `year` + `month` (reduce time range)
+> - `year` **and** `month` — year-only queries are the single most
+>   common cause of 504s; always pin a single month for production work
 > - `org_level1` + `org_level2` (reduce to a specific organization)
 > - `legal_nature` (reduce to a legal nature category)
 > - `max_rows` (set a hard cap for testing)
 >
-> The package retries automatically on 504 errors (up to 5 times with
-> progressive backoff), but narrower filters prevent them in the first
-> place.
+> The package retries automatically on 504s (up to 5 attempts with
+> progressive backoff). When pagination fails after the first page, the
+> rows already fetched are **not discarded** — you receive a partial
+> tibble with `attr(result, "partial") = TRUE` and
+> `attr(result, "last_page_error")` describing the failure. Always check
+> these attributes when working with broad queries.
 
 ## Available functions
 
@@ -67,13 +71,20 @@ orgaos <- get_siorg_organizations(power_code = 1, sphere_code = 1)
 mec <- orgaos |> filter(sigla == "MEC")          # code 244
 inep <- orgaos |> filter(sigla == "INEP")         # code 249
 
-# Step 2: Query CUSTOS with org filters (much faster than unfiltered!)
-# Active staff costs for INEP, all months of 2023
+# Step 2: Query CUSTOS with org AND month filters (year-only is unsafe!)
+# Active staff costs for INEP, June 2023
 ativos_inep <- get_costs_active_staff(
-  year = 2023,
+  year = 2023, month = 6,
   org_level1 = 244,     # MEC — auto-padded to "000244"
   org_level2 = 249      # INEP — auto-padded to "000249"
 )
+
+# Always check whether pagination completed; on 504 mid-stream the
+# package returns a partial tibble rather than dropping the data.
+if (isTRUE(attr(ativos_inep, "partial"))) {
+  message("Partial result — last page failed: ",
+          attr(ativos_inep, "last_page_error"))
+}
 
 # Pensioner costs for INEP, June 2023 only
 pensionistas_inep <- get_costs_pensioners(
