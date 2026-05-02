@@ -8,3 +8,5 @@
 ^\.github$
 ^\.DS_Store$
 ^data-raw$
+^\.positai$
+^\.claude$

@@ -174,6 +174,97 @@ get_annual_accounts <- function(fiscal_year, entity_id, appendix = NULL,
   )
 }
 
+# -- get_dca_for_state / get_annual_accounts_for_state ------------------------
+
+#' Get DCA data for all municipalities of a Brazilian state
+#'
+#' Fetches annual accounts (DCA) for every municipality of `state_uf`, looping
+#' over [get_dca()] with fault tolerance. See [get_rreo_for_state()] for the
+#' rationale and behaviour of `on_error`.
+#'
+#' `get_annual_accounts_for_state()` is an English-parameter alias.
+#'
+#' @param state_uf Character. Two-letter UF code (e.g., `"PE"`). **Required**.
+#' @param an_exercicio Integer. Fiscal year. **Required**.
+#' @param no_anexo Character. Appendix name filter (e.g., `"DCA-Anexo I-AB"`).
+#'   Optional.
+#' @param include_capital Logical. Include the state capital? Defaults to `TRUE`.
+#' @param on_error Character. `"warn"` (default), `"stop"`, or `"silent"`.
+#' @param use_cache Logical.
+#' @param verbose Logical.
+#' @param page_size Integer or `NULL`.
+#' @param max_rows Numeric.
+#'
+#' @return A [tibble][tibble::tibble] with all successful DCA rows. If any
+#'   call failed, has an attribute `"failed"`.
+#'
+#' @family SICONFI
+#' @export
+#' @examples
+#' \dontrun{
+#' dca_pe <- get_dca_for_state(state_uf = "PE", an_exercicio = 2022)
+#' }
+get_dca_for_state <- function(state_uf, an_exercicio, no_anexo = NULL,
+                              include_capital = TRUE,
+                              on_error = c("warn", "stop", "silent"),
+                              use_cache = TRUE, verbose = FALSE,
+                              page_size = NULL, max_rows = Inf) {
+  check_required(state_uf, an_exercicio)
+  on_error <- match.arg(on_error)
+
+  munis <- resolve_state_munis(
+    state_uf = state_uf, include_capital = include_capital,
+    use_cache = use_cache, verbose = verbose
+  )
+
+  param_list <- lapply(munis$cod_ibge, function(id) {
+    list(
+      an_exercicio = an_exercicio,
+      id_ente      = id,
+      no_anexo     = no_anexo,
+      use_cache    = use_cache,
+      verbose      = verbose,
+      page_size    = page_size,
+      max_rows     = max_rows
+    )
+  })
+
+  tnr_loop(
+    .f             = get_dca,
+    .params        = param_list,
+    .id            = "id_ente",
+    on_error       = on_error,
+    progress_label = paste0("DCA ", state_uf)
+  )
+}
+
+#' @rdname get_dca_for_state
+#' @param fiscal_year Integer. Fiscal year. **Required**. Maps to `an_exercicio`.
+#' @param appendix Character. Appendix name filter. Optional. Maps to `no_anexo`.
+#' @usage get_annual_accounts_for_state(state_uf, fiscal_year, appendix = NULL,
+#'   include_capital = TRUE, on_error = c("warn", "stop", "silent"),
+#'   use_cache = TRUE, verbose = FALSE,
+#'   page_size = NULL, max_rows = Inf)
+#' @export
+get_annual_accounts_for_state <- function(state_uf, fiscal_year, appendix = NULL,
+                                          include_capital = TRUE,
+                                          on_error = c("warn", "stop", "silent"),
+                                          use_cache = TRUE, verbose = FALSE,
+                                          page_size = NULL, max_rows = Inf) {
+  check_required(state_uf, fiscal_year)
+  get_dca_for_state(
+    state_uf        = state_uf,
+    an_exercicio    = fiscal_year,
+    no_anexo        = appendix,
+    include_capital = include_capital,
+    on_error        = on_error,
+    use_cache       = use_cache,
+    verbose         = verbose,
+    page_size       = page_size,
+    max_rows        = max_rows
+  )
+}
+
 # -- get_extrato / get_delivery_status ----------------------------------------
 
 #' Get delivery status extract
@@ -343,6 +434,127 @@ get_budget_report <- function(fiscal_year, period, report_type,
   )
 }
 
+# -- get_rreo_for_state / get_budget_report_for_state -------------------------
+
+#' Get RREO data for all municipalities of a Brazilian state
+#'
+#' Fetches RREO data for every municipality of `state_uf`, looping over
+#' [get_rreo()] with fault tolerance: if an individual municipality call fails
+#' after all retries, the failure is recorded and the loop continues. Failed
+#' calls are returned in `attr(result, "failed")`.
+#'
+#' This is the recommended way to assemble a state-wide panel: it handles
+#' pagination per municipality, uses the cache, and surfaces partial failures
+#' instead of aborting on the first error (see SICONFI behaviour for entities
+#' that have not yet homologated a given report).
+#'
+#' `get_budget_report_for_state()` is an English-parameter alias.
+#'
+#' @param state_uf Character. Two-letter UF code (e.g., `"PE"`, `"ES"`).
+#'   **Required**.
+#' @param an_exercicio Integer. Fiscal year. **Required**.
+#' @param nr_periodo Integer. Bimester (1-6). **Required**.
+#' @param co_tipo_demonstrativo Character. `"RREO"` or `"RREO Simplificado"`.
+#'   **Required**.
+#' @param no_anexo Character. Appendix name (e.g., `"RREO-Anexo 01"`).
+#'   **Required**.
+#' @param include_capital Logical. Include the state capital? Defaults to `TRUE`.
+#' @param on_error Character. One of `"warn"` (default — log and continue),
+#'   `"stop"` (abort on first failure), or `"silent"` (record but no message).
+#' @param use_cache Logical. If `TRUE` (default), uses the in-memory cache.
+#' @param verbose Logical. If `TRUE`, prints the full API URL for each call.
+#' @param page_size Integer or `NULL`. Rows per API page.
+#' @param max_rows Numeric. Maximum rows per municipality call.
+#'
+#' @return A [tibble][tibble::tibble] with RREO rows for all successful
+#'   municipalities. If any call failed, has an attribute `"failed"` (tibble
+#'   with `iteration`, `id`, `error`).
+#'
+#' @family SICONFI
+#' @export
+#' @examples
+#' \dontrun{
+#' rreo_es <- get_rreo_for_state(
+#'   state_uf = "ES", an_exercicio = 2021, nr_periodo = 6,
+#'   co_tipo_demonstrativo = "RREO", no_anexo = "RREO-Anexo 01"
+#' )
+#' attr(rreo_es, "failed")
+#' }
+get_rreo_for_state <- function(state_uf,
+                               an_exercicio, nr_periodo, co_tipo_demonstrativo,
+                               no_anexo,
+                               include_capital = TRUE,
+                               on_error = c("warn", "stop", "silent"),
+                               use_cache = TRUE, verbose = FALSE,
+                               page_size = NULL, max_rows = Inf) {
+  check_required(state_uf, an_exercicio, nr_periodo, co_tipo_demonstrativo, no_anexo)
+  on_error <- match.arg(on_error)
+
+  munis <- resolve_state_munis(
+    state_uf = state_uf, include_capital = include_capital,
+    use_cache = use_cache, verbose = verbose
+  )
+
+  param_list <- lapply(munis$cod_ibge, function(id) {
+    list(
+      an_exercicio          = an_exercicio,
+      nr_periodo            = nr_periodo,
+      co_tipo_demonstrativo = co_tipo_demonstrativo,
+      no_anexo              = no_anexo,
+      co_esfera             = "M",
+      id_ente               = id,
+      use_cache             = use_cache,
+      verbose               = verbose,
+      page_size             = page_size,
+      max_rows              = max_rows
+    )
+  })
+
+  tnr_loop(
+    .f             = get_rreo,
+    .params        = param_list,
+    .id            = "id_ente",
+    on_error       = on_error,
+    progress_label = paste0("RREO ", state_uf)
+  )
+}
+
+#' @rdname get_rreo_for_state
+#' @param fiscal_year Integer. Fiscal year. **Required**. Maps to
+#'   `an_exercicio`.
+#' @param period Integer. Bimester (1-6). **Required**. Maps to `nr_periodo`.
+#' @param report_type Character. `"RREO"` or `"RREO Simplificado"`.
+#'   **Required**. Maps to `co_tipo_demonstrativo`.
+#' @param appendix Character. Appendix name. **Required**. Maps to `no_anexo`.
+#' @usage get_budget_report_for_state(state_uf, fiscal_year, period,
+#'   report_type, appendix, include_capital = TRUE,
+#'   on_error = c("warn", "stop", "silent"),
+#'   use_cache = TRUE, verbose = FALSE,
+#'   page_size = NULL, max_rows = Inf)
+#' @export
+get_budget_report_for_state <- function(state_uf,
+                                        fiscal_year, period, report_type,
+                                        appendix,
+                                        include_capital = TRUE,
+                                        on_error = c("warn", "stop", "silent"),
+                                        use_cache = TRUE, verbose = FALSE,
+                                        page_size = NULL, max_rows = Inf) {
+  check_required(state_uf, fiscal_year, period, report_type, appendix)
+  get_rreo_for_state(
+    state_uf              = state_uf,
+    an_exercicio          = fiscal_year,
+    nr_periodo            = period,
+    co_tipo_demonstrativo = report_type,
+    no_anexo              = appendix,
+    include_capital       = include_capital,
+    on_error              = on_error,
+    use_cache             = use_cache,
+    verbose               = verbose,
+    page_size             = page_size,
+    max_rows              = max_rows
+  )
+}
+
 # -- get_rgf / get_fiscal_report ----------------------------------------------
 
 #' Get Fiscal Management Report data (RGF)
@@ -457,6 +669,136 @@ get_fiscal_report <- function(fiscal_year, periodicity, period,
     verbose      = verbose,
     page_size    = page_size,
     max_rows  = max_rows
+  )
+}
+
+# -- get_rgf_for_state / get_fiscal_report_for_state --------------------------
+
+#' Get RGF data for all municipalities of a Brazilian state
+#'
+#' Fetches RGF data for every municipality of `state_uf`, looping over
+#' [get_rgf()] with fault tolerance. See [get_rreo_for_state()] for the
+#' rationale and behaviour of `on_error`.
+#'
+#' `get_fiscal_report_for_state()` is an English-parameter alias.
+#'
+#' @param state_uf Character. Two-letter UF code (e.g., `"PE"`). **Required**.
+#' @param an_exercicio Integer. Fiscal year. **Required**.
+#' @param in_periodicidade Character. `"Q"` (four-monthly) or `"S"`
+#'   (semi-annual). **Required**.
+#' @param nr_periodo Integer. Period number. **Required**.
+#' @param co_tipo_demonstrativo Character. `"RGF"` or `"RGF Simplificado"`.
+#'   **Required**.
+#' @param no_anexo Character. Appendix name (e.g., `"RGF-Anexo 01"`).
+#'   **Required**.
+#' @param co_poder Character. Government branch: `"E"`, `"L"`, `"J"`, `"M"`,
+#'   `"D"`. **Required**.
+#' @param include_capital Logical. Include the state capital? Defaults to `TRUE`.
+#' @param on_error Character. `"warn"` (default), `"stop"`, or `"silent"`.
+#' @param use_cache Logical.
+#' @param verbose Logical.
+#' @param page_size Integer or `NULL`.
+#' @param max_rows Numeric.
+#'
+#' @return A [tibble][tibble::tibble] with all successful RGF rows. If any
+#'   call failed, has an attribute `"failed"`.
+#'
+#' @family SICONFI
+#' @export
+#' @examples
+#' \dontrun{
+#' rgf_pe <- get_rgf_for_state(
+#'   state_uf = "PE", an_exercicio = 2022,
+#'   in_periodicidade = "Q", nr_periodo = 3,
+#'   co_tipo_demonstrativo = "RGF", no_anexo = "RGF-Anexo 01",
+#'   co_poder = "E"
+#' )
+#' }
+get_rgf_for_state <- function(state_uf,
+                              an_exercicio, in_periodicidade, nr_periodo,
+                              co_tipo_demonstrativo, no_anexo, co_poder,
+                              include_capital = TRUE,
+                              on_error = c("warn", "stop", "silent"),
+                              use_cache = TRUE, verbose = FALSE,
+                              page_size = NULL, max_rows = Inf) {
+  check_required(
+    state_uf, an_exercicio, in_periodicidade, nr_periodo,
+    co_tipo_demonstrativo, no_anexo, co_poder
+  )
+  on_error <- match.arg(on_error)
+
+  munis <- resolve_state_munis(
+    state_uf = state_uf, include_capital = include_capital,
+    use_cache = use_cache, verbose = verbose
+  )
+
+  param_list <- lapply(munis$cod_ibge, function(id) {
+    list(
+      an_exercicio          = an_exercicio,
+      in_periodicidade      = in_periodicidade,
+      nr_periodo            = nr_periodo,
+      co_tipo_demonstrativo = co_tipo_demonstrativo,
+      no_anexo              = no_anexo,
+      co_esfera             = "M",
+      co_poder              = co_poder,
+      id_ente               = id,
+      use_cache             = use_cache,
+      verbose               = verbose,
+      page_size             = page_size,
+      max_rows              = max_rows
+    )
+  })
+
+  tnr_loop(
+    .f             = get_rgf,
+    .params        = param_list,
+    .id            = "id_ente",
+    on_error       = on_error,
+    progress_label = paste0("RGF ", state_uf)
+  )
+}
+
+#' @rdname get_rgf_for_state
+#' @param fiscal_year Integer. Fiscal year. **Required**. Maps to `an_exercicio`.
+#' @param periodicity Character. `"Q"` or `"S"`. **Required**.
+#'   Maps to `in_periodicidade`.
+#' @param period Integer. Period number. **Required**. Maps to `nr_periodo`.
+#' @param report_type Character. `"RGF"` or `"RGF Simplificado"`.
+#'   **Required**. Maps to `co_tipo_demonstrativo`.
+#' @param appendix Character. Appendix name. **Required**. Maps to `no_anexo`.
+#' @param branch Character. Government branch. **Required**. Maps to
+#'   `co_poder`.
+#' @usage get_fiscal_report_for_state(state_uf, fiscal_year, periodicity,
+#'   period, report_type, appendix, branch,
+#'   include_capital = TRUE, on_error = c("warn", "stop", "silent"),
+#'   use_cache = TRUE, verbose = FALSE,
+#'   page_size = NULL, max_rows = Inf)
+#' @export
+get_fiscal_report_for_state <- function(state_uf,
+                                        fiscal_year, periodicity, period,
+                                        report_type, appendix, branch,
+                                        include_capital = TRUE,
+                                        on_error = c("warn", "stop", "silent"),
+                                        use_cache = TRUE, verbose = FALSE,
+                                        page_size = NULL, max_rows = Inf) {
+  check_required(
+    state_uf, fiscal_year, periodicity, period,
+    report_type, appendix, branch
+  )
+  get_rgf_for_state(
+    state_uf              = state_uf,
+    an_exercicio          = fiscal_year,
+    in_periodicidade      = periodicity,
+    nr_periodo            = period,
+    co_tipo_demonstrativo = report_type,
+    no_anexo              = appendix,
+    co_poder              = branch,
+    include_capital       = include_capital,
+    on_error              = on_error,
+    use_cache             = use_cache,
+    verbose               = verbose,
+    page_size             = page_size,
+    max_rows              = max_rows
   )
 }
 

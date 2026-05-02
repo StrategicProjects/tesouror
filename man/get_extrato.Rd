@@ -65,11 +65,14 @@ extrato <- get_extrato(id_ente = 17, an_referencia = 2022)
 Other SICONFI: 
 \code{\link{get_anexos}()},
 \code{\link{get_dca}()},
+\code{\link{get_dca_for_state}()},
 \code{\link{get_entes}()},
 \code{\link{get_msc_controle}()},
 \code{\link{get_msc_orcamentaria}()},
 \code{\link{get_msc_patrimonial}()},
 \code{\link{get_rgf}()},
-\code{\link{get_rreo}()}
+\code{\link{get_rgf_for_state}()},
+\code{\link{get_rreo}()},
+\code{\link{get_rreo_for_state}()}
 }
 \concept{SICONFI}

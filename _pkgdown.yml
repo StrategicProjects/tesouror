@@ -22,6 +22,10 @@ navbar:
         - text: "Getting started"
           href: articles/getting-started.html
         - text: "---"
+        - text: "How-to"
+        - text: "RREO longitudinal — handling layout drift across years"
+          href: articles/rreo-longitudinal.html
+        - text: "---"
         - text: "API guides"
         - text: "SICONFI – Fiscal data"
           href: articles/siconfi.html
@@ -57,6 +61,30 @@ reference:
       - get_msc_equity
       - get_msc_budget
       - get_msc_control
+
+  - title: "SICONFI – Batch fetchers (fault-tolerant)"
+    desc: >
+      Loop over every municipality of a Brazilian state with fault tolerance.
+      Failures are captured in `attr(result, "failed")` and entities that
+      have not homologated the report in `attr(result, "no_data")`,
+      instead of aborting the whole call.
+    contents:
+      - get_rreo_for_state
+      - get_budget_report_for_state
+      - get_dca_for_state
+      - get_annual_accounts_for_state
+      - get_rgf_for_state
+      - get_fiscal_report_for_state
+
+  - title: "SICONFI – RREO tidy layer"
+    desc: >
+      Reconcile the drifting RREO labels (appendix names, column suffixes,
+      Roman-numeral account codes) across fiscal years and produce
+      year-stable indicators ready for longitudinal analysis.
+    contents:
+      - rreo_layout
+      - rreo_normalize_columns
+      - tidy_rreo
 
   - title: "SICONFI – Portuguese interface"
     desc: >
@@ -202,6 +230,9 @@ articles:
   - title: "Getting started"
     contents:
       - getting-started
+  - title: "How-to"
+    contents:
+      - rreo-longitudinal
   - title: "API guides"
     contents:
       - siconfi

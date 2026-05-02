@@ -421,6 +421,144 @@ ords_fetch_all <- function(base_url, endpoint, params = list(),
   result
 }
 
+# -- Looped fetch with fault tolerance ----------------------------------------
+
+#' Apply a fetcher across many parameter sets, tolerating per-iteration failures
+#'
+#' Internal helper used by `get_*_for_state()` family. Iterates over a list of
+#' parameter sets, calls `.f` on each, captures errors per iteration, and
+#' returns a single bound tibble plus an attribute `"failed"` listing failures.
+#'
+#' @param .f Function to call per iteration.
+#' @param .params List of named lists, one per iteration, of arguments to `.f`.
+#' @param .id Character. Name of the argument inside each entry of `.params`
+#'   used as iteration label in messages (e.g., `"id_ente"`). Optional.
+#' @param on_error One of `"warn"` (default), `"stop"`, `"silent"`.
+#' @param progress_label Character. Short label used in progress messages.
+#'
+#' @return A tibble with all successful, non-empty results bound together.
+#'   Iterations that raised an error are recorded in `attr(result, "failed")`
+#'   (tibble with `iteration`, `id`, `error`); iterations that succeeded but
+#'   returned zero rows (e.g., a SICONFI entity that never homologated the
+#'   report) are recorded in `attr(result, "no_data")` (tibble with
+#'   `iteration`, `id`).
+#' @noRd
+tnr_loop <- function(.f, .params, .id = NULL,
+                     on_error = c("warn", "stop", "silent"),
+                     progress_label = "Iteration") {
+  on_error <- match.arg(on_error)
+  n <- length(.params)
+  results <- vector("list", n)
+  failures <- vector("list", 0L)
+  empties  <- vector("list", 0L)
+
+  iter_label_of <- function(i) {
+    args <- .params[[i]]
+    if (!is.null(.id) && !is.null(args[[.id]])) {
+      as.character(args[[.id]])
+    } else {
+      as.character(i)
+    }
+  }
+
+  cli::cli_alert_info(
+    "{progress_label}: looping over {n} call{?s}..."
+  )
+
+  for (i in seq_len(n)) {
+    args <- .params[[i]]
+    iter_label <- iter_label_of(i)
+
+    res <- tryCatch(
+      do.call(.f, args),
+      error = function(e) {
+        failures[[length(failures) + 1L]] <<- tibble::tibble(
+          iteration = i,
+          id        = iter_label,
+          error     = conditionMessage(e)
+        )
+        if (on_error == "stop") stop(e)
+        if (on_error == "warn") {
+          cli::cli_alert_warning(
+            "[{i}/{n}] {progress_label} {.val {iter_label}} failed: {conditionMessage(e)}"
+          )
+        }
+        NULL
+      }
+    )
+
+    if (!is.null(res) && is.data.frame(res) && nrow(res) == 0L) {
+      empties[[length(empties) + 1L]] <- tibble::tibble(
+        iteration = i, id = iter_label
+      )
+      results[[i]] <- NULL
+    } else {
+      results[[i]] <- res
+    }
+  }
+
+  ok <- !vapply(results, is.null, logical(1))
+  combined <- if (any(ok)) {
+    dplyr::bind_rows(results[ok])
+  } else {
+    tibble::tibble()
+  }
+
+  n_failed <- length(failures)
+  n_empty  <- length(empties)
+  n_ok     <- n - n_failed - n_empty
+
+  if (n_failed > 0L) {
+    attr(combined, "failed") <- dplyr::bind_rows(failures)
+    if (on_error != "silent") {
+      cli::cli_alert_warning(
+        "{n_failed} of {n} call{?s} failed. Inspect with {.code attr(result, 'failed')}."
+      )
+    }
+  }
+
+  if (n_empty > 0L) {
+    attr(combined, "no_data") <- dplyr::bind_rows(empties)
+    if (on_error != "silent") {
+      cli::cli_alert_info(
+        "{n_empty} of {n} call{?s} returned no data (e.g., entity never homologated this report). Inspect with {.code attr(result, 'no_data')}."
+      )
+    }
+  }
+
+  if (n_failed == 0L && n_empty == 0L) {
+    cli::cli_alert_success("All {n} call{?s} succeeded.")
+  } else if (n_failed == 0L) {
+    cli::cli_alert_success("{n_ok} of {n} call{?s} returned data.")
+  }
+
+  combined
+}
+
+#' Resolve municipalities of a Brazilian state for SICONFI loops
+#'
+#' Internal helper used by `get_*_for_state()` functions. Calls `get_entes()`
+#' (cached), filters to municipalities of `state_uf`, optionally drops the
+#' state capital, and returns the resulting tibble. Aborts if no municipalities
+#' are found.
+#'
+#' @noRd
+resolve_state_munis <- function(state_uf, include_capital = TRUE,
+                                use_cache = TRUE, verbose = FALSE) {
+  entes <- get_entes(use_cache = use_cache, verbose = verbose)
+  munis <- entes[entes$uf == state_uf & entes$esfera == "M", , drop = FALSE]
+  if (!isTRUE(include_capital) && "capital" %in% names(munis)) {
+    munis <- munis[munis$capital != 1, , drop = FALSE]
+  }
+  if (nrow(munis) == 0L) {
+    cli::cli_abort(c(
+      "x" = "No municipalities found for {.val {state_uf}}.",
+      "i" = "Check the UF code or run {.fun get_entes} to inspect available states."
+    ))
+  }
+  munis
+}
+
 # -- Convenience wrappers per API ----------------------------------------------
 # Each wrapper sets a safe default page_size for its API.
 # SICONFI/SADIPEM: NULL (server default = 5000, fast).
