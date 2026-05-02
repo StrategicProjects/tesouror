@@ -15,14 +15,14 @@ get_custos_transferencias(
   organizacao_n3 = NULL,
   use_cache = TRUE,
   verbose = FALSE,
-  page_size = 1000L,
+  page_size = 500L,
   max_rows = Inf
 )
 
 get_costs_transfers(year = NULL, month = NULL,
   legal_nature = NULL, org_level1 = NULL, org_level2 = NULL,
   org_level3 = NULL, use_cache = TRUE, verbose = FALSE,
-  page_size = 1000, max_rows = Inf)
+  page_size = 500, max_rows = Inf)
 ```
 
 ## Arguments
@@ -74,9 +74,12 @@ get_costs_transfers(year = NULL, month = NULL,
 
 - page_size:
 
-  Integer. Number of rows per API page. Defaults to `1000` (the server
-  default of 250 is too slow; 5000 may cause timeouts). Adjust as
-  needed.
+  Integer. Number of rows per API page. Defaults to `500`. The CUSTOS
+  backend is slow on broad queries: smaller pages are more robust
+  against HTTP 504 timeouts at the cost of a few extra round-trips. The
+  server default of 250 is conservative; 1000+ may time out. If the
+  package returns `attr(result, "partial") = TRUE`, lower this further
+  or add a `mes` filter.
 
 - max_rows:
 

@@ -9,7 +9,7 @@ All parameters are optional filters."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,14 +68,14 @@ All parameters are optional filters.</p>
 <span>  organizacao_n3 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  page_size <span class="op">=</span> <span class="fl">1000L</span>,</span>
+<span>  page_size <span class="op">=</span> <span class="fl">500L</span>,</span>
 <span>  max_rows <span class="op">=</span> <span class="cn">Inf</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_costs_depreciation</span><span class="op">(</span>year <span class="op">=</span> <span class="cn">NULL</span>, month <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legal_nature <span class="op">=</span> <span class="cn">NULL</span>, org_level1 <span class="op">=</span> <span class="cn">NULL</span>, org_level2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  org_level3 <span class="op">=</span> <span class="cn">NULL</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  page_size <span class="op">=</span> <span class="fl">1000</span>, max_rows <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
+<span>  page_size <span class="op">=</span> <span class="fl">500</span>, max_rows <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -128,8 +128,12 @@ called. Useful for debugging or testing in a browser. Defaults to
 
 <dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
 <dd><p>Integer. Number of rows per API page. Defaults to
-<code>1000</code> (the server default of 250 is too slow; 5000 may cause
-timeouts). Adjust as needed.</p></dd>
+<code>500</code>. The CUSTOS backend is slow on broad queries: smaller pages
+are more robust against HTTP 504 timeouts at the cost of a few
+extra round-trips. The server default of 250 is conservative;
+1000+ may time out. If the package returns
+<code>attr(result, "partial") = TRUE</code>, lower this further or add a
+<code>mes</code> filter.</p></dd>
 
 
 <dt id="arg-max-rows">max_rows<a class="anchor" aria-label="anchor" href="#arg-max-rows"></a></dt>
