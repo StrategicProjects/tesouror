@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    width="100%"
-   viewBox="0 0 680 1400"
+   viewBox="0 0 680 1440"
    version="1.1"
    id="svg91"
    sodipodi:docname="architecture.svg"
@@ -23,7 +23,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="1.1885714"
      inkscape:cx="356.3101"
-     inkscape:cy="342.84856"
+     inkscape:cy="382.849"
      inkscape:window-width="1456"
      inkscape:window-height="822"
      inkscape:window-x="55"
@@ -42,7 +42,7 @@
      x="340"
      y="30"
      text-anchor="middle"
-     id="text1">tesouror — 80 exported functions</text>
+     id="text1">tesouror — 90 exported functions</text>
   <text
      class="ts"
      x="340"
@@ -54,7 +54,7 @@
      x="40"
      y="75"
      width="620"
-     height="155"
+     height="195"
      rx="12"
      fill="#E6F1FB"
      stroke="#185FA5"
@@ -65,7 +65,7 @@
      x="60"
      y="100"
      fill="#0C447C"
-     id="text3">SICONFI — fiscal reports (18 functions)</text>
+     id="text3">SICONFI — fiscal reports (27 functions)</text>
   <text
      class="ts"
      x="60"
@@ -275,10 +275,37 @@
      text-anchor="middle"
      fill="#0C447C"
      id="text16">get_msc_control</text>
+  <!-- SICONFI: batch fetchers (fault-tolerant) + RREO tidy layer -->
+  <rect
+     x="55" y="202" width="160" height="28" rx="6"
+     fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"
+     id="rect_for_state" />
+  <text class="ts" x="135" y="220" text-anchor="middle" fill="#0C447C"
+     id="text_for_state">get_*_for_state (×3)</text>
+  <rect
+     x="222" y="202" width="135" height="28" rx="6"
+     fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"
+     id="rect_tidy_rreo" />
+  <text class="ts" x="289" y="220" text-anchor="middle" fill="#0C447C"
+     id="text_tidy_rreo">tidy_rreo</text>
+  <rect
+     x="364" y="202" width="135" height="28" rx="6"
+     fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"
+     id="rect_rreo_layout" />
+  <text class="ts" x="431" y="220" text-anchor="middle" fill="#0C447C"
+     id="text_rreo_layout">rreo_layout</text>
+  <rect
+     x="506" y="202" width="146" height="28" rx="6"
+     fill="#B5D4F4" stroke="#185FA5" stroke-width="0.5"
+     id="rect_rreo_norm" />
+  <text class="ts" x="579" y="220" text-anchor="middle" fill="#0C447C"
+     id="text_rreo_norm">rreo_normalize_cols</text>
+  <text class="ts" x="60" y="248" fill="#0C447C" id="text_siconfi_note_1">batch helpers loop over a UF's municipalities with attr('failed') / attr('no_data')</text>
+  <text class="ts" x="60" y="263" fill="#0C447C" id="text_siconfi_note_2">tidy layer reconciles RREO label drift across years (inst/extdata/rreo_layout.csv)</text>
   <!-- ═══ CUSTOS ═══ -->
   <rect
      x="40"
-     y="248"
+     y="288"
      width="620"
      height="150"
      rx="12"
@@ -289,17 +316,17 @@
   <text
      class="th"
      x="60"
-     y="273"
+     y="313"
      fill="#712B13"
      id="text17">CUSTOS — federal government costs (12 functions)</text>
   <text
      class="ts"
      x="60"
-     y="291"
+     y="331"
      id="text18">apidatalake.tesouro.gov.br/ords/custos/tt/ · ORDS · 1000 rows/page · SIORG auto-padding</text>
   <rect
      x="55"
-     y="303"
+     y="343"
      width="145"
      height="28"
      rx="6"
@@ -310,13 +337,13 @@
   <text
      class="ts"
      x="127"
-     y="321"
+     y="361"
      text-anchor="middle"
      fill="#712B13"
      id="text19">get_custos_ativo</text>
   <rect
      x="207"
-     y="303"
+     y="343"
      width="145"
      height="28"
      rx="6"
@@ -327,13 +354,13 @@
   <text
      class="ts"
      x="279"
-     y="321"
+     y="361"
      text-anchor="middle"
      fill="#712B13"
      id="text20">get_custos_inativo</text>
   <rect
      x="359"
-     y="303"
+     y="343"
      width="148"
      height="28"
      rx="6"
@@ -344,13 +371,13 @@
   <text
      class="ts"
      x="433"
-     y="321"
+     y="361"
      text-anchor="middle"
      fill="#712B13"
      id="text21">get_custos_pension.</text>
   <rect
      x="514"
-     y="303"
+     y="343"
      width="138"
      height="28"
      rx="6"
@@ -361,13 +388,13 @@
   <text
      class="ts"
      x="583"
-     y="321"
+     y="361"
      text-anchor="middle"
      fill="#712B13"
      id="text22">demais depr. transf.</text>
   <rect
      x="55"
-     y="339"
+     y="379"
      width="160"
      height="28"
      rx="6"
@@ -378,13 +405,13 @@
   <text
      class="ts"
      x="135"
-     y="357"
+     y="397"
      text-anchor="middle"
      fill="#712B13"
      id="text23">get_costs_active_staff</text>
   <rect
      x="222"
-     y="339"
+     y="379"
      width="155"
      height="28"
      rx="6"
@@ -395,13 +422,13 @@
   <text
      class="ts"
      x="299"
-     y="357"
+     y="397"
      text-anchor="middle"
      fill="#712B13"
      id="text24">get_costs_retired_staff</text>
   <rect
      x="384"
-     y="339"
+     y="379"
      width="148"
      height="28"
      rx="6"
@@ -412,13 +439,13 @@
   <text
      class="ts"
      x="458"
-     y="357"
+     y="397"
      text-anchor="middle"
      fill="#712B13"
      id="text25">get_costs_pensioners</text>
   <rect
      x="539"
-     y="339"
+     y="379"
      width="113"
      height="28"
      rx="6"
@@ -429,14 +456,14 @@
   <text
      class="ts"
      x="595"
-     y="357"
+     y="397"
      text-anchor="middle"
      fill="#712B13"
      id="text26">other depr. transf.</text>
   <!-- ═══ SADIPEM ═══ -->
   <rect
      x="40"
-     y="416"
+     y="456"
      width="620"
      height="150"
      rx="12"
@@ -447,17 +474,17 @@
   <text
      class="th"
      x="60"
-     y="441"
+     y="481"
      fill="#085041"
      id="text27">SADIPEM — public debt (14 functions)</text>
   <text
      class="ts"
      x="60"
-     y="459"
+     y="499"
      id="text28">apidatalake.tesouro.gov.br/ords/sadipem/tt/ · ORDS · 5000 rows/page</text>
   <rect
      x="55"
-     y="471"
+     y="511"
      width="78"
      height="28"
      rx="6"
@@ -468,13 +495,13 @@
   <text
      class="ts"
      x="94"
-     y="489"
+     y="529"
      text-anchor="middle"
      fill="#085041"
      id="text29">get_pvl</text>
   <rect
      x="140"
-     y="471"
+     y="511"
      width="140"
      height="28"
      rx="6"
@@ -485,13 +512,13 @@
   <text
      class="ts"
      x="210"
-     y="489"
+     y="529"
      text-anchor="middle"
      fill="#085041"
      id="text30">get_pvl_tramitacao</text>
   <rect
      x="287"
-     y="471"
+     y="511"
      width="115"
      height="28"
      rx="6"
@@ -502,13 +529,13 @@
   <text
      class="ts"
      x="344"
-     y="489"
+     y="529"
      text-anchor="middle"
      fill="#085041"
      id="text31">get_opc_cron_*</text>
   <rect
      x="409"
-     y="471"
+     y="511"
      width="120"
      height="28"
      rx="6"
@@ -519,13 +546,13 @@
   <text
      class="ts"
      x="469"
-     y="489"
+     y="529"
      text-anchor="middle"
      fill="#085041"
      id="text32">get_opc_taxa_*</text>
   <rect
      x="536"
-     y="471"
+     y="511"
      width="115"
      height="28"
      rx="6"
@@ -536,13 +563,13 @@
   <text
      class="ts"
      x="593"
-     y="489"
+     y="529"
      text-anchor="middle"
      fill="#085041"
      id="text33">get_res_cdp +1</text>
   <rect
      x="55"
-     y="507"
+     y="547"
      width="140"
      height="28"
      rx="6"
@@ -553,13 +580,13 @@
   <text
      class="ts"
      x="125"
-     y="525"
+     y="565"
      text-anchor="middle"
      fill="#085041"
      id="text34">get_debt_requests</text>
   <rect
      x="202"
-     y="507"
+     y="547"
      width="120"
      height="28"
      rx="6"
@@ -570,13 +597,13 @@
   <text
      class="ts"
      x="262"
-     y="525"
+     y="565"
      text-anchor="middle"
      fill="#085041"
      id="text35">get_pvl_status</text>
   <rect
      x="329"
-     y="507"
+     y="547"
      width="155"
      height="28"
      rx="6"
@@ -587,13 +614,13 @@
   <text
      class="ts"
      x="406"
-     y="525"
+     y="565"
      text-anchor="middle"
      fill="#085041"
      id="text36">get_credit_release_*</text>
   <rect
      x="491"
-     y="507"
+     y="547"
      width="160"
      height="28"
      rx="6"
@@ -604,14 +631,14 @@
   <text
      class="ts"
      x="571"
-     y="525"
+     y="565"
      text-anchor="middle"
      fill="#085041"
      id="text37">get_debt_capacity +1</text>
   <!-- ═══ TRANSFERÊNCIAS ═══ -->
   <rect
      x="40"
-     y="584"
+     y="624"
      width="620"
      height="150"
      rx="12"
@@ -622,17 +649,17 @@
   <text
      class="th"
      x="60"
-     y="609"
+     y="649"
      fill="#633806"
      id="text38">Transferências constitucionais (14 functions)</text>
   <text
      class="ts"
      x="60"
-     y="627"
+     y="667"
      id="text39">apiapex.tesouro.gov.br/aria/v1/ · single response · Treasury codes (not IBGE)</text>
   <rect
      x="55"
-     y="639"
+     y="679"
      width="125"
      height="28"
      rx="6"
@@ -643,13 +670,13 @@
   <text
      class="ts"
      x="117"
-     y="657"
+     y="697"
      text-anchor="middle"
      fill="#633806"
      id="text40">get_tc_estados</text>
   <rect
      x="187"
-     y="639"
+     y="679"
      width="145"
      height="28"
      rx="6"
@@ -660,13 +687,13 @@
   <text
      class="ts"
      x="259"
-     y="657"
+     y="697"
      text-anchor="middle"
      fill="#633806"
      id="text41">get_tc_municipios</text>
   <rect
      x="339"
-     y="639"
+     y="679"
      width="155"
      height="28"
      rx="6"
@@ -677,13 +704,13 @@
   <text
      class="ts"
      x="416"
-     y="657"
+     y="697"
      text-anchor="middle"
      fill="#633806"
      id="text42">get_tc_por_estados</text>
   <rect
      x="501"
-     y="639"
+     y="679"
      width="150"
      height="28"
      rx="6"
@@ -694,13 +721,13 @@
   <text
      class="ts"
      x="576"
-     y="657"
+     y="697"
      text-anchor="middle"
      fill="#633806"
      id="text43">get_tc_por_municipio</text>
   <rect
      x="55"
-     y="675"
+     y="715"
      width="120"
      height="28"
      rx="6"
@@ -711,13 +738,13 @@
   <text
      class="ts"
      x="115"
-     y="693"
+     y="733"
      text-anchor="middle"
      fill="#633806"
      id="text44">get_tc_states</text>
   <rect
      x="182"
-     y="675"
+     y="715"
      width="160"
      height="28"
      rx="6"
@@ -728,13 +755,13 @@
   <text
      class="ts"
      x="262"
-     y="693"
+     y="733"
      text-anchor="middle"
      fill="#633806"
      id="text45">get_tc_municipalities</text>
   <rect
      x="349"
-     y="675"
+     y="715"
      width="140"
      height="28"
      rx="6"
@@ -745,13 +772,13 @@
   <text
      class="ts"
      x="419"
-     y="693"
+     y="733"
      text-anchor="middle"
      fill="#633806"
      id="text46">get_tc_by_state</text>
   <rect
      x="496"
-     y="675"
+     y="715"
      width="155"
      height="28"
      rx="6"
@@ -762,14 +789,14 @@
   <text
      class="ts"
      x="573"
-     y="693"
+     y="733"
      text-anchor="middle"
      fill="#633806"
      id="text47">get_tc_by_municipality</text>
   <!-- ═══ SIORG ═══ -->
   <rect
      x="40.012592"
-     y="752.01257"
+     y="792.013"
      width="299.97482"
      height="143.43636"
      rx="11.998993"
@@ -780,22 +807,22 @@
   <text
      class="th"
      x="60"
-     y="777"
+     y="817"
      fill="#444441"
      id="text48">SIORG — org structure (6 functions)</text>
   <text
      class="ts"
      x="60"
-     y="795"
+     y="835"
      id="text49">estruturaorganizacional.dados.gov.br</text>
   <text
      class="ts"
      x="60"
-     y="811"
+     y="851"
      id="text50">dictionary for CUSTOS org codes</text>
   <rect
      x="55"
-     y="822"
+     y="862"
      width="130"
      height="26"
      rx="6"
@@ -806,13 +833,13 @@
   <text
      class="ts"
      x="120"
-     y="839"
+     y="879"
      text-anchor="middle"
      fill="#444441"
      id="text51">get_siorg_orgaos</text>
   <rect
      x="192"
-     y="822"
+     y="862"
      width="140"
      height="26"
      rx="6"
@@ -823,13 +850,13 @@
   <text
      class="ts"
      x="262"
-     y="839"
+     y="879"
      text-anchor="middle"
      fill="#444441"
      id="text52">get_siorg_estrutura</text>
   <rect
      x="55"
-     y="852"
+     y="892"
      width="155"
      height="26"
      rx="6"
@@ -840,13 +867,13 @@
   <text
      class="ts"
      x="132"
-     y="869"
+     y="909"
      text-anchor="middle"
      fill="#444441"
      id="text53">get_siorg_organizations</text>
   <rect
      x="217"
-     y="852"
+     y="892"
      width="115"
      height="26"
      rx="6"
@@ -857,34 +884,34 @@
   <text
      class="ts"
      x="274"
-     y="869"
+     y="909"
      text-anchor="middle"
      fill="#444441"
      id="text54">get_siorg_unit</text>
   <!-- Arrow SIORG → CUSTOS going LEFT outside -->
   <path
-     d="M40 810 L18 810 L18 320 L38 320"
+     d="M40 850 L18 850 L18 360 L38 360"
      fill="none"
      stroke="#888780"
      stroke-width="1.2"
      stroke-dasharray="5 3"
      id="path54" />
   <polygon
-     points="38,316 38,324 46,320 "
+     points="38,356 38,364 46,360 "
      fill="#888780"
      id="polygon54"
      transform="translate(-6)" />
   <text
      class="ts"
      x="14"
-     y="560"
+     y="600"
      text-anchor="middle"
-     transform="rotate(-90 14 560)"
+     transform="rotate(-90 14 600)"
      id="text55">org codes → auto-padded to 6 digits</text>
   <!-- ═══ SIOPE ═══ -->
   <rect
      x="40"
-     y="912"
+     y="952"
      width="620"
      height="165"
      rx="12"
@@ -895,22 +922,22 @@
   <text
      class="th"
      x="60"
-     y="937"
+     y="977"
      fill="#3c3489"
      id="text56">SIOPE — education spending, FNDE/MEC (16 functions)</text>
   <text
      class="ts"
      x="60"
-     y="955"
+     y="995"
      id="text57">fnde.gov.br/olinda-ide/.../odata/ · OData $top/$skip · 1000 rows/page</text>
   <text
      class="ts"
      x="60"
-     y="971"
+     y="1011"
      id="text58">supports server-side filter, select, orderby (OData syntax, uppercase column names)</text>
   <rect
      x="55"
-     y="984"
+     y="1024"
      width="170"
      height="28"
      rx="6"
@@ -921,13 +948,13 @@
   <text
      class="ts"
      x="140"
-     y="1002"
+     y="1042"
      text-anchor="middle"
      fill="#3C3489"
      id="text59">get_siope_dados_gerais</text>
   <rect
      x="232"
-     y="984"
+     y="1024"
      width="160"
      height="28"
      rx="6"
@@ -938,13 +965,13 @@
   <text
      class="ts"
      x="312"
-     y="1002"
+     y="1042"
      text-anchor="middle"
      fill="#3C3489"
      id="text60">get_siope_responsaveis</text>
   <rect
      x="399"
-     y="984"
+     y="1024"
      width="140"
      height="28"
      rx="6"
@@ -955,13 +982,13 @@
   <text
      class="ts"
      x="469"
-     y="1002"
+     y="1042"
      text-anchor="middle"
      fill="#3C3489"
      id="text61">get_siope_despesas</text>
   <rect
      x="546"
-     y="984"
+     y="1024"
      width="105"
      height="28"
      rx="6"
@@ -972,13 +999,13 @@
   <text
      class="ts"
      x="598"
-     y="1002"
+     y="1042"
      text-anchor="middle"
      fill="#3C3489"
      id="text62">receitas +3</text>
   <rect
      x="55"
-     y="1020"
+     y="1060"
      width="170"
      height="28"
      rx="6"
@@ -989,13 +1016,13 @@
   <text
      class="ts"
      x="140"
-     y="1038"
+     y="1078"
      text-anchor="middle"
      fill="#3C3489"
      id="text63">get_siope_general_data</text>
   <rect
      x="232"
-     y="1020"
+     y="1060"
      width="140"
      height="28"
      rx="6"
@@ -1006,13 +1033,13 @@
   <text
      class="ts"
      x="302"
-     y="1038"
+     y="1078"
      text-anchor="middle"
      fill="#3C3489"
      id="text64">get_siope_officials</text>
   <rect
      x="379"
-     y="1020"
+     y="1060"
      width="140"
      height="28"
      rx="6"
@@ -1023,13 +1050,13 @@
   <text
      class="ts"
      x="449"
-     y="1038"
+     y="1078"
      text-anchor="middle"
      fill="#3C3489"
      id="text65">get_siope_expenses</text>
   <rect
      x="526"
-     y="1020"
+     y="1060"
      width="125"
      height="28"
      rx="6"
@@ -1040,14 +1067,14 @@
   <text
      class="ts"
      x="588"
-     y="1038"
+     y="1078"
      text-anchor="middle"
      fill="#3C3489"
      id="text66">revenues +3</text>
   <!-- ═══ SHARED INFRA ═══ -->
   <rect
      x="40"
-     y="1102"
+     y="1142"
      width="620"
      height="130"
      rx="12"
@@ -1058,13 +1085,13 @@
   <text
      class="th"
      x="350"
-     y="1127"
+     y="1167"
      text-anchor="middle"
      fill="#27500a"
      id="text67">shared infrastructure (R/utils.R)</text>
   <rect
      x="55"
-     y="1142"
+     y="1182"
      width="112"
      height="50"
      rx="6"
@@ -1075,20 +1102,20 @@
   <text
      class="th"
      x="111"
-     y="1162"
+     y="1202"
      text-anchor="middle"
      fill="#27500a"
      id="text68">tnr_request</text>
   <text
      class="ts"
      x="111"
-     y="1180"
+     y="1220"
      text-anchor="middle"
      fill="#3B6D11"
      id="text69">retry 5× + cache</text>
   <rect
      x="176"
-     y="1142"
+     y="1182"
      width="112"
      height="50"
      rx="6"
@@ -1099,20 +1126,20 @@
   <text
      class="th"
      x="232"
-     y="1162"
+     y="1202"
      text-anchor="middle"
      fill="#27500a"
      id="text70">ords_fetch_all</text>
   <text
      class="ts"
      x="232"
-     y="1180"
+     y="1220"
      text-anchor="middle"
      fill="#3B6D11"
      id="text71">hasMore / offset</text>
   <rect
      x="297"
-     y="1142"
+     y="1182"
      width="100"
      height="50"
      rx="6"
@@ -1123,20 +1150,20 @@
   <text
      class="th"
      x="347"
-     y="1162"
+     y="1202"
      text-anchor="middle"
      fill="#27500a"
      id="text72">siope_fetch</text>
   <text
      class="ts"
      x="347"
-     y="1180"
+     y="1220"
      text-anchor="middle"
      fill="#3B6D11"
      id="text73">$top / $skip</text>
   <rect
      x="406"
-     y="1142"
+     y="1182"
      width="100"
      height="50"
      rx="6"
@@ -1147,20 +1174,20 @@
   <text
      class="th"
      x="456"
-     y="1162"
+     y="1202"
      text-anchor="middle"
      fill="#27500a"
      id="text74">is_verbose</text>
   <text
      class="ts"
      x="456"
-     y="1180"
+     y="1220"
      text-anchor="middle"
      fill="#3B6D11"
      id="text75">global option</text>
   <rect
      x="515"
-     y="1142"
+     y="1182"
      width="136"
      height="50"
      rx="6"
@@ -1171,53 +1198,55 @@
   <text
      class="th"
      x="583"
-     y="1162"
+     y="1202"
      text-anchor="middle"
      fill="#27500a"
      id="text76">cache + helpers</text>
   <text
      class="ts"
      x="583"
-     y="1180"
+     y="1220"
      text-anchor="middle"
      fill="#3B6D11"
      id="text77">pad_siorg_code</text>
+  <text class="ts" x="350" y="1257" text-anchor="middle" fill="#3B6D11"
+     id="text_extra_infra">+ tnr_loop (fault-tolerant batch helper) · .check_not_uf_abbrev (UF guard)</text>
   <!-- Arrow APIs → infra -->
   <!-- ═══ LEGEND ═══ -->
   <text
      class="ts"
      x="40"
-     y="1260"
+     y="1300"
      id="text78">Retries: 5×, backoff 3–15s (5xx, 429)</text>
   <text
      class="ts"
      x="40"
-     y="1278"
+     y="1318"
      id="text79">HTTP 400: not retried, actionable error message</text>
   <text
      class="ts"
      x="40"
-     y="1296"
+     y="1336"
      id="text80">max_rows: caps limit/$top automatically</text>
   <text
      class="ts"
      x="380"
-     y="1260"
+     y="1300"
      id="text81">Output: tidy tibbles, janitor::clean_names()</text>
   <text
      class="ts"
      x="380"
-     y="1278"
+     y="1318"
      id="text82">verbose: per-call or options(tesouror.verbose)</text>
   <text
      class="ts"
      x="380"
-     y="1296"
+     y="1336"
      id="text83">Cache: in-memory, tesouror_clear_cache()</text>
   <!-- Color legend -->
   <rect
      x="40"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1228,11 +1257,11 @@
   <text
      class="ts"
      x="58"
-     y="1331"
+     y="1371"
      id="text84">SICONFI</text>
   <rect
      x="115"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1243,11 +1272,11 @@
   <text
      class="ts"
      x="133"
-     y="1331"
+     y="1371"
      id="text85">CUSTOS</text>
   <rect
      x="195"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1258,11 +1287,11 @@
   <text
      class="ts"
      x="213"
-     y="1331"
+     y="1371"
      id="text86">SADIPEM</text>
   <rect
      x="275"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1273,11 +1302,11 @@
   <text
      class="ts"
      x="293"
-     y="1331"
+     y="1371"
      id="text87">Transf.</text>
   <rect
      x="340"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1288,11 +1317,11 @@
   <text
      class="ts"
      x="358"
-     y="1331"
+     y="1371"
      id="text88">SIORG</text>
   <rect
      x="400"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1303,11 +1332,11 @@
   <text
      class="ts"
      x="418"
-     y="1331"
+     y="1371"
      id="text89">SIOPE</text>
   <rect
      x="460"
-     y="1320"
+     y="1360"
      width="12"
      height="12"
      rx="2"
@@ -1318,20 +1347,20 @@
   <text
      class="ts"
      x="478"
-     y="1331"
+     y="1371"
      id="text90">Infra</text>
   <line
      x1="40"
-     y1="1350"
+     y1="1390"
      x2="650"
-     y2="1350"
+     y2="1390"
      stroke="#D3D1C7"
      stroke-width="0.5"
      id="line90" />
   <text
      class="ts"
      x="350"
-     y="1370"
+     y="1410"
      text-anchor="middle"
-     id="text91">tesouror 0.1.0 · MIT · pkgdown: strategicprojects.github.io/tesouror</text>
+     id="text91">tesouror 0.2.0 · MIT · pkgdown: strategicprojects.github.io/tesouror</text>
 </svg>
