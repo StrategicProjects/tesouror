@@ -58,6 +58,39 @@ collapse_param <- function(x) {
   paste(x, collapse = ":")
 }
 
+# -- UF abbreviation guard -----------------------------------------------------
+
+#' Brazilian state two-letter abbreviations (used by .check_not_uf_abbrev)
+#' @noRd
+.uf_abbrevs <- c(
+  "AC", "AL", "AM", "AP", "BA", "BR", "CE", "DF", "ES", "GO",
+  "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ",
+  "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"
+)
+
+#' Abort early when a UF abbreviation is passed where a Treasury numeric code is expected
+#'
+#' Several Transferencias endpoints expect a numeric Treasury state code in
+#' parameters named `p_uf` / `p_estado` / `state_code` (NOT the IBGE code and
+#' NOT the two-letter abbreviation). Passing the abbreviation makes the
+#' upstream API return HTTP 500 after a long retry budget; this helper short-
+#' circuits that with an actionable error.
+#'
+#' @noRd
+.check_not_uf_abbrev <- function(value, arg_name) {
+  if (is.null(value)) return(invisible())
+  v <- as.character(value)
+  is_abbrev <- length(v) == 1L && !is.na(v) && nchar(v) == 2L &&
+    toupper(v) %in% .uf_abbrevs
+  if (is_abbrev) {
+    cli::cli_abort(c(
+      "x" = "{.arg {arg_name}} must be a Treasury state code (numeric), not the UF abbreviation {.val {v}}.",
+      "i" = "Look it up with {.fun get_tc_estados}: e.g. {.code estados$codigo[estados$nome == \"Pernambuco\"]}."
+    ), call = NULL)
+  }
+  invisible()
+}
+
 # -- Verbose helper ------------------------------------------------------------
 
 #' Check if verbose mode is enabled

@@ -135,6 +135,7 @@ get_tc_states <- function(use_cache = TRUE, verbose = FALSE) {
 #' recife <- get_tc_municipios(p_nome = "Recife")
 #' }
 get_tc_municipios <- function(p_nome = NULL, p_uf = NULL, use_cache = TRUE, verbose = FALSE) {
+  .check_not_uf_abbrev(p_uf, "p_uf")
   params <- list(p_nome = p_nome, p_uf = p_uf)
   transferencias_fetch("/municipios", params, use_cache = use_cache, verbose = verbose)
 }
@@ -207,6 +208,7 @@ get_tc_por_estados <- function(p_estado = NULL, p_ano = NULL, p_mes = NULL,
                                p_transferencia = NULL,
                                p_sn_detalhar = NULL,
                                use_cache = TRUE, verbose = FALSE) {
+  .check_not_uf_abbrev(p_estado, "p_estado")
   params <- list(
     p_estado        = collapse_param(p_estado),
     p_ano           = collapse_param(p_ano),
@@ -286,6 +288,7 @@ get_tc_por_estados_detalhe <- function(p_estado = NULL, p_ano = NULL,
                                        p_mes = NULL,
                                        p_transferencia = NULL,
                                        use_cache = TRUE, verbose = FALSE) {
+  .check_not_uf_abbrev(p_estado, "p_estado")
   params <- list(
     p_estado        = collapse_param(p_estado),
     p_ano           = collapse_param(p_ano),
@@ -379,6 +382,7 @@ get_tc_por_municipio <- function(p_estado = NULL, p_municipio = NULL,
                                  p_transferencia = NULL,
                                  p_sn_detalhar = NULL,
                                  use_cache = TRUE, verbose = FALSE) {
+  .check_not_uf_abbrev(p_estado, "p_estado")
   params <- list(
     P_ESTADO        = collapse_param(p_estado),
     P_MUNICIPIOS    = collapse_param(p_municipio),
@@ -469,6 +473,7 @@ get_tc_por_municipio_detalhe <- function(p_estado = NULL,
                                          p_ano = NULL, p_mes = NULL,
                                          p_transferencia = NULL,
                                          use_cache = TRUE, verbose = FALSE) {
+  .check_not_uf_abbrev(p_estado, "p_estado")
   params <- list(
     P_ESTADO        = collapse_param(p_estado),
     P_MUNICIPIOS    = collapse_param(p_municipio),
