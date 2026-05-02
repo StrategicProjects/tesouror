@@ -10,3 +10,5 @@
 ^data-raw$
 ^\.positai$
 ^\.claude$
+^doc$
+^Meta$
