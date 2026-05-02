@@ -182,6 +182,16 @@ tesouror_clear_cache <- function() {
 max_retries <- 5L
 retry_wait <- 3L
 
+#' Wait between retries
+#'
+#' Thin wrapper around [base::Sys.sleep()]; exists so tests can mock retry
+#' delays via `testthat::local_mocked_bindings(.tnr_sleep = ...)` instead of
+#' actually pausing for the full backoff budget.
+#' @noRd
+.tnr_sleep <- function(seconds) {
+  Sys.sleep(seconds)
+}
+
 #' Build and perform a single request to a Treasury API
 #' @noRd
 tnr_request <- function(url, params = list(), use_cache = TRUE,
@@ -234,7 +244,7 @@ tnr_request <- function(url, params = list(), use_cache = TRUE,
           cli::cli_alert_warning(
             "HTTP {last_status} on attempt {attempt}/{max_retries}. Retrying in {wait}s..."
           )
-          Sys.sleep(wait)
+          .tnr_sleep(wait)
           resp <- NULL  # reset so we retry
           next
         }
@@ -250,7 +260,7 @@ tnr_request <- function(url, params = list(), use_cache = TRUE,
         cli::cli_alert_warning(
           "Connection failed (attempt {attempt}/{max_retries}). Retrying in {wait}s..."
         )
-        Sys.sleep(wait)
+        .tnr_sleep(wait)
       }
     }
   }
