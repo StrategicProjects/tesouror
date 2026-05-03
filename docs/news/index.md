@@ -1,5 +1,32 @@
 # Changelog
 
+## tesouror 0.2.1
+
+### Robustness against upstream timeouts (CUSTOS)
+
+- **`ords_fetch_all()` now returns partial results on mid-pagination
+  failures.** When a page after the first fails (e.g., HTTP 504 after
+  the retry budget is exhausted), the package no longer discards the
+  rows it had already fetched. Instead it logs a warning and returns the
+  partial tibble with `attr(result, "partial") = TRUE` and
+  `attr(result, "last_page_error")` describing the failure. This matters
+  most for CUSTOS, where the backend timeout caused users to lose
+  hundreds of rows from a successful first page when page two stalled.
+
+- **CUSTOS default `page_size` lowered to 500** (was 1000). The CUSTOS
+  load balancer became more aggressive about cutting slow queries; 1000
+  rows often times out on broad queries even with month and org filters.
+  500 is a more robust starting point at the cost of a few extra
+  round-trips.
+
+- **More actionable HTTP 504 error message for CUSTOS** — explicitly
+  suggests adding a `mes` filter and/or reducing `page_size`, and
+  reminds the user that partial results are now available via
+  attributes.
+
+- README’s CUSTOS quick-start example now passes a `month` filter so
+  copy-paste users do not hit the 504 ceiling.
+
 ## tesouror 0.2.0
 
 ### New features

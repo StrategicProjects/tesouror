@@ -44,10 +44,14 @@ rreo <- get_budget_report(
   appendix = "RREO-Anexo 01", sphere = "E", entity_id = 17
 )
 
-# Federal government active staff costs (always filter by org!)
+# Federal government active staff costs (always filter by org AND month!
+# the CUSTOS backend is slow; year-wide queries often hit HTTP 504)
 custos <- get_costs_active_staff(
-  year = 2023, org_level1 = 244, org_level2 = 249  # MEC > INEP
+  year = 2023, month = 6,
+  org_level1 = 244, org_level2 = 249  # MEC > INEP
 )
+# If pagination fails mid-way the package returns a partial result;
+# check `attr(custos, "partial")` and `attr(custos, "last_page_error")`.
 
 # Constitutional transfers (codes are Treasury-internal, NOT IBGE!)
 estados <- get_tc_states()
@@ -135,16 +139,18 @@ demographics.
 | Detail | Value |
 |:---|:---|
 | Pagination | ORDS (`hasMore`/`offset`), automatic |
-| Default page size | **1,000 rows** (server default of 250 is too slow; 5,000 causes timeouts) |
+| Default page size | **500 rows** (lowered from 1000 in 0.2.1: the backend timed out on broad queries) |
 | Retries | 5 attempts, progressive backoff (3s, 6s, 9s…) |
 | `max_rows` | Supported |
+| Partial results | When pagination fails mid-way, the package returns what was fetched with `attr(result, "partial") = TRUE` |
 | SIORG code padding | Automatic (`244` → `"000244"`) |
 | Functions | 12 (6 PT + 6 EN) |
 
 > **Warning**: The CUSTOS API is slow. Always filter by
 > `organizacao_n1` + `organizacao_n2` (or `org_level1` + `org_level2`)
-> to avoid downloading hundreds of thousands of rows. Use `max_rows` for
-> quick tests.
+> **and** by `mes` / `month` to avoid HTTP 504 timeouts. Use `max_rows`
+> for quick tests. Year-wide queries with no month filter routinely time
+> out the upstream load balancer.
 
 ### SADIPEM — Public Debt
 

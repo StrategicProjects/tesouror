@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,10 +164,14 @@
 <span>  appendix <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>, sphere <span class="op">=</span> <span class="st">"E"</span>, entity_id <span class="op">=</span> <span class="fl">17</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Federal government active staff costs (always filter by org!)</span></span>
+<span><span class="co"># Federal government active staff costs (always filter by org AND month!</span></span>
+<span><span class="co"># the CUSTOS backend is slow; year-wide queries often hit HTTP 504)</span></span>
 <span><span class="va">custos</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_custos_pessoal_ativo.html">get_costs_active_staff</a></span><span class="op">(</span></span>
-<span>  year <span class="op">=</span> <span class="fl">2023</span>, org_level1 <span class="op">=</span> <span class="fl">244</span>, org_level2 <span class="op">=</span> <span class="fl">249</span>  <span class="co"># MEC &gt; INEP</span></span>
+<span>  year <span class="op">=</span> <span class="fl">2023</span>, month <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  org_level1 <span class="op">=</span> <span class="fl">244</span>, org_level2 <span class="op">=</span> <span class="fl">249</span>  <span class="co"># MEC &gt; INEP</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co"># If pagination fails mid-way the package returns a partial result;</span></span>
+<span><span class="co"># check `attr(custos, "partial")` and `attr(custos, "last_page_error")`.</span></span>
 <span></span>
 <span><span class="co"># Constitutional transfers (codes are Treasury-internal, NOT IBGE!)</span></span>
 <span><span class="va">estados</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_tc_estados.html">get_tc_states</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -285,7 +289,7 @@
 <tr>
 <td align="left">Default page size</td>
 <td align="left">
-<strong>1,000 rows</strong> (server default of 250 is too slow; 5,000 causes timeouts)</td>
+<strong>500 rows</strong> (lowered from 1000 in 0.2.1: the backend timed out on broad queries)</td>
 </tr>
 <tr>
 <td align="left">Retries</td>
@@ -294,6 +298,11 @@
 <tr>
 <td align="left"><code>max_rows</code></td>
 <td align="left">Supported</td>
+</tr>
+<tr>
+<td align="left">Partial results</td>
+<td align="left">When pagination fails mid-way, the package returns what was fetched with <code>attr(result, "partial") = TRUE</code>
+</td>
 </tr>
 <tr>
 <td align="left">SIORG code padding</td>
@@ -306,7 +315,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Warning</strong>: The CUSTOS API is slow. Always filter by <code>organizacao_n1</code> + <code>organizacao_n2</code> (or <code>org_level1</code> + <code>org_level2</code>) to avoid downloading hundreds of thousands of rows. Use <code>max_rows</code> for quick tests.</p>
+<p><strong>Warning</strong>: The CUSTOS API is slow. Always filter by <code>organizacao_n1</code> + <code>organizacao_n2</code> (or <code>org_level1</code> + <code>org_level2</code>) <strong>and</strong> by <code>mes</code> / <code>month</code> to avoid HTTP 504 timeouts. Use <code>max_rows</code> for quick tests. Year-wide queries with no month filter routinely time out the upstream load balancer.</p>
 </blockquote>
 </div>
 <div class="section level3">

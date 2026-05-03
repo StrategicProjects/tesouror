@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,13 +102,16 @@ call any function without arguments to retrieve the full dataset.</p>
 </h2>
 <blockquote>
 <p><strong>The CUSTOS API is slow.</strong> Its server default is only
-250 rows per page (the package increases this to 1000), but unfiltered
-queries can still return hundreds of thousands of rows across many
-pages, with frequent HTTP 504 timeouts. <strong>Always filter your
-queries</strong> by at least:</p>
+250 rows per page; the package raises this to 500 by default (lowered
+from 1000 in 0.2.1 after the upstream load balancer started cutting
+broader queries). Even with 500-row pages, unfiltered queries routinely
+hit HTTP 504 timeouts. <strong>Always filter your queries</strong> by at
+least:</p>
 <ul>
 <li>
-<code>year</code> + <code>month</code> (reduce time range)</li>
+<code>year</code> <strong>and</strong> <code>month</code> —
+year-only queries are the single most common cause of 504s; always pin a
+single month for production work</li>
 <li>
 <code>org_level1</code> + <code>org_level2</code> (reduce to a
 specific organization)</li>
@@ -117,9 +120,12 @@ specific organization)</li>
 <li>
 <code>max_rows</code> (set a hard cap for testing)</li>
 </ul>
-<p>The package retries automatically on 504 errors (up to 5 times with
-progressive backoff), but narrower filters prevent them in the first
-place.</p>
+<p>The package retries automatically on 504s (up to 5 attempts with
+progressive backoff). When pagination fails after the first page, the
+rows already fetched are <strong>not discarded</strong> — you receive a
+partial tibble with <code>attr(result, "partial") = TRUE</code> and
+<code>attr(result, "last_page_error")</code> describing the failure.
+Always check these attributes when working with broad queries.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -238,13 +244,20 @@ produce the same query.</p>
 <span><span class="va">mec</span> <span class="op">&lt;-</span> <span class="va">orgaos</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sigla</span> <span class="op">==</span> <span class="st">"MEC"</span><span class="op">)</span>          <span class="co"># code 244</span></span>
 <span><span class="va">inep</span> <span class="op">&lt;-</span> <span class="va">orgaos</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sigla</span> <span class="op">==</span> <span class="st">"INEP"</span><span class="op">)</span>         <span class="co"># code 249</span></span>
 <span></span>
-<span><span class="co"># Step 2: Query CUSTOS with org filters (much faster than unfiltered!)</span></span>
-<span><span class="co"># Active staff costs for INEP, all months of 2023</span></span>
+<span><span class="co"># Step 2: Query CUSTOS with org AND month filters (year-only is unsafe!)</span></span>
+<span><span class="co"># Active staff costs for INEP, June 2023</span></span>
 <span><span class="va">ativos_inep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_custos_pessoal_ativo.html">get_costs_active_staff</a></span><span class="op">(</span></span>
-<span>  year <span class="op">=</span> <span class="fl">2023</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2023</span>, month <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  org_level1 <span class="op">=</span> <span class="fl">244</span>,     <span class="co"># MEC — auto-padded to "000244"</span></span>
 <span>  org_level2 <span class="op">=</span> <span class="fl">249</span>      <span class="co"># INEP — auto-padded to "000249"</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Always check whether pagination completed; on 504 mid-stream the</span></span>
+<span><span class="co"># package returns a partial tibble rather than dropping the data.</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ativos_inep</span>, <span class="st">"partial"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Partial result — last page failed: "</span>,</span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ativos_inep</span>, <span class="st">"last_page_error"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Pensioner costs for INEP, June 2023 only</span></span>
 <span><span class="va">pensionistas_inep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_custos_pensionistas.html">get_costs_pensioners</a></span><span class="op">(</span></span>
