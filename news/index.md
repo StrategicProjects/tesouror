@@ -1,5 +1,22 @@
 # Changelog
 
+## tesouror 0.2.2
+
+CRAN auto-check fixes for the 0.2.1 submission:
+
+- Replaced the U+2264 (≤) character in `R/rreo_tidy.R` (in
+  [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)’s
+  `@details`) with `"up to"`. The original character broke the LaTeX
+  manual build on r-devel-windows and r-devel-linux-debian-gcc.
+- Single-quoted technical acronyms (CUSTOS, DCA, FNDE, MEC, MSC, RGF,
+  RREO, SADIPEM, SICONFI, SIOPE, SIORG, Tesouro, Nacional,
+  Transferencias, Constitucionais) in DESCRIPTION’s Description field to
+  suppress the spell-check NOTE.
+- Removed the `https://www.condepefidem.pe.gov.br` link from
+  `vignettes/transferencias_pernambuco.Rmd` (the agency’s site times out
+  from CRAN’s checkers). The CONDEPE/FIDEM attribution stays as plain
+  text.
+
 ## tesouror 0.2.1
 
 ### Robustness against upstream timeouts (CUSTOS)
