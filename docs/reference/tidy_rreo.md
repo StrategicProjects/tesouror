@@ -58,8 +58,8 @@ Currently supported topics:
 - `"previdencia"` — federal previdência (RGPS, RPPS civis, FCDF,
   militares inativos) for the União sphere. Anexos 04.1 / 04.2 / 04.3 /
   04.4 of the RREO; the layout knows that the RGPS appendix moved from
-  04.3 (≤2022) to 04.4 (2023+) and that civis/FCDF moved from 04.1
-  (≤2022) to 04.2 (2023+).
+  04.3 (up to 2022) to 04.4 (2023+) and that civis/FCDF moved from 04.1
+  (up to 2022) to 04.2 (2023+).
 
 Pull requests adding new topics to `inst/extdata/rreo_layout.csv` are
 welcome.

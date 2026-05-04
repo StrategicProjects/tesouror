@@ -749,7 +749,6 @@ ggplot(tc_cat_geo) +
 
 - Tesouro Nacional — API de Transferências Constitucionais:
   <https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs>
-- CONDEPE/FIDEM — Regiões de Desenvolvimento de Pernambuco:
-  <https://www.condepefidem.pe.gov.br>
+- CONDEPE/FIDEM — Regiões de Desenvolvimento de Pernambuco
 - MetBrewer — Paletas de cores:
   <https://github.com/BlakeRMills/MetBrewer>
