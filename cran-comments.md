@@ -1,5 +1,27 @@
 ## Submission summary
 
+`tesouror 0.2.2` — resubmission addressing the issues flagged by
+CRAN's auto-check on the 0.2.1 submission:
+
+1. **PDF manual ERROR + WARNING** (`r-devel-windows-x86_64`,
+   `r-devel-linux-x86_64-debian-gcc`): the LaTeX builder couldn't
+   render U+2264 (`≤`) used in `tidy_rreo()`'s `@details`. Replaced
+   with the ASCII phrase "up to". Verified locally with
+   `R CMD check --as-cran` (PDF build now clean).
+2. **`CRAN incoming feasibility` NOTE on misspellings** (both
+   flavors): single-quoted the Brazilian-government acronyms in the
+   `Description:` field of `DESCRIPTION` (SICONFI, CUSTOS, SADIPEM,
+   SIORG, SIOPE, RREO, RGF, DCA, MSC, FNDE, MEC, plus Tesouro,
+   Nacional, Transferencias, Constitucionais), per CRAN convention
+   for technical names that aren't dictionary words.
+3. **Invalid URL `https://www.condepefidem.pe.gov.br`** (both
+   flavors, timeout): removed the link from
+   `vignettes/transferencias_pernambuco.Rmd`. The agency's site has
+   been intermittently unreachable; the CONDEPE/FIDEM credit
+   remains as plain text.
+
+The first submission's broader context still applies:
+
 This is the first CRAN submission of `tesouror`. It supersedes the
 unreleased `siconfir` package, expanding the scope from one to six
 Brazilian National Treasury / open-data APIs (SICONFI, CUSTOS, SADIPEM,

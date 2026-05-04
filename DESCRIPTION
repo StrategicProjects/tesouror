@@ -1,6 +1,6 @@
 Package: tesouror
 Title: Access Brazilian National Treasury Open Data APIs
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
     person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
@@ -10,18 +10,18 @@ Authors@R: c(
     person("Tiago", "Pereira", email = "tiago.pereira@tesouro.gov.br", role = "aut"),
     person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"))
 Description: Provides a unified interface to access open data from the
-    Brazilian National Treasury (Tesouro Nacional) and related government
-    APIs. Covers six data sources: SICONFI
+    Brazilian National Treasury ('Tesouro Nacional') and related government
+    APIs. Covers six data sources: 'SICONFI'
     <https://apidatalake.tesouro.gov.br/docs/siconfi/> for fiscal reports
-    (RREO, RGF, DCA, MSC) and entity information; CUSTOS
+    ('RREO', 'RGF', 'DCA', 'MSC') and entity information; 'CUSTOS'
     <https://apidatalake.tesouro.gov.br/docs/custos/> for federal
-    government cost data; SADIPEM
+    government cost data; 'SADIPEM'
     <https://apidatalake.tesouro.gov.br/docs/sadipem/> for public debt and
-    credit operations; Transferencias Constitucionais
+    credit operations; 'Transferencias Constitucionais'
     <https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs>
-    for constitutional transfers to states and municipalities; SIORG
+    for constitutional transfers to states and municipalities; 'SIORG'
     <https://estruturaorganizacional.dados.gov.br> for federal
-    organizational structure; and SIOPE (FNDE/MEC) for education
+    organizational structure; and 'SIOPE' ('FNDE'/'MEC') for education
     spending data. Features automatic pagination, in-memory caching,
     retry logic, and tidy output.
 License: MIT + file LICENSE
