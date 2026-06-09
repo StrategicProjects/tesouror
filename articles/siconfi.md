@@ -24,21 +24,21 @@ accounting balances matrices (MSC).
 
 ## Parameter mapping
 
-| Portuguese (API)        | English         | Description                 |
-|:------------------------|:----------------|:----------------------------|
-| `an_exercicio`          | `fiscal_year`   | Fiscal year                 |
-| `id_ente`               | `entity_id`     | IBGE entity code            |
-| `no_anexo`              | `appendix`      | Report appendix name        |
-| `an_referencia`         | `year`          | Reference year              |
-| `me_referencia`         | `month`         | Reference month             |
-| `nr_periodo`            | `period`        | Period number               |
-| `co_tipo_demonstrativo` | `report_type`   | Report type                 |
-| `co_esfera`             | `sphere`        | Government sphere (M/E/U)   |
-| `co_poder`              | `branch`        | Government branch           |
-| `in_periodicidade`      | `periodicity`   | Periodicity (Q/S)           |
-| `co_tipo_matriz`        | `matrix_type`   | MSC matrix type (MSCC/MSCE) |
-| `classe_conta`          | `account_class` | Account class               |
-| `id_tv`                 | `value_type`    | Value type                  |
+| Portuguese (API) | English | Description |
+|:---|:---|:---|
+| `an_exercicio` | `fiscal_year` | Fiscal year |
+| `id_ente` | `entity_id` | IBGE entity code |
+| `no_anexo` | `appendix` | Report appendix name |
+| `an_referencia` | `year` | Reference year |
+| `me_referencia` | `month` | Reference month |
+| `nr_periodo` | `period` | Period number |
+| `co_tipo_demonstrativo` | `report_type` | Report type |
+| `co_esfera` | `sphere` | Government sphere (M/E/U) — optional; omit if a filtered call returns empty |
+| `co_poder` | `branch` | Government branch |
+| `in_periodicidade` | `periodicity` | Periodicity (Q/S) |
+| `co_tipo_matriz` | `matrix_type` | MSC matrix type (MSCC/MSCE) |
+| `classe_conta` | `account_class` | Account class |
+| `id_tv` | `value_type` | Value type |
 
 ## Examples
 
@@ -66,6 +66,24 @@ rreo <- get_budget_report(
   report_type = "RREO",
   appendix = "RREO-Anexo 01",
   sphere = "E", entity_id = 17
+)
+```
+
+The `sphere` argument (`co_esfera`) is **optional**. Some entities only
+return data when the sphere filter is *omitted* — notably the Federal
+District constitutional fund, whose previdência appendix comes back
+empty if a sphere is supplied. If a sphere-filtered call returns
+nothing, drop `sphere`/`co_esfera` entirely:
+
+``` r
+
+# Federal District constitutional fund (id_ente = 1), RREO-Anexo 04.2 —
+# only returns rows when co_esfera is NOT passed
+fcdf <- get_rreo(
+  an_exercicio = 2023, nr_periodo = 6,
+  co_tipo_demonstrativo = "RREO",
+  no_anexo = "RREO-Anexo 04.2",
+  id_ente = 1
 )
 ```
 
