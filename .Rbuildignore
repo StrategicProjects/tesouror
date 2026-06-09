@@ -10,6 +10,7 @@
 ^data-raw$
 ^\.positai$
 ^\.claude$
+^CLAUDE\.md$
 ^doc$
 ^Meta$
 ^cran-comments\.md$
