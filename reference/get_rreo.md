@@ -12,7 +12,7 @@ get_rreo(
   nr_periodo,
   co_tipo_demonstrativo,
   no_anexo,
-  co_esfera,
+  co_esfera = NULL,
   id_ente,
   use_cache = TRUE,
   verbose = FALSE,
@@ -21,7 +21,7 @@ get_rreo(
 )
 
 get_budget_report(fiscal_year, period, report_type, appendix,
-  sphere, entity_id, use_cache = TRUE, verbose = FALSE,
+  sphere = NULL, entity_id, use_cache = TRUE, verbose = FALSE,
   page_size = NULL, max_rows = Inf)
 ```
 
@@ -48,8 +48,12 @@ get_budget_report(fiscal_year, period, report_type, appendix,
 
 - co_esfera:
 
-  Character. Government sphere: `"M"` (municipalities), `"E"` (states),
-  or `"U"` (union). **Required**.
+  Character or `NULL`. Government sphere: `"M"` (municipalities), `"E"`
+  (states), or `"U"` (union). **Optional** — defaults to `NULL`, which
+  omits the `co_esfera` filter from the request. Some entities (e.g. the
+  Federal District constitutional fund) only return data when the sphere
+  is *not* supplied, so leave this `NULL` if a sphere-filtered call
+  comes back empty.
 
 - id_ente:
 
@@ -97,8 +101,9 @@ get_budget_report(fiscal_year, period, report_type, appendix,
 
 - sphere:
 
-  Character. Government sphere: `"M"` (municipalities), `"E"` (states),
-  or `"U"` (union). **Required**. Maps to `co_esfera`.
+  Character or `NULL`. Government sphere: `"M"` (municipalities), `"E"`
+  (states), or `"U"` (union). **Optional** — defaults to `NULL`, which
+  omits the sphere filter. Maps to `co_esfera`.
 
 - entity_id:
 

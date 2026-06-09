@@ -1,6 +1,21 @@
 # Changelog
 
+## tesouror 0.2.3
+
+- **`co_esfera` is now optional in
+  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)**
+  (and the `sphere` argument of
+  [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)),
+  defaulting to `NULL`. When `NULL` the sphere filter is omitted from
+  the request. Some SICONFI entities — notably the Federal District
+  constitutional fund (`id_ente = 1`) — only return data when
+  `co_esfera` is *absent*; previously the argument was mandatory, making
+  those records unreachable. Existing calls that pass `co_esfera` are
+  unaffected.
+
 ## tesouror 0.2.2
+
+CRAN release: 2026-05-06
 
 CRAN auto-check fixes for the 0.2.1 submission:
 
