@@ -1,4 +1,4 @@
-# tesouror 0.2.3 (development version)
+# tesouror 0.2.3
 
 * **`co_esfera` is now optional in `get_rreo()`** (and the `sphere`
   argument of `get_budget_report()`), defaulting to `NULL`. When `NULL`
