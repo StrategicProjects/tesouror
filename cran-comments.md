@@ -1,17 +1,21 @@
 ## Submission summary
 
-`tesouror 0.2.3` — a small maintenance update to the version currently
-on CRAN (0.2.2).
+`tesouror 0.3.0` — a feature release following 0.2.3.
 
-This release makes the `co_esfera` argument of `get_rreo()` (and the
-`sphere` argument of its English alias `get_budget_report()`) optional.
-Some SICONFI entities only return data when the sphere filter is absent
-— notably the Federal District constitutional fund — so the previously
-mandatory argument made those records unreachable. `co_esfera` now
-defaults to `NULL` and is omitted from the request when not supplied;
-existing calls that pass it are unaffected. A regression test was added.
+* **Clearer SICONFI function names.** The single-entity report getters were
+  renamed to make their scope explicit (e.g. `get_rreo()` → `get_rreo_ufs()`),
+  and the state-wide municipality sweeps moved from the `_for_state` suffix to
+  `_municipios` / `_municipalities`. **No API was broken:** every old name is
+  retained as an exported, deprecated wrapper that emits a `.Deprecated()`
+  warning and forwards to its replacement (documented under
+  `?"tesouror-deprecated"`).
+* **New SIOPE entity-type filter.** All `get_siope_*()` functions gained an
+  optional `tipo` / `type` argument that applies a server-side filter so
+  callers can fetch only the state row or only the municipalities. Existing
+  calls are unaffected (defaults to `NULL`).
 
-No user-visible API was removed or renamed.
+The documentation was regenerated with roxygen2 8.0.0 (cosmetic `.Rd`
+changes only).
 
 ## Test environments
 
@@ -24,14 +28,20 @@ No user-visible API was removed or renamed.
 0 errors | 0 warnings | 0 notes
 ```
 
+Locally a single NOTE is emitted — "Skipping checking HTML validation:
+'tidy' doesn't look like recent enough HTML Tidy" — which reflects the old
+`tidy` binary on the test machine, not the package, and does not occur on
+CRAN's check machines.
+
 ## Network access in tests and examples
 
-Unchanged from 0.2.2. The package wraps several public Brazilian
+Unchanged from 0.2.x. The package wraps several public Brazilian
 government APIs. Tests under `tests/testthat/` are network-free: HTTP
 responses are mocked through `httr2::with_mocked_responses()` and the
 retry timer is mocked via `testthat::local_mocked_bindings()`, so the
 suite finishes in well under a minute. Examples that need network are
-wrapped in `\dontrun{}`.
+wrapped in `\dontrun{}` and vignette chunks that call the APIs use
+`eval = FALSE`.
 
 ## Reverse dependencies
 
