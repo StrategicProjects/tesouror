@@ -101,12 +101,12 @@ tc <- get_tc_por_municipio(
 }
 }
 \seealso{
-Other Transferencias: 
-\code{\link{get_tc_estados}()},
-\code{\link{get_tc_municipios}()},
-\code{\link{get_tc_por_estados}()},
-\code{\link{get_tc_por_estados_detalhe}()},
-\code{\link{get_tc_por_municipio_detalhe}()},
-\code{\link{get_tc_transferencias}()}
+Other Transferencias:
+\code{\link[=get_tc_estados]{get_tc_estados()}},
+\code{\link[=get_tc_municipios]{get_tc_municipios()}},
+\code{\link[=get_tc_por_estados]{get_tc_por_estados()}},
+\code{\link[=get_tc_por_estados_detalhe]{get_tc_por_estados_detalhe()}},
+\code{\link[=get_tc_por_municipio_detalhe]{get_tc_por_municipio_detalhe()}},
+\code{\link[=get_tc_transferencias]{get_tc_transferencias()}}
 }
 \concept{Transferencias}

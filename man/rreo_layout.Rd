@@ -26,8 +26,8 @@ with \code{\link[=get_rreo]{get_rreo()}} for a given topic.
 rreo_layout()
 }
 \seealso{
-Other RREO tidy: 
-\code{\link{rreo_normalize_columns}()},
-\code{\link{tidy_rreo}()}
+Other RREO tidy:
+\code{\link[=rreo_normalize_columns]{rreo_normalize_columns()}},
+\code{\link[=tidy_rreo]{tidy_rreo()}}
 }
 \concept{RREO tidy}

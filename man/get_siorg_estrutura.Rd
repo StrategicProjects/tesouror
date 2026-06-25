@@ -55,8 +55,8 @@ estrutura <- get_siorg_estrutura(codigo_unidade = 46)
 }
 }
 \seealso{
-Other SIORG: 
-\code{\link{get_siorg_orgaos}()},
-\code{\link{get_siorg_unidade}()}
+Other SIORG:
+\code{\link[=get_siorg_orgaos]{get_siorg_orgaos()}},
+\code{\link[=get_siorg_unidade]{get_siorg_unidade()}}
 }
 \concept{SIORG}

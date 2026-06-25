@@ -9,7 +9,7 @@
 
 | API | Data | Functions |
 |:---|:---|:---|
-| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | `get_rreo()`, `get_rgf()`, `get_dca()`, ... |
+| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | `get_rreo_ufs()`, `get_rgf_ufs()`, `get_dca_ufs()`, ... |
 | **CUSTOS** | Federal government costs | `get_custos_pessoal_ativo()`, ... |
 | **SADIPEM** | Public debt & credit operations (PVL) | `get_pvl()`, `get_opc_*()`, `get_res_*()` |
 | **SIORG** | Federal organizational structure (dictionary for CUSTOS) | `get_siorg_orgaos()`, `get_siorg_estrutura()` |
@@ -31,9 +31,9 @@ However, because the source APIs are natively in Portuguese, some
 <code>appendix = "RREO-Anexo 01"</code>), and <strong>response column
 names</strong> are in Portuguese (e.g., <code>cod_ibge</code>,
 <code>exercicio</code>, <code>valor</code>). For example: you may use
-<code>get_budget_report()</code>, but you need to pass values like
+<code>get_budget_report_ufs()</code>, but you need to pass values like
 <code>appendix = "RREO-Anexo 01"</code>. The original Portuguese-named
-functions (e.g., <code>get_rreo(an_exercicio = 2022)</code>) are also fully
+functions (e.g., <code>get_rreo_ufs(an_exercicio = 2022)</code>) are also fully
 supported. You can find the original list of endpoints and their respective
 parameters in the official API documentation:
 <a href="https://apidatalake.tesouro.gov.br/docs/siconfi/">SICONFI</a>,
@@ -63,7 +63,7 @@ library(tesouror)
 entes <- get_entes()
 
 # RREO for Tocantins
-rreo <- get_budget_report(
+rreo <- get_budget_report_ufs(
   fiscal_year = 2022, period = 6, report_type = "RREO",
   appendix = "RREO-Anexo 01", sphere = "E", entity_id = 17
 )

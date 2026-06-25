@@ -40,8 +40,8 @@ demo <- tibble::tibble(
 rreo_normalize_columns(demo)
 }
 \seealso{
-Other RREO tidy: 
-\code{\link{rreo_layout}()},
-\code{\link{tidy_rreo}()}
+Other RREO tidy:
+\code{\link[=rreo_layout]{rreo_layout()}},
+\code{\link[=tidy_rreo]{tidy_rreo()}}
 }
 \concept{RREO tidy}

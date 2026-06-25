@@ -92,17 +92,17 @@ msc_pat <- get_msc_patrimonial(
 }
 }
 \seealso{
-Other SICONFI: 
-\code{\link{get_anexos}()},
-\code{\link{get_dca}()},
-\code{\link{get_dca_for_state}()},
-\code{\link{get_entes}()},
-\code{\link{get_extrato}()},
-\code{\link{get_msc_controle}()},
-\code{\link{get_msc_orcamentaria}()},
-\code{\link{get_rgf}()},
-\code{\link{get_rgf_for_state}()},
-\code{\link{get_rreo}()},
-\code{\link{get_rreo_for_state}()}
+Other SICONFI:
+\code{\link[=get_anexos]{get_anexos()}},
+\code{\link[=get_dca_municipios]{get_dca_municipios()}},
+\code{\link[=get_dca_ufs]{get_dca_ufs()}},
+\code{\link[=get_entes]{get_entes()}},
+\code{\link[=get_extrato]{get_extrato()}},
+\code{\link[=get_msc_controle]{get_msc_controle()}},
+\code{\link[=get_msc_orcamentaria]{get_msc_orcamentaria()}},
+\code{\link[=get_rgf_municipios]{get_rgf_municipios()}},
+\code{\link[=get_rgf_ufs]{get_rgf_ufs()}},
+\code{\link[=get_rreo_municipios]{get_rreo_municipios()}},
+\code{\link[=get_rreo_ufs]{get_rreo_ufs()}}
 }
 \concept{SICONFI}

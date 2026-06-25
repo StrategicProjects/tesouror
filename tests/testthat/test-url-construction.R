@@ -7,26 +7,16 @@
 # can be brittle across httr2 versions. A mock function is simpler and gives
 # us substring matching on the URL.
 
-capture_url <- function(response_fn = function() mock_ords_response(items = list())) {
-  rec <- new.env(parent = emptyenv())
-  rec$urls <- character()
-  list(
-    mock = function(req) {
-      rec$urls <- c(rec$urls, req$url)
-      response_fn()
-    },
-    urls = function() rec$urls
-  )
-}
+# `capture_url()` lives in helper-mocks.R so every test file can use it.
 
-test_that("get_rreo builds the SICONFI rreo URL with all required params", {
+test_that("get_rreo_ufs builds the SICONFI rreo URL with all required params", {
   skip_if_no_httptest2()
   local_fast_retry()
   rec <- capture_url()
 
   out <- httr2::with_mocked_responses(
     rec$mock,
-    suppressMessages(get_rreo(
+    suppressMessages(get_rreo_ufs(
       an_exercicio = 2022, nr_periodo = 6,
       co_tipo_demonstrativo = "RREO", no_anexo = "RREO-Anexo 01",
       co_esfera = "E", id_ente = 17, use_cache = FALSE
@@ -43,7 +33,7 @@ test_that("get_rreo builds the SICONFI rreo URL with all required params", {
   expect_match(url, "id_ente=17")
 })
 
-test_that("get_rreo omits co_esfera from the URL when it is NULL", {
+test_that("get_rreo_ufs omits co_esfera from the URL when it is NULL", {
   # Some SICONFI entities (e.g. the DF constitutional fund) only return data
   # when the sphere filter is absent. co_esfera is optional and a NULL value
   # must be dropped from the query string entirely.
@@ -53,7 +43,7 @@ test_that("get_rreo omits co_esfera from the URL when it is NULL", {
 
   httr2::with_mocked_responses(
     rec$mock,
-    suppressMessages(get_rreo(
+    suppressMessages(get_rreo_ufs(
       an_exercicio = 2023, nr_periodo = 6,
       co_tipo_demonstrativo = "RREO", no_anexo = "RREO-Anexo 04.2",
       id_ente = 1, use_cache = FALSE
@@ -65,14 +55,14 @@ test_that("get_rreo omits co_esfera from the URL when it is NULL", {
   expect_no_match(url, "co_esfera")
 })
 
-test_that("get_dca uses the SICONFI /dca endpoint", {
+test_that("get_dca_ufs uses the SICONFI /dca endpoint", {
   skip_if_no_httptest2()
   local_fast_retry()
   rec <- capture_url()
 
   httr2::with_mocked_responses(
     rec$mock,
-    suppressMessages(get_dca(an_exercicio = 2022, id_ente = 17, use_cache = FALSE))
+    suppressMessages(get_dca_ufs(an_exercicio = 2022, id_ente = 17, use_cache = FALSE))
   )
 
   url <- rec$urls()[1]

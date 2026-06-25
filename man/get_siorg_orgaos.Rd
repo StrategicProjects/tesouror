@@ -67,9 +67,9 @@ mec_filhos <- orgaos[orgaos$codigo_unidade_pai == mec_code, ]
 }
 }
 \seealso{
-Other SIORG: 
-\code{\link{get_siorg_estrutura}()},
-\code{\link{get_siorg_unidade}()}
+Other SIORG:
+\code{\link[=get_siorg_estrutura]{get_siorg_estrutura()}},
+\code{\link[=get_siorg_unidade]{get_siorg_unidade()}}
 }
 \concept{SIORG}
 \concept{SIORG dictionaries}

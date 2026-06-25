@@ -32,6 +32,21 @@ mock_error_response <- function(status_code = 500L,
   )
 }
 
+# Record the URL(s) of mocked requests and return a canned response. Used by
+# the URL-construction tests (and others) to assert on query strings without
+# hitting the network.
+capture_url <- function(response_fn = function() mock_ords_response(items = list())) {
+  rec <- new.env(parent = emptyenv())
+  rec$urls <- character()
+  list(
+    mock = function(req) {
+      rec$urls <- c(rec$urls, req$url)
+      response_fn()
+    },
+    urls = function() rec$urls
+  )
+}
+
 # Disable retry sleeps and ensure cache is clean for every test.
 local_fast_retry <- function(.envir = parent.frame()) {
   testthat::local_mocked_bindings(

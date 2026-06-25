@@ -9,6 +9,7 @@ get_siope_indicadores(
   ano,
   periodo,
   uf,
+  tipo = NULL,
   use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000L,
@@ -18,7 +19,7 @@ get_siope_indicadores(
   select = NULL
 )
 
-get_siope_indicators(year, period, state, use_cache = TRUE,
+get_siope_indicators(year, period, state, type = NULL, use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000, max_rows = Inf,
   filter = NULL, orderby = NULL, select = NULL)
@@ -29,6 +30,13 @@ get_siope_indicators(year, period, state, use_cache = TRUE,
 \item{periodo}{Integer. Bimester period (1-6). \strong{Required}.}
 
 \item{uf}{Character. State abbreviation (e.g., \code{"PE"}). \strong{Required}.}
+
+\item{tipo}{Character. Convenience filter on the entity type, applied
+\strong{server-side} via the \code{DS_TIPO} column so you don't download both the
+state and all its municipalities. Accepts \code{"estado"}/\code{"uf"} (state) or
+\code{"municipio"}/\code{"municipios"} (municipalities), accent- and
+case-insensitive. Combined with \code{filter} via \code{and} when both are given.
+Defaults to \code{NULL} (no type filter). \code{type} is the English alias.}
 
 \item{use_cache}{Logical. If \code{TRUE} (default), uses an in-memory cache.}
 
@@ -62,6 +70,9 @@ returns HTTP 400. Optional.}
 \item{period}{Integer. Bimester (1-6). \strong{Required}. Maps to \code{periodo}.}
 
 \item{state}{Character. State abbreviation. \strong{Required}. Maps to \code{uf}.}
+
+\item{type}{Character. English alias for \code{tipo}: \code{"state"}/\code{"uf"} or
+\code{"municipality"}/\code{"municipalities"}. Optional, defaults to \code{NULL}.}
 }
 \value{
 A \link[tibble:tibble]{tibble} with 13 columns including indicator
@@ -80,13 +91,13 @@ ind <- get_siope_indicadores(ano = 2023, periodo = 6, uf = "PE")
 }
 }
 \seealso{
-Other SIOPE: 
-\code{\link{get_siope_dados_gerais}()},
-\code{\link{get_siope_despesas}()},
-\code{\link{get_siope_despesas_funcao}()},
-\code{\link{get_siope_info_complementares}()},
-\code{\link{get_siope_receitas}()},
-\code{\link{get_siope_remuneracao}()},
-\code{\link{get_siope_responsaveis}()}
+Other SIOPE:
+\code{\link[=get_siope_dados_gerais]{get_siope_dados_gerais()}},
+\code{\link[=get_siope_despesas]{get_siope_despesas()}},
+\code{\link[=get_siope_despesas_funcao]{get_siope_despesas_funcao()}},
+\code{\link[=get_siope_info_complementares]{get_siope_info_complementares()}},
+\code{\link[=get_siope_receitas]{get_siope_receitas()}},
+\code{\link[=get_siope_remuneracao]{get_siope_remuneracao()}},
+\code{\link[=get_siope_responsaveis]{get_siope_responsaveis()}}
 }
 \concept{SIOPE}

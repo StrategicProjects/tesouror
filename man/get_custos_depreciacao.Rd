@@ -107,11 +107,11 @@ deprec <- get_custos_depreciacao(
 }
 }
 \seealso{
-Other CUSTOS: 
-\code{\link{get_custos_demais}()},
-\code{\link{get_custos_pensionistas}()},
-\code{\link{get_custos_pessoal_ativo}()},
-\code{\link{get_custos_pessoal_inativo}()},
-\code{\link{get_custos_transferencias}()}
+Other CUSTOS:
+\code{\link[=get_custos_demais]{get_custos_demais()}},
+\code{\link[=get_custos_pensionistas]{get_custos_pensionistas()}},
+\code{\link[=get_custos_pessoal_ativo]{get_custos_pessoal_ativo()}},
+\code{\link[=get_custos_pessoal_inativo]{get_custos_pessoal_inativo()}},
+\code{\link[=get_custos_transferencias]{get_custos_transferencias()}}
 }
 \concept{CUSTOS}

@@ -68,8 +68,8 @@ tidy_rreo(rreo, topic = "previdencia", regime = "rgps") |>
 }
 }
 \seealso{
-Other RREO tidy: 
-\code{\link{rreo_layout}()},
-\code{\link{rreo_normalize_columns}()}
+Other RREO tidy:
+\code{\link[=rreo_layout]{rreo_layout()}},
+\code{\link[=rreo_normalize_columns]{rreo_normalize_columns()}}
 }
 \concept{RREO tidy}

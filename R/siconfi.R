@@ -102,14 +102,20 @@ get_annexes <- function(use_cache = TRUE, verbose = FALSE, page_size = NULL, max
   get_anexos(use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
 }
 
-# -- get_dca / get_annual_accounts --------------------------------------------
+# -- get_dca_ufs / get_annual_accounts_ufs ------------------------------------
 
-#' Get annual accounts data (DCA)
+#' Get annual accounts data (DCA) for a single entity
 #'
 #' Retrieves data from the Annual Accounts Declaration (DCA) or the legacy
-#' QDCC for a specific entity and fiscal year.
+#' QDCC for a **single** entity (a state or a municipality, identified by
+#' `id_ente`) and fiscal year. To sweep every municipality of a state, use
+#' [get_dca_municipios()].
 #'
-#' `get_annual_accounts()` is an English alias for `get_dca()`.
+#' `get_annual_accounts_ufs()` is an English-parameter alias for `get_dca_ufs()`.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_dca()` for clarity. The old name still works
+#' but is deprecated.
 #'
 #' @param an_exercicio Integer. Fiscal year (e.g., `2022`). **Required**.
 #' @param id_ente Integer. IBGE code of the entity. **Required**.
@@ -135,9 +141,9 @@ get_annexes <- function(use_cache = TRUE, verbose = FALSE, page_size = NULL, max
 #' @export
 #' @examples
 #' \dontrun{
-#' dca <- get_dca(an_exercicio = 2022, id_ente = 17)
+#' dca <- get_dca_ufs(an_exercicio = 2022, id_ente = 17)
 #' }
-get_dca <- function(an_exercicio, id_ente, no_anexo = NULL, use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
+get_dca_ufs <- function(an_exercicio, id_ente, no_anexo = NULL, use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(an_exercicio, id_ente)
 
   params <- list(
@@ -149,21 +155,21 @@ get_dca <- function(an_exercicio, id_ente, no_anexo = NULL, use_cache = TRUE, ve
   siconfi_fetch_all("/dca", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
 }
 
-#' @rdname get_dca
+#' @rdname get_dca_ufs
 #' @param fiscal_year Integer. Fiscal year (e.g., `2022`). **Required**.
 #'   Maps to `an_exercicio`.
 #' @param entity_id Integer. IBGE code of the entity. **Required**.
 #'   Maps to `id_ente`.
 #' @param appendix Character. Appendix name filter (e.g.,
 #'   `"DCA-Anexo I-AB"`). Optional. Maps to `no_anexo`.
-#' @usage get_annual_accounts(fiscal_year, entity_id, appendix = NULL,
+#' @usage get_annual_accounts_ufs(fiscal_year, entity_id, appendix = NULL,
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_annual_accounts <- function(fiscal_year, entity_id, appendix = NULL,
+get_annual_accounts_ufs <- function(fiscal_year, entity_id, appendix = NULL,
                                 use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(fiscal_year, entity_id)
-  get_dca(
+  get_dca_ufs(
     an_exercicio = fiscal_year,
     id_ente      = entity_id,
     no_anexo     = appendix,
@@ -174,15 +180,19 @@ get_annual_accounts <- function(fiscal_year, entity_id, appendix = NULL,
   )
 }
 
-# -- get_dca_for_state / get_annual_accounts_for_state ------------------------
+# -- get_dca_municipios / get_annual_accounts_municipalities ------------------
 
 #' Get DCA data for all municipalities of a Brazilian state
 #'
 #' Fetches annual accounts (DCA) for every municipality of `state_uf`, looping
-#' over [get_dca()] with fault tolerance. See [get_rreo_for_state()] for the
+#' over [get_dca_ufs()] with fault tolerance. See [get_rreo_municipios()] for the
 #' rationale and behaviour of `on_error`.
 #'
-#' `get_annual_accounts_for_state()` is an English-parameter alias.
+#' `get_annual_accounts_municipalities()` is an English-parameter alias.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_dca_for_state()` for clarity. The old name
+#' still works but is deprecated.
 #'
 #' @param state_uf Character. Two-letter UF code (e.g., `"PE"`). **Required**.
 #' @param an_exercicio Integer. Fiscal year. **Required**.
@@ -202,9 +212,9 @@ get_annual_accounts <- function(fiscal_year, entity_id, appendix = NULL,
 #' @export
 #' @examples
 #' \dontrun{
-#' dca_pe <- get_dca_for_state(state_uf = "PE", an_exercicio = 2022)
+#' dca_pe <- get_dca_municipios(state_uf = "PE", an_exercicio = 2022)
 #' }
-get_dca_for_state <- function(state_uf, an_exercicio, no_anexo = NULL,
+get_dca_municipios <- function(state_uf, an_exercicio, no_anexo = NULL,
                               include_capital = TRUE,
                               on_error = c("warn", "stop", "silent"),
                               use_cache = TRUE, verbose = FALSE,
@@ -230,7 +240,7 @@ get_dca_for_state <- function(state_uf, an_exercicio, no_anexo = NULL,
   })
 
   tnr_loop(
-    .f             = get_dca,
+    .f             = get_dca_ufs,
     .params        = param_list,
     .id            = "id_ente",
     on_error       = on_error,
@@ -238,21 +248,21 @@ get_dca_for_state <- function(state_uf, an_exercicio, no_anexo = NULL,
   )
 }
 
-#' @rdname get_dca_for_state
+#' @rdname get_dca_municipios
 #' @param fiscal_year Integer. Fiscal year. **Required**. Maps to `an_exercicio`.
 #' @param appendix Character. Appendix name filter. Optional. Maps to `no_anexo`.
-#' @usage get_annual_accounts_for_state(state_uf, fiscal_year, appendix = NULL,
+#' @usage get_annual_accounts_municipalities(state_uf, fiscal_year, appendix = NULL,
 #'   include_capital = TRUE, on_error = c("warn", "stop", "silent"),
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_annual_accounts_for_state <- function(state_uf, fiscal_year, appendix = NULL,
+get_annual_accounts_municipalities <- function(state_uf, fiscal_year, appendix = NULL,
                                           include_capital = TRUE,
                                           on_error = c("warn", "stop", "silent"),
                                           use_cache = TRUE, verbose = FALSE,
                                           page_size = NULL, max_rows = Inf) {
   check_required(state_uf, fiscal_year)
-  get_dca_for_state(
+  get_dca_municipios(
     state_uf        = state_uf,
     an_exercicio    = fiscal_year,
     no_anexo        = appendix,
@@ -331,15 +341,21 @@ get_delivery_status <- function(entity_id, year, use_cache = TRUE, verbose = FAL
   )
 }
 
-# -- get_rreo / get_budget_report ---------------------------------------------
+# -- get_rreo_ufs / get_budget_report_ufs -------------------------------------
 
-#' Get Budget Execution Summary Report data (RREO)
+#' Get Budget Execution Summary Report data (RREO) for a single entity
 #'
-#' Retrieves data from the Budget Execution Summary Report (RREO) for specific
-#' filtering criteria. The RREO is published bimonthly and contains
-#' information about revenues, expenses, and other budgetary data.
+#' Retrieves data from the Budget Execution Summary Report (RREO) for a
+#' **single** entity (a state or a municipality, identified by `id_ente`).
+#' The RREO is published bimonthly and contains information about revenues,
+#' expenses, and other budgetary data. To sweep every municipality of a
+#' state, use [get_rreo_municipios()].
 #'
-#' `get_budget_report()` is an English-parameter alias for this function.
+#' `get_budget_report_ufs()` is an English-parameter alias for this function.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_rreo()` for clarity. The old name still works
+#' but is deprecated.
 #'
 #' @param an_exercicio Integer. Fiscal year (e.g., `2022`). **Required**.
 #' @param nr_periodo Integer. Bimester number (1-6). **Required**.
@@ -377,14 +393,14 @@ get_delivery_status <- function(entity_id, year, use_cache = TRUE, verbose = FAL
 #' @export
 #' @examples
 #' \dontrun{
-#' rreo <- get_rreo(
+#' rreo <- get_rreo_ufs(
 #'   an_exercicio = 2022, nr_periodo = 6,
 #'   co_tipo_demonstrativo = "RREO",
 #'   no_anexo = "RREO-Anexo 01",
 #'   co_esfera = "E", id_ente = 17
 #' )
 #' }
-get_rreo <- function(an_exercicio, nr_periodo, co_tipo_demonstrativo,
+get_rreo_ufs <- function(an_exercicio, nr_periodo, co_tipo_demonstrativo,
                      no_anexo, co_esfera = NULL, id_ente, use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(
     an_exercicio, nr_periodo, co_tipo_demonstrativo,
@@ -403,7 +419,7 @@ get_rreo <- function(an_exercicio, nr_periodo, co_tipo_demonstrativo,
   siconfi_fetch_all("/rreo", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
 }
 
-#' @rdname get_rreo
+#' @rdname get_rreo_ufs
 #' @param fiscal_year Integer. Fiscal year (e.g., `2022`). **Required**.
 #'   Maps to `an_exercicio`.
 #' @param period Integer. Bimester number (1-6). **Required**.
@@ -417,15 +433,15 @@ get_rreo <- function(an_exercicio, nr_periodo, co_tipo_demonstrativo,
 #'   omits the sphere filter. Maps to `co_esfera`.
 #' @param entity_id Integer. IBGE code of the entity. **Required**.
 #'   Maps to `id_ente`.
-#' @usage get_budget_report(fiscal_year, period, report_type, appendix,
+#' @usage get_budget_report_ufs(fiscal_year, period, report_type, appendix,
 #'   sphere = NULL, entity_id, use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_budget_report <- function(fiscal_year, period, report_type,
+get_budget_report_ufs <- function(fiscal_year, period, report_type,
                               appendix, sphere = NULL, entity_id,
                               use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(fiscal_year, period, report_type, appendix, entity_id)
-  get_rreo(
+  get_rreo_ufs(
     an_exercicio          = fiscal_year,
     nr_periodo            = period,
     co_tipo_demonstrativo = report_type,
@@ -439,12 +455,12 @@ get_budget_report <- function(fiscal_year, period, report_type,
   )
 }
 
-# -- get_rreo_for_state / get_budget_report_for_state -------------------------
+# -- get_rreo_municipios / get_budget_report_municipalities -------------------
 
 #' Get RREO data for all municipalities of a Brazilian state
 #'
 #' Fetches RREO data for every municipality of `state_uf`, looping over
-#' [get_rreo()] with fault tolerance: if an individual municipality call fails
+#' [get_rreo_ufs()] with fault tolerance: if an individual municipality call fails
 #' after all retries, the failure is recorded and the loop continues. Failed
 #' calls are returned in `attr(result, "failed")`.
 #'
@@ -453,7 +469,11 @@ get_budget_report <- function(fiscal_year, period, report_type,
 #' instead of aborting on the first error (see SICONFI behaviour for entities
 #' that have not yet homologated a given report).
 #'
-#' `get_budget_report_for_state()` is an English-parameter alias.
+#' `get_budget_report_municipalities()` is an English-parameter alias.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_rreo_for_state()` for clarity. The old name
+#' still works but is deprecated.
 #'
 #' @param state_uf Character. Two-letter UF code (e.g., `"PE"`, `"ES"`).
 #'   **Required**.
@@ -479,13 +499,13 @@ get_budget_report <- function(fiscal_year, period, report_type,
 #' @export
 #' @examples
 #' \dontrun{
-#' rreo_es <- get_rreo_for_state(
+#' rreo_es <- get_rreo_municipios(
 #'   state_uf = "ES", an_exercicio = 2021, nr_periodo = 6,
 #'   co_tipo_demonstrativo = "RREO", no_anexo = "RREO-Anexo 01"
 #' )
 #' attr(rreo_es, "failed")
 #' }
-get_rreo_for_state <- function(state_uf,
+get_rreo_municipios <- function(state_uf,
                                an_exercicio, nr_periodo, co_tipo_demonstrativo,
                                no_anexo,
                                include_capital = TRUE,
@@ -516,7 +536,7 @@ get_rreo_for_state <- function(state_uf,
   })
 
   tnr_loop(
-    .f             = get_rreo,
+    .f             = get_rreo_ufs,
     .params        = param_list,
     .id            = "id_ente",
     on_error       = on_error,
@@ -524,20 +544,20 @@ get_rreo_for_state <- function(state_uf,
   )
 }
 
-#' @rdname get_rreo_for_state
+#' @rdname get_rreo_municipios
 #' @param fiscal_year Integer. Fiscal year. **Required**. Maps to
 #'   `an_exercicio`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `nr_periodo`.
 #' @param report_type Character. `"RREO"` or `"RREO Simplificado"`.
 #'   **Required**. Maps to `co_tipo_demonstrativo`.
 #' @param appendix Character. Appendix name. **Required**. Maps to `no_anexo`.
-#' @usage get_budget_report_for_state(state_uf, fiscal_year, period,
+#' @usage get_budget_report_municipalities(state_uf, fiscal_year, period,
 #'   report_type, appendix, include_capital = TRUE,
 #'   on_error = c("warn", "stop", "silent"),
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_budget_report_for_state <- function(state_uf,
+get_budget_report_municipalities <- function(state_uf,
                                         fiscal_year, period, report_type,
                                         appendix,
                                         include_capital = TRUE,
@@ -545,7 +565,7 @@ get_budget_report_for_state <- function(state_uf,
                                         use_cache = TRUE, verbose = FALSE,
                                         page_size = NULL, max_rows = Inf) {
   check_required(state_uf, fiscal_year, period, report_type, appendix)
-  get_rreo_for_state(
+  get_rreo_municipios(
     state_uf              = state_uf,
     an_exercicio          = fiscal_year,
     nr_periodo            = period,
@@ -560,15 +580,21 @@ get_budget_report_for_state <- function(state_uf,
   )
 }
 
-# -- get_rgf / get_fiscal_report ----------------------------------------------
+# -- get_rgf_ufs / get_fiscal_report_ufs --------------------------------------
 
-#' Get Fiscal Management Report data (RGF)
+#' Get Fiscal Management Report data (RGF) for a single entity
 #'
-#' Retrieves data from the Fiscal Management Report (RGF) for specific
-#' filtering criteria. The RGF contains information about personnel expenses,
-#' debt, credit operations, and other fiscal indicators.
+#' Retrieves data from the Fiscal Management Report (RGF) for a **single**
+#' entity (a state or a municipality, identified by `id_ente`). The RGF
+#' contains information about personnel expenses, debt, credit operations,
+#' and other fiscal indicators. To sweep every municipality of a state, use
+#' [get_rgf_municipios()].
 #'
-#' `get_fiscal_report()` is an English-parameter alias for this function.
+#' `get_fiscal_report_ufs()` is an English-parameter alias for this function.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_rgf()` for clarity. The old name still works
+#' but is deprecated.
 #'
 #' @param an_exercicio Integer. Fiscal year (e.g., `2022`). **Required**.
 #' @param in_periodicidade Character. Periodicity: `"Q"` (four-monthly) or
@@ -603,13 +629,13 @@ get_budget_report_for_state <- function(state_uf,
 #' @export
 #' @examples
 #' \dontrun{
-#' rgf <- get_rgf(
+#' rgf <- get_rgf_ufs(
 #'   an_exercicio = 2022, in_periodicidade = "Q", nr_periodo = 3,
 #'   co_tipo_demonstrativo = "RGF", no_anexo = "RGF-Anexo 01",
 #'   co_esfera = "E", co_poder = "E", id_ente = 17
 #' )
 #' }
-get_rgf <- function(an_exercicio, in_periodicidade, nr_periodo,
+get_rgf_ufs <- function(an_exercicio, in_periodicidade, nr_periodo,
                     co_tipo_demonstrativo, no_anexo, co_esfera,
                     co_poder, id_ente, use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(
@@ -632,7 +658,7 @@ get_rgf <- function(an_exercicio, in_periodicidade, nr_periodo,
   siconfi_fetch_all("/rgf", params, use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows)
 }
 
-#' @rdname get_rgf
+#' @rdname get_rgf_ufs
 #' @param fiscal_year Integer. Fiscal year (e.g., `2022`). **Required**.
 #'   Maps to `an_exercicio`.
 #' @param periodicity Character. Periodicity: `"Q"` (quadrimester) or
@@ -650,18 +676,18 @@ get_rgf <- function(an_exercicio, in_periodicidade, nr_periodo,
 #'   `"D"` (public defender). **Required**. Maps to `co_poder`.
 #' @param entity_id Integer. IBGE code of the entity. **Required**.
 #'   Maps to `id_ente`.
-#' @usage get_fiscal_report(fiscal_year, periodicity, period, report_type,
+#' @usage get_fiscal_report_ufs(fiscal_year, periodicity, period, report_type,
 #'   appendix, sphere, branch, entity_id, use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_fiscal_report <- function(fiscal_year, periodicity, period,
+get_fiscal_report_ufs <- function(fiscal_year, periodicity, period,
                               report_type, appendix, sphere,
                               branch, entity_id, use_cache = TRUE, verbose = FALSE, page_size = NULL, max_rows = Inf) {
   check_required(
     fiscal_year, periodicity, period, report_type,
     appendix, sphere, branch, entity_id
   )
-  get_rgf(
+  get_rgf_ufs(
     an_exercicio          = fiscal_year,
     in_periodicidade      = periodicity,
     nr_periodo            = period,
@@ -677,15 +703,19 @@ get_fiscal_report <- function(fiscal_year, periodicity, period,
   )
 }
 
-# -- get_rgf_for_state / get_fiscal_report_for_state --------------------------
+# -- get_rgf_municipios / get_fiscal_report_municipalities --------------------
 
 #' Get RGF data for all municipalities of a Brazilian state
 #'
 #' Fetches RGF data for every municipality of `state_uf`, looping over
-#' [get_rgf()] with fault tolerance. See [get_rreo_for_state()] for the
+#' [get_rgf_ufs()] with fault tolerance. See [get_rreo_municipios()] for the
 #' rationale and behaviour of `on_error`.
 #'
-#' `get_fiscal_report_for_state()` is an English-parameter alias.
+#' `get_fiscal_report_municipalities()` is an English-parameter alias.
+#'
+#' @details
+#' Renamed in 0.3.0 from `get_rgf_for_state()` for clarity. The old name
+#' still works but is deprecated.
 #'
 #' @param state_uf Character. Two-letter UF code (e.g., `"PE"`). **Required**.
 #' @param an_exercicio Integer. Fiscal year. **Required**.
@@ -712,14 +742,14 @@ get_fiscal_report <- function(fiscal_year, periodicity, period,
 #' @export
 #' @examples
 #' \dontrun{
-#' rgf_pe <- get_rgf_for_state(
+#' rgf_pe <- get_rgf_municipios(
 #'   state_uf = "PE", an_exercicio = 2022,
 #'   in_periodicidade = "Q", nr_periodo = 3,
 #'   co_tipo_demonstrativo = "RGF", no_anexo = "RGF-Anexo 01",
 #'   co_poder = "E"
 #' )
 #' }
-get_rgf_for_state <- function(state_uf,
+get_rgf_municipios <- function(state_uf,
                               an_exercicio, in_periodicidade, nr_periodo,
                               co_tipo_demonstrativo, no_anexo, co_poder,
                               include_capital = TRUE,
@@ -755,7 +785,7 @@ get_rgf_for_state <- function(state_uf,
   })
 
   tnr_loop(
-    .f             = get_rgf,
+    .f             = get_rgf_ufs,
     .params        = param_list,
     .id            = "id_ente",
     on_error       = on_error,
@@ -763,7 +793,7 @@ get_rgf_for_state <- function(state_uf,
   )
 }
 
-#' @rdname get_rgf_for_state
+#' @rdname get_rgf_municipios
 #' @param fiscal_year Integer. Fiscal year. **Required**. Maps to `an_exercicio`.
 #' @param periodicity Character. `"Q"` or `"S"`. **Required**.
 #'   Maps to `in_periodicidade`.
@@ -773,13 +803,13 @@ get_rgf_for_state <- function(state_uf,
 #' @param appendix Character. Appendix name. **Required**. Maps to `no_anexo`.
 #' @param branch Character. Government branch. **Required**. Maps to
 #'   `co_poder`.
-#' @usage get_fiscal_report_for_state(state_uf, fiscal_year, periodicity,
+#' @usage get_fiscal_report_municipalities(state_uf, fiscal_year, periodicity,
 #'   period, report_type, appendix, branch,
 #'   include_capital = TRUE, on_error = c("warn", "stop", "silent"),
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = NULL, max_rows = Inf)
 #' @export
-get_fiscal_report_for_state <- function(state_uf,
+get_fiscal_report_municipalities <- function(state_uf,
                                         fiscal_year, periodicity, period,
                                         report_type, appendix, branch,
                                         include_capital = TRUE,
@@ -790,7 +820,7 @@ get_fiscal_report_for_state <- function(state_uf,
     state_uf, fiscal_year, periodicity, period,
     report_type, appendix, branch
   )
-  get_rgf_for_state(
+  get_rgf_municipios(
     state_uf              = state_uf,
     an_exercicio          = fiscal_year,
     in_periodicidade      = periodicity,

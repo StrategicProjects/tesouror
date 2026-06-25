@@ -38,8 +38,8 @@ agu <- get_siorg_unidade(codigo_unidade = 46)
 }
 }
 \seealso{
-Other SIORG: 
-\code{\link{get_siorg_estrutura}()},
-\code{\link{get_siorg_orgaos}()}
+Other SIORG:
+\code{\link[=get_siorg_estrutura]{get_siorg_estrutura()}},
+\code{\link[=get_siorg_orgaos]{get_siorg_orgaos()}}
 }
 \concept{SIORG}
