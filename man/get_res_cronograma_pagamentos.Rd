@@ -53,12 +53,12 @@ pgto_res <- get_res_cronograma_pagamentos(id_pleito = 40353)
 }
 }
 \seealso{
-Other SADIPEM: 
-\code{\link{get_opc_cronograma_liberacoes}()},
-\code{\link{get_opc_cronograma_pagamentos}()},
-\code{\link{get_opc_taxa_cambio}()},
-\code{\link{get_pvl}()},
-\code{\link{get_pvl_tramitacao}()},
-\code{\link{get_res_cdp}()}
+Other SADIPEM:
+\code{\link[=get_opc_cronograma_liberacoes]{get_opc_cronograma_liberacoes()}},
+\code{\link[=get_opc_cronograma_pagamentos]{get_opc_cronograma_pagamentos()}},
+\code{\link[=get_opc_taxa_cambio]{get_opc_taxa_cambio()}},
+\code{\link[=get_pvl]{get_pvl()}},
+\code{\link[=get_pvl_tramitacao]{get_pvl_tramitacao()}},
+\code{\link[=get_res_cdp]{get_res_cdp()}}
 }
 \concept{SADIPEM}

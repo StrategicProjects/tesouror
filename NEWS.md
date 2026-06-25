@@ -1,3 +1,33 @@
+# tesouror 0.3.0
+
+## Clearer SICONFI function names
+
+The SICONFI report getters were renamed so their scope is explicit:
+
+* The single-entity getters gained the `_ufs` suffix:
+  `get_rreo()` → `get_rreo_ufs()`, `get_dca()` → `get_dca_ufs()`,
+  `get_rgf()` → `get_rgf_ufs()` (and the English aliases
+  `get_budget_report_ufs()`, `get_annual_accounts_ufs()`,
+  `get_fiscal_report_ufs()`).
+* The state-wide sweeps over all municipalities moved from `_for_state`
+  to `_municipios` (PT) / `_municipalities` (EN):
+  `get_rreo_for_state()` → `get_rreo_municipios()` /
+  `get_budget_report_municipalities()`, and likewise for DCA and RGF.
+
+The **old names still work** but are deprecated and emit a
+`.Deprecated()` warning; they forward to the new names and will be kept
+for at least one release cycle. See `?"tesouror-deprecated"`.
+
+## New SIOPE entity-type filter
+
+* All `get_siope_*()` functions gained a `tipo` argument (`type` in the
+  English aliases) that filters by entity type **on the server** via the
+  `DS_TIPO` column. Pass `tipo = "estado"` (or `"uf"`) to fetch only the
+  state-level row, or `tipo = "municipio"` for the municipalities, instead
+  of downloading the whole UF + municipalities payload. Accepts PT/EN
+  synonyms (accent- and case-insensitive) and combines with an existing
+  `filter` via `and`.
+
 # tesouror 0.2.3
 
 * **`co_esfera` is now optional in `get_rreo()`** (and the `sphere`

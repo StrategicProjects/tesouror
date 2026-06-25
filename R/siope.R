@@ -22,6 +22,38 @@
 # This drastically reduces response size and improves speed.
 # ============================================================================
 
+# Build a server-side `DS_TIPO` OData $filter clause from a friendly
+# `tipo`/`type` value and combine it with any user-supplied `filter`.
+# Accepts state/municipality synonyms in PT or EN (accent-insensitive) and
+# returns the (possibly combined) filter string, or `filter` unchanged when
+# `tipo` is NULL. The canonical API values are "Estado" and "Municipio"
+# (with the accent on the latter, written here as a \u escape to keep the
+# source ASCII-only for CRAN).
+siope_tipo_filter <- function(tipo, filter = NULL) {
+  if (is.null(tipo)) return(filter)
+  key <- tolower(stringi::stri_trans_general(
+    trimws(as.character(tipo)), "Latin-ASCII"
+  ))
+  canon <- c(
+    estado          = "Estado",
+    uf              = "Estado",
+    state           = "Estado",
+    municipio       = "Munic\u00edpio",
+    municipios      = "Munic\u00edpio",
+    municipality    = "Munic\u00edpio",
+    municipalities  = "Munic\u00edpio",
+    city            = "Munic\u00edpio"
+  )
+  if (!key %in% names(canon)) {
+    cli::cli_abort(c(
+      "Invalid {.arg tipo}/{.arg type}: {.val {tipo}}.",
+      "i" = "Use {.val estado}/{.val state} or {.val municipio}/{.val municipality}."
+    ))
+  }
+  clause <- paste0("DS_TIPO eq '", canon[[key]], "'")
+  if (is.null(filter)) clause else paste0("(", filter, ") and ", clause)
+}
+
 # -- get_siope_dados_gerais / get_siope_general_data --------------------------
 
 #' Get SIOPE general data
@@ -59,6 +91,12 @@
 #'   size). Uses original API column names (e.g.,
 #'   `c("NOM_MUNI", "VAL_DECL")`). If a column name is invalid the API
 #'   returns HTTP 400. Optional.
+#' @param tipo Character. Convenience filter on the entity type, applied
+#'   **server-side** via the `DS_TIPO` column so you don't download both the
+#'   state and all its municipalities. Accepts `"estado"`/`"uf"` (state) or
+#'   `"municipio"`/`"municipios"` (municipalities), accent- and
+#'   case-insensitive. Combined with `filter` via `and` when both are given.
+#'   Defaults to `NULL` (no type filter). `type` is the English alias.
 #'
 #' @return A [tibble][tibble::tibble] with 52 columns including `tipo`,
 #'   `num_ano`, `sig_uf`, `cod_muni`, `nom_muni`, `num_popu`, revenue and
@@ -77,6 +115,11 @@
 #'   filter = "NOM_MUNI eq 'Recife'"
 #' )
 #'
+#' # Only the state-level row (skip the municipalities)
+#' estado <- get_siope_dados_gerais(
+#'   ano = 2023, periodo = 6, uf = "PE", tipo = "estado"
+#' )
+#'
 #' # Filter + select specific columns (use original API names!)
 #' resumo <- get_siope_dados_gerais(
 #'   ano = 2023, periodo = 6, uf = "PE",
@@ -84,12 +127,13 @@
 #'   select = c("NOM_MUNI", "VAL_RECE_REAL", "VAL_DESP_PAGA")
 #' )
 #' }
-get_siope_dados_gerais <- function(ano, periodo, uf,
+get_siope_dados_gerais <- function(ano, periodo, uf, tipo = NULL,
                                    use_cache = TRUE, verbose = FALSE,
                                    page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Dados_Gerais_Siope", params, use_cache = use_cache,
               verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -100,17 +144,19 @@ get_siope_dados_gerais <- function(ano, periodo, uf,
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation (e.g., `"PE"`). **Required**.
 #'   Maps to `uf`.
-#' @usage get_siope_general_data(year, period, state, use_cache = TRUE,
+#' @param type Character. English alias for `tipo`: `"state"`/`"uf"` or
+#'   `"municipality"`/`"municipalities"`. Optional, defaults to `NULL`.
+#' @usage get_siope_general_data(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_general_data <- function(year, period, state,
+get_siope_general_data <- function(year, period, state, type = NULL,
                                    use_cache = TRUE, verbose = FALSE,
                                    page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_dados_gerais(ano = year, periodo = period, uf = state,
+  get_siope_dados_gerais(ano = year, periodo = period, uf = state, tipo = type,
                          use_cache = use_cache, verbose = verbose,
                          page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -136,12 +182,13 @@ get_siope_general_data <- function(year, period, state,
 #' \dontrun{
 #' resp <- get_siope_responsaveis(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_responsaveis <- function(ano, periodo, uf,
+get_siope_responsaveis <- function(ano, periodo, uf, tipo = NULL,
                                    use_cache = TRUE, verbose = FALSE,
                                    page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Dados_Gerais_Siope_Dados_Responsaveis", params,
               use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -151,17 +198,17 @@ get_siope_responsaveis <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_officials(year, period, state, use_cache = TRUE,
+#' @usage get_siope_officials(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_officials <- function(year, period, state,
+get_siope_officials <- function(year, period, state, type = NULL,
                                 use_cache = TRUE, verbose = FALSE,
                                 page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_responsaveis(ano = year, periodo = period, uf = state,
+  get_siope_responsaveis(ano = year, periodo = period, uf = state, tipo = type,
                          use_cache = use_cache, verbose = verbose,
                          page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -187,12 +234,13 @@ get_siope_officials <- function(year, period, state,
 #' \dontrun{
 #' desp <- get_siope_despesas(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_despesas <- function(ano, periodo, uf,
+get_siope_despesas <- function(ano, periodo, uf, tipo = NULL,
                                use_cache = TRUE, verbose = FALSE,
                                page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Despesas_Siope", params, use_cache = use_cache,
               verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -202,17 +250,17 @@ get_siope_despesas <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_expenses(year, period, state, use_cache = TRUE,
+#' @usage get_siope_expenses(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_expenses <- function(year, period, state,
+get_siope_expenses <- function(year, period, state, type = NULL,
                                use_cache = TRUE, verbose = FALSE,
                                page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_despesas(ano = year, periodo = period, uf = state,
+  get_siope_despesas(ano = year, periodo = period, uf = state, tipo = type,
                      use_cache = use_cache, verbose = verbose,
                      page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -238,12 +286,13 @@ get_siope_expenses <- function(year, period, state,
 #' \dontrun{
 #' desp_func <- get_siope_despesas_funcao(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_despesas_funcao <- function(ano, periodo, uf,
+get_siope_despesas_funcao <- function(ano, periodo, uf, tipo = NULL,
                                       use_cache = TRUE, verbose = FALSE,
                                       page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Despesas_Funcao_Educacao_Siope", params,
               use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -253,17 +302,17 @@ get_siope_despesas_funcao <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_expenses_by_function(year, period, state,
+#' @usage get_siope_expenses_by_function(year, period, state, type = NULL,
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_expenses_by_function <- function(year, period, state,
+get_siope_expenses_by_function <- function(year, period, state, type = NULL,
                                            use_cache = TRUE, verbose = FALSE,
                                            page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_despesas_funcao(ano = year, periodo = period, uf = state,
+  get_siope_despesas_funcao(ano = year, periodo = period, uf = state, tipo = type,
                             use_cache = use_cache, verbose = verbose,
                             page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -289,12 +338,13 @@ get_siope_expenses_by_function <- function(year, period, state,
 #' \dontrun{
 #' ind <- get_siope_indicadores(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_indicadores <- function(ano, periodo, uf,
+get_siope_indicadores <- function(ano, periodo, uf, tipo = NULL,
                                   use_cache = TRUE, verbose = FALSE,
                                   page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Indicadores_Siope", params, use_cache = use_cache,
               verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -304,17 +354,17 @@ get_siope_indicadores <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_indicators(year, period, state, use_cache = TRUE,
+#' @usage get_siope_indicators(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_indicators <- function(year, period, state,
+get_siope_indicators <- function(year, period, state, type = NULL,
                                  use_cache = TRUE, verbose = FALSE,
                                  page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_indicadores(ano = year, periodo = period, uf = state,
+  get_siope_indicadores(ano = year, periodo = period, uf = state, tipo = type,
                         use_cache = use_cache, verbose = verbose,
                         page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -338,12 +388,13 @@ get_siope_indicators <- function(year, period, state,
 #' \dontrun{
 #' info <- get_siope_info_complementares(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_info_complementares <- function(ano, periodo, uf,
+get_siope_info_complementares <- function(ano, periodo, uf, tipo = NULL,
                                           use_cache = TRUE, verbose = FALSE,
                                           page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Informacoes_Complementares_Siope", params,
               use_cache = use_cache, verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -353,17 +404,17 @@ get_siope_info_complementares <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_supplementary(year, period, state, use_cache = TRUE,
+#' @usage get_siope_supplementary(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_supplementary <- function(year, period, state,
+get_siope_supplementary <- function(year, period, state, type = NULL,
                                     use_cache = TRUE, verbose = FALSE,
                                     page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_info_complementares(ano = year, periodo = period, uf = state,
+  get_siope_info_complementares(ano = year, periodo = period, uf = state, tipo = type,
                                 use_cache = use_cache, verbose = verbose,
                                 page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -389,12 +440,13 @@ get_siope_supplementary <- function(year, period, state,
 #' \dontrun{
 #' rec <- get_siope_receitas(ano = 2023, periodo = 6, uf = "PE")
 #' }
-get_siope_receitas <- function(ano, periodo, uf,
+get_siope_receitas <- function(ano, periodo, uf, tipo = NULL,
                                use_cache = TRUE, verbose = FALSE,
                                page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(ano, periodo, uf)
   params <- list(Ano_Consulta = ano, Num_Peri = periodo, Sig_UF = uf)
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Receita_Siope", params, use_cache = use_cache,
               verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -404,17 +456,17 @@ get_siope_receitas <- function(ano, periodo, uf,
 #' @param year Integer. Year. **Required**. Maps to `ano`.
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_revenues(year, period, state, use_cache = TRUE,
+#' @usage get_siope_revenues(year, period, state, type = NULL, use_cache = TRUE,
 #'   verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_revenues <- function(year, period, state,
+get_siope_revenues <- function(year, period, state, type = NULL,
                                use_cache = TRUE, verbose = FALSE,
                                page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, state)
-  get_siope_receitas(ano = year, periodo = period, uf = state,
+  get_siope_receitas(ano = year, periodo = period, uf = state, tipo = type,
                      use_cache = use_cache, verbose = verbose,
                      page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -453,6 +505,10 @@ get_siope_revenues <- function(year, period, state,
 #'   size). Uses original API column names (e.g.,
 #'   `c("NOM_MUNI", "VAL_DECL")`). If a column name is invalid the API
 #'   returns HTTP 400. Optional.
+#' @param tipo Character. Convenience filter on the entity type, applied
+#'   **server-side** via the `DS_TIPO` column. Accepts `"estado"`/`"uf"` or
+#'   `"municipio"`/`"municipios"` (accent- and case-insensitive). Combined
+#'   with `filter` via `and`. Defaults to `NULL`. `type` is the English alias.
 #'
 #' @return A [tibble][tibble::tibble] with 19 columns including
 #'   compensation categories and values for education professionals.
@@ -463,7 +519,7 @@ get_siope_revenues <- function(year, period, state,
 #' \dontrun{
 #' rem <- get_siope_remuneracao(ano = 2023, periodo = 6, mes = 12, uf = "PE")
 #' }
-get_siope_remuneracao <- function(ano, periodo, mes, uf,
+get_siope_remuneracao <- function(ano, periodo, mes, uf, tipo = NULL,
                                   use_cache = TRUE, verbose = FALSE,
                                   page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
@@ -472,6 +528,7 @@ get_siope_remuneracao <- function(ano, periodo, mes, uf,
     Ano_Declaracao = ano, Num_Peri = periodo,
     Mes_Exercicio = mes, Sig_UF = uf
   )
+  filter <- siope_tipo_filter(tipo, filter)
   siope_fetch("Remuneracao_Siope", params, use_cache = use_cache,
               verbose = verbose, page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)
@@ -482,17 +539,19 @@ get_siope_remuneracao <- function(ano, periodo, mes, uf,
 #' @param period Integer. Bimester (1-6). **Required**. Maps to `periodo`.
 #' @param month Integer. Month (1-12). **Required**. Maps to `mes`.
 #' @param state Character. State abbreviation. **Required**. Maps to `uf`.
-#' @usage get_siope_compensation(year, period, month, state,
+#' @param type Character. English alias for `tipo`: `"state"`/`"uf"` or
+#'   `"municipality"`/`"municipalities"`. Optional, defaults to `NULL`.
+#' @usage get_siope_compensation(year, period, month, state, type = NULL,
 #'   use_cache = TRUE, verbose = FALSE,
 #'   page_size = 1000, max_rows = Inf,
 #'   filter = NULL, orderby = NULL, select = NULL)
 #' @export
-get_siope_compensation <- function(year, period, month, state,
+get_siope_compensation <- function(year, period, month, state, type = NULL,
                                    use_cache = TRUE, verbose = FALSE,
                                    page_size = 1000L, max_rows = Inf,
                                    filter = NULL, orderby = NULL, select = NULL) {
   check_required(year, period, month, state)
-  get_siope_remuneracao(ano = year, periodo = period, mes = month, uf = state,
+  get_siope_remuneracao(ano = year, periodo = period, mes = month, uf = state, tipo = type,
                         use_cache = use_cache, verbose = verbose,
                         page_size = page_size, max_rows = max_rows,
               filter = filter, orderby = orderby, select = select)

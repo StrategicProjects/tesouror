@@ -6,6 +6,8 @@
 \alias{tesouror-package}
 \title{tesouror: Access Brazilian National Treasury Open Data APIs}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 Provides a unified interface to access open data from the Brazilian National Treasury ('Tesouro Nacional') and related government APIs. Covers six data sources: 'SICONFI' \url{https://apidatalake.tesouro.gov.br/docs/siconfi/} for fiscal reports ('RREO', 'RGF', 'DCA', 'MSC') and entity information; 'CUSTOS' \url{https://apidatalake.tesouro.gov.br/docs/custos/} for federal government cost data; 'SADIPEM' \url{https://apidatalake.tesouro.gov.br/docs/sadipem/} for public debt and credit operations; 'Transferencias Constitucionais' \url{https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs} for constitutional transfers to states and municipalities; 'SIORG' \url{https://estruturaorganizacional.dados.gov.br} for federal organizational structure; and 'SIOPE' ('FNDE'/'MEC') for education spending data. Features automatic pagination, in-memory caching, retry logic, and tidy output.
 }
 \seealso{
@@ -22,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Andre Leite \email{leite@castlab.org}
   \item Marcos Wasilew \email{marcos.wasilew@gmail.com}
   \item Hugo Vasconcelos \email{hugo.vasconcelos@ufpe.br}
   \item Carlos Amorin \email{carlos.agaf@ufpe.br}

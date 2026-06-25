@@ -37,17 +37,17 @@ tipos <- get_tc_transferencias()
 }
 }
 \seealso{
-Other Transferencias: 
-\code{\link{get_tc_estados}()},
-\code{\link{get_tc_municipios}()},
-\code{\link{get_tc_por_estados}()},
-\code{\link{get_tc_por_estados_detalhe}()},
-\code{\link{get_tc_por_municipio}()},
-\code{\link{get_tc_por_municipio_detalhe}()}
+Other Transferencias:
+\code{\link[=get_tc_estados]{get_tc_estados()}},
+\code{\link[=get_tc_municipios]{get_tc_municipios()}},
+\code{\link[=get_tc_por_estados]{get_tc_por_estados()}},
+\code{\link[=get_tc_por_estados_detalhe]{get_tc_por_estados_detalhe()}},
+\code{\link[=get_tc_por_municipio]{get_tc_por_municipio()}},
+\code{\link[=get_tc_por_municipio_detalhe]{get_tc_por_municipio_detalhe()}}
 
-Other Transferencias dictionaries: 
-\code{\link{get_tc_estados}()},
-\code{\link{get_tc_municipios}()}
+Other Transferencias dictionaries:
+\code{\link[=get_tc_estados]{get_tc_estados()}},
+\code{\link[=get_tc_municipios]{get_tc_municipios()}}
 }
 \concept{Transferencias}
 \concept{Transferencias dictionaries}

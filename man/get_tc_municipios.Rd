@@ -64,17 +64,17 @@ recife <- get_tc_municipios(p_nome = "Recife")
 }
 }
 \seealso{
-Other Transferencias: 
-\code{\link{get_tc_estados}()},
-\code{\link{get_tc_por_estados}()},
-\code{\link{get_tc_por_estados_detalhe}()},
-\code{\link{get_tc_por_municipio}()},
-\code{\link{get_tc_por_municipio_detalhe}()},
-\code{\link{get_tc_transferencias}()}
+Other Transferencias:
+\code{\link[=get_tc_estados]{get_tc_estados()}},
+\code{\link[=get_tc_por_estados]{get_tc_por_estados()}},
+\code{\link[=get_tc_por_estados_detalhe]{get_tc_por_estados_detalhe()}},
+\code{\link[=get_tc_por_municipio]{get_tc_por_municipio()}},
+\code{\link[=get_tc_por_municipio_detalhe]{get_tc_por_municipio_detalhe()}},
+\code{\link[=get_tc_transferencias]{get_tc_transferencias()}}
 
-Other Transferencias dictionaries: 
-\code{\link{get_tc_estados}()},
-\code{\link{get_tc_transferencias}()}
+Other Transferencias dictionaries:
+\code{\link[=get_tc_estados]{get_tc_estados()}},
+\code{\link[=get_tc_transferencias]{get_tc_transferencias()}}
 }
 \concept{Transferencias}
 \concept{Transferencias dictionaries}

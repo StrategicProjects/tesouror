@@ -107,11 +107,11 @@ transf <- get_custos_transferencias(
 }
 }
 \seealso{
-Other CUSTOS: 
-\code{\link{get_custos_demais}()},
-\code{\link{get_custos_depreciacao}()},
-\code{\link{get_custos_pensionistas}()},
-\code{\link{get_custos_pessoal_ativo}()},
-\code{\link{get_custos_pessoal_inativo}()}
+Other CUSTOS:
+\code{\link[=get_custos_demais]{get_custos_demais()}},
+\code{\link[=get_custos_depreciacao]{get_custos_depreciacao()}},
+\code{\link[=get_custos_pensionistas]{get_custos_pensionistas()}},
+\code{\link[=get_custos_pessoal_ativo]{get_custos_pessoal_ativo()}},
+\code{\link[=get_custos_pessoal_inativo]{get_custos_pessoal_inativo()}}
 }
 \concept{CUSTOS}

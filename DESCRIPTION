@@ -1,6 +1,6 @@
 Package: tesouror
 Title: Access Brazilian National Treasury Open Data APIs
-Version: 0.2.3
+Version: 0.3.0
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
     person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
@@ -29,7 +29,6 @@ Encoding: UTF-8
 Language: en-US
 Depends: R (>= 4.1.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports:
     cli (>= 3.6.0),
     dplyr (>= 1.1.0),
@@ -49,3 +48,4 @@ VignetteBuilder: knitr
 URL: https://github.com/StrategicProjects/tesouror,
     https://strategicprojects.github.io/tesouror/
 BugReports: https://github.com/StrategicProjects/tesouror/issues
+Config/roxygen2/version: 8.0.0
