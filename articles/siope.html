@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -239,9 +239,35 @@ need. This is much faster than downloading everything and filtering
 locally with <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>.</p>
 </blockquote>
 <div class="section level3">
+<h3 id="filtering-by-entity-type-tipo-type">Filtering by entity type (<code>tipo</code> /
+<code>type</code>)<a class="anchor" aria-label="anchor" href="#filtering-by-entity-type-tipo-type"></a>
+</h3>
+<p>The most common reason to narrow a SIOPE call is to keep only the
+state-level row or only the municipalities. Use the <code>tipo</code>
+argument (<code>type</code> in the English aliases) — a convenience
+shortcut that applies a server-side <code>DS_TIPO</code> filter for you,
+so you don’t have to remember the column name or write OData by
+hand:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Only the state-level (UF) row</span></span>
+<span><span class="va">estado_pe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_dados_gerais</a></span><span class="op">(</span></span>
+<span>  ano <span class="op">=</span> <span class="fl">2023</span>, periodo <span class="op">=</span> <span class="fl">6</span>, uf <span class="op">=</span> <span class="st">"PE"</span>, tipo <span class="op">=</span> <span class="st">"estado"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Only the municipalities (English alias)</span></span>
+<span><span class="va">munis_pe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_general_data</a></span><span class="op">(</span></span>
+<span>  year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>, type <span class="op">=</span> <span class="st">"municipality"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code>tipo</code> accepts PT/EN synonyms
+(<code>"estado"</code>/<code>"uf"</code>/<code>"state"</code>,
+<code>"municipio"</code>/<code>"municipios"</code>/<code>"municipality"</code>)
+and is accent- and case-insensitive. When combined with
+<code>filter</code>, the two are joined with <code>and</code>.</p>
+</div>
+<div class="section level3">
 <h3 id="filtering-by-municipality">Filtering by municipality<a class="anchor" aria-label="anchor" href="#filtering-by-municipality"></a>
 </h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># SLOW: downloads all 185 municipalities, then filters locally</span></span>
 <span><span class="va">dados_pe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_general_data</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span><span class="op">)</span></span>
 <span><span class="va">recife</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dados_pe</span>, <span class="va">nom_muni</span> <span class="op">==</span> <span class="st">"Recife"</span><span class="op">)</span></span>
@@ -324,7 +350,7 @@ cleaned snake_case names. Use <code>verbose = TRUE</code> on a
 </h3>
 <p>Use <code>select</code> to request only the columns you need (reduces
 payload):</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Only municipality name and declared value</span></span>
 <span><span class="va">resumo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_despesas.html">get_siope_expenses</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>,</span>
@@ -335,7 +361,7 @@ payload):</p>
 <p><strong>Column names in filter/select/orderby must use the original
 API names (UPPERCASE), not the cleaned snake_case names.</strong> To
 discover valid column names, run a quick test:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_despesas.html">get_siope_expenses</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>, max_rows <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
@@ -346,7 +372,7 @@ discover valid column names, run a quick test:</p>
 <div class="section level3">
 <h3 id="sorting-results">Sorting results<a class="anchor" aria-label="anchor" href="#sorting-results"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Sort by population descending</span></span>
 <span><span class="va">dados</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_general_data</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>,</span>
@@ -356,7 +382,7 @@ discover valid column names, run a quick test:</p>
 <div class="section level3">
 <h3 id="compensation-data-with-filters">Compensation data with filters<a class="anchor" aria-label="anchor" href="#compensation-data-with-filters"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Staff compensation for Agrestina, only "Efetivo" professionals</span></span>
 <span><span class="va">rem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_remuneracao.html">get_siope_compensation</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fl">2024</span>, period <span class="op">=</span> <span class="fl">1</span>, month <span class="op">=</span> <span class="fl">1</span>, state <span class="op">=</span> <span class="st">"PE"</span>,</span>
@@ -367,7 +393,7 @@ discover valid column names, run a quick test:</p>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/tesouror" class="external-link">tesouror</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -392,7 +418,7 @@ discover valid column names, run a quick test:</p>
 <div class="section level3">
 <h3 id="quick-test-with-max_rows">Quick test with max_rows<a class="anchor" aria-label="anchor" href="#quick-test-with-max_rows"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Grab just 10 rows to inspect the structure</span></span>
 <span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_general_data</a></span><span class="op">(</span></span>
 <span>  year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>, max_rows <span class="op">=</span> <span class="fl">10</span></span>
@@ -402,7 +428,7 @@ discover valid column names, run a quick test:</p>
 <div class="section level3">
 <h3 id="combining-states">Combining states<a class="anchor" aria-label="anchor" href="#combining-states"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fetch multiple states and combine</span></span>
 <span><span class="va">nordeste</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AL"</span>, <span class="st">"BA"</span>, <span class="st">"CE"</span>, <span class="st">"MA"</span>, <span class="st">"PB"</span>, <span class="st">"PE"</span>, <span class="st">"PI"</span>, <span class="st">"RN"</span>, <span class="st">"SE"</span><span class="op">)</span></span>
 <span></span>
@@ -424,7 +450,7 @@ from <code>tesouror:::siope_base_url()</code>.</p>
 <p>You don’t need to worry about this — just pass the parameters and the
 package handles the rest. Use <code>verbose = TRUE</code> to see the
 full URL:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_siope_dados_gerais.html">get_siope_general_data</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2023</span>, period <span class="op">=</span> <span class="fl">6</span>, state <span class="op">=</span> <span class="st">"PE"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ API call: https://www.fnde.gov.br/olinda-ide/servico/...</span></span></code></pre></div>
 </div>

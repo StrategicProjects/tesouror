@@ -60,6 +60,32 @@ has a 4th required parameter: `mes` / `month` (1-12).
 > everything and filtering locally with
 > [`dplyr::filter()`](https://dplyr.tidyverse.org/reference/filter.html).
 
+### Filtering by entity type (`tipo` / `type`)
+
+The most common reason to narrow a SIOPE call is to keep only the
+state-level row or only the municipalities. Use the `tipo` argument
+(`type` in the English aliases) — a convenience shortcut that applies a
+server-side `DS_TIPO` filter for you, so you don’t have to remember the
+column name or write OData by hand:
+
+``` r
+
+# Only the state-level (UF) row
+estado_pe <- get_siope_dados_gerais(
+  ano = 2023, periodo = 6, uf = "PE", tipo = "estado"
+)
+
+# Only the municipalities (English alias)
+munis_pe <- get_siope_general_data(
+  year = 2023, period = 6, state = "PE", type = "municipality"
+)
+```
+
+`tipo` accepts PT/EN synonyms (`"estado"`/`"uf"`/`"state"`,
+`"municipio"`/`"municipios"`/`"municipality"`) and is accent- and
+case-insensitive. When combined with `filter`, the two are joined with
+`and`.
+
 ### Filtering by municipality
 
 ``` r

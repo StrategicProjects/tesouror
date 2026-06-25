@@ -55,7 +55,7 @@ rreo_layout()
     #> 7 previdencia  rgps             2023      2099 U         RREO-Anexo 04.4 - RGPS  resultado previdenciario rgps        resultado_previdenciario_rgps
 
 Use it directly to look up the right appendix when fetching data with
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md):
+[`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md):
 
 ``` r
 
@@ -65,7 +65,7 @@ fetch_year <- function(year) {
                  layout$regime == "rgps" &
                  year >= layout$first_year &
                  year <= layout$last_year, ]
-  get_rreo(
+  get_rreo_ufs(
     an_exercicio = year, nr_periodo = 6,
     co_tipo_demonstrativo = "RREO", no_anexo = rule$no_anexo[1],
     co_esfera = "U", id_ente = 1
@@ -158,7 +158,7 @@ fetch_topic <- function(year, regime) {
                       year <= all_topics$last_year, ]
   if (nrow(rules) == 0L) return(NULL)
   purrr::map_dfr(unique(rules$no_anexo), \(an) {
-    get_rreo(
+    get_rreo_ufs(
       an_exercicio = year, nr_periodo = 6,
       co_tipo_demonstrativo = "RREO", no_anexo = an,
       co_esfera = "U", id_ente = 1
@@ -204,7 +204,7 @@ The matching key (`conta_match`) is built by lowercasing the account
 label, stripping Latin diacritics, and dropping everything from the
 first `(` onwards. The helper `tesouror:::.clean_conta()` shows the
 exact transformation; running it on a sample row from
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
+[`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
 gives you the value to put into the CSV.
 
 ## See also
@@ -212,8 +212,8 @@ gives you the value to put into the CSV.
 - [rsiconfi#4](https://github.com/tchiluanda/rsiconfi/issues/4) — the
   original issue on the competing `rsiconfi` package describing the
   problem this layer solves.
-- [`?get_rreo`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md),
-  [`?get_rreo_for_state`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
+- [`?get_rreo_ufs`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md),
+  [`?get_rreo_municipios`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md),
   [`?tidy_rreo`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md),
   [`?rreo_normalize_columns`](https://strategicprojects.github.io/tesouror/reference/rreo_normalize_columns.md),
   [`?rreo_layout`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md).

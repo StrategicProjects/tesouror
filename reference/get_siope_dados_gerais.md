@@ -10,6 +10,7 @@ get_siope_dados_gerais(
   ano,
   periodo,
   uf,
+  tipo = NULL,
   use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000L,
@@ -19,7 +20,7 @@ get_siope_dados_gerais(
   select = NULL
 )
 
-get_siope_general_data(year, period, state, use_cache = TRUE,
+get_siope_general_data(year, period, state, type = NULL, use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000, max_rows = Inf,
   filter = NULL, orderby = NULL, select = NULL)
@@ -38,6 +39,16 @@ get_siope_general_data(year, period, state, use_cache = TRUE,
 - uf:
 
   Character. State abbreviation (e.g., `"PE"`). **Required**.
+
+- tipo:
+
+  Character. Convenience filter on the entity type, applied
+  **server-side** via the `DS_TIPO` column so you don't download both
+  the state and all its municipalities. Accepts `"estado"`/`"uf"`
+  (state) or `"municipio"`/`"municipios"` (municipalities), accent- and
+  case-insensitive. Combined with `filter` via `and` when both are
+  given. Defaults to `NULL` (no type filter). `type` is the English
+  alias.
 
 - use_cache:
 
@@ -91,6 +102,11 @@ get_siope_general_data(year, period, state, use_cache = TRUE,
   Character. State abbreviation (e.g., `"PE"`). **Required**. Maps to
   `uf`.
 
+- type:
+
+  Character. English alias for `tipo`: `"state"`/`"uf"` or
+  `"municipality"`/`"municipalities"`. Optional, defaults to `NULL`.
+
 ## Value
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) with 52
@@ -129,6 +145,11 @@ dados <- get_siope_dados_gerais(ano = 2023, periodo = 6, uf = "PE")
 recife <- get_siope_dados_gerais(
   ano = 2023, periodo = 6, uf = "PE",
   filter = "NOM_MUNI eq 'Recife'"
+)
+
+# Only the state-level row (skip the municipalities)
+estado <- get_siope_dados_gerais(
+  ano = 2023, periodo = 6, uf = "PE", tipo = "estado"
 )
 
 # Filter + select specific columns (use original API names!)

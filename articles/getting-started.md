@@ -39,7 +39,7 @@ library(tesouror)
 entes <- get_entes()
 
 # Get RREO data for Tocantins (IBGE code 17)
-rreo <- get_rreo(
+rreo <- get_rreo_ufs(
   an_exercicio = 2022, nr_periodo = 6,
   co_tipo_demonstrativo = "RREO",
   no_anexo = "RREO-Anexo 01",
@@ -47,7 +47,7 @@ rreo <- get_rreo(
 )
 
 # Same query using English aliases
-rreo <- get_budget_report(
+rreo <- get_budget_report_ufs(
   fiscal_year = 2022, period = 6,
   report_type = "RREO",
   appendix = "RREO-Anexo 01",
@@ -90,10 +90,10 @@ names:
 ``` r
 
 # Portuguese (API-native)
-get_dca(an_exercicio = 2022, id_ente = 17)
+get_dca_ufs(an_exercicio = 2022, id_ente = 17)
 
 # English
-get_annual_accounts(fiscal_year = 2022, entity_id = 17)
+get_annual_accounts_ufs(fiscal_year = 2022, entity_id = 17)
 ```
 
 Both call the same endpoint and return the same data. See the

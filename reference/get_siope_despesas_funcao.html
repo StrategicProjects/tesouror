@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,6 +63,7 @@
 <span>  <span class="va">ano</span>,</span>
 <span>  <span class="va">periodo</span>,</span>
 <span>  <span class="va">uf</span>,</span>
+<span>  tipo <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  page_size <span class="op">=</span> <span class="fl">1000L</span>,</span>
@@ -72,7 +73,7 @@
 <span>  select <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_siope_expenses_by_function</span><span class="op">(</span><span class="va">year</span>, <span class="va">period</span>, <span class="va">state</span>,</span>
+<span><span class="fu">get_siope_expenses_by_function</span><span class="op">(</span><span class="va">year</span>, <span class="va">period</span>, <span class="va">state</span>, type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  page_size <span class="op">=</span> <span class="fl">1000</span>, max_rows <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  filter <span class="op">=</span> <span class="cn">NULL</span>, orderby <span class="op">=</span> <span class="cn">NULL</span>, select <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
@@ -92,6 +93,15 @@
 
 <dt id="arg-uf">uf<a class="anchor" aria-label="anchor" href="#arg-uf"></a></dt>
 <dd><p>Character. State abbreviation (e.g., <code>"PE"</code>). <strong>Required</strong>.</p></dd>
+
+
+<dt id="arg-tipo">tipo<a class="anchor" aria-label="anchor" href="#arg-tipo"></a></dt>
+<dd><p>Character. Convenience filter on the entity type, applied
+<strong>server-side</strong> via the <code>DS_TIPO</code> column so you don't download both the
+state and all its municipalities. Accepts <code>"estado"</code>/<code>"uf"</code> (state) or
+<code>"municipio"</code>/<code>"municipios"</code> (municipalities), accent- and
+case-insensitive. Combined with <code>filter</code> via <code>and</code> when both are given.
+Defaults to <code>NULL</code> (no type filter). <code>type</code> is the English alias.</p></dd>
 
 
 <dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
@@ -145,6 +155,11 @@ returns HTTP 400. Optional.</p></dd>
 
 <dt id="arg-state">state<a class="anchor" aria-label="anchor" href="#arg-state"></a></dt>
 <dd><p>Character. State abbreviation. <strong>Required</strong>. Maps to <code>uf</code>.</p></dd>
+
+
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dd><p>Character. English alias for <code>tipo</code>: <code>"state"</code>/<code>"uf"</code> or
+<code>"municipality"</code>/<code>"municipalities"</code>. Optional, defaults to <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

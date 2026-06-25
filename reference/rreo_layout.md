@@ -24,7 +24,7 @@ columns `topic`, `regime`, `first_year`, `last_year`, `co_esfera`,
 [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
 uses this table to assemble layout-stable indicators across years; you
 can also use it directly to look up which appendix to fetch with
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
+[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
 for a given topic.
 
 ## See also

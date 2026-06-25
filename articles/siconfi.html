@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,8 +121,8 @@ balances matrices (MSC).</p>
 <td align="left">Report appendix reference table</td>
 </tr>
 <tr class="odd">
-<td align="left"><code><a href="../reference/get_dca.html">get_dca()</a></code></td>
-<td align="left"><code><a href="../reference/get_dca.html">get_annual_accounts()</a></code></td>
+<td align="left"><code><a href="../reference/get_dca_ufs.html">get_dca_ufs()</a></code></td>
+<td align="left"><code><a href="../reference/get_dca_ufs.html">get_annual_accounts_ufs()</a></code></td>
 <td align="left">Annual accounts (DCA)</td>
 </tr>
 <tr class="even">
@@ -131,13 +131,13 @@ balances matrices (MSC).</p>
 <td align="left">Report delivery status</td>
 </tr>
 <tr class="odd">
-<td align="left"><code><a href="../reference/get_rreo.html">get_rreo()</a></code></td>
-<td align="left"><code><a href="../reference/get_rreo.html">get_budget_report()</a></code></td>
+<td align="left"><code><a href="../reference/get_rreo_ufs.html">get_rreo_ufs()</a></code></td>
+<td align="left"><code><a href="../reference/get_rreo_ufs.html">get_budget_report_ufs()</a></code></td>
 <td align="left">Budget execution report (RREO)</td>
 </tr>
 <tr class="even">
-<td align="left"><code><a href="../reference/get_rgf.html">get_rgf()</a></code></td>
-<td align="left"><code><a href="../reference/get_rgf.html">get_fiscal_report()</a></code></td>
+<td align="left"><code><a href="../reference/get_rgf_ufs.html">get_rgf_ufs()</a></code></td>
+<td align="left"><code><a href="../reference/get_rgf_ufs.html">get_fiscal_report_ufs()</a></code></td>
 <td align="left">Fiscal management report (RGF)</td>
 </tr>
 <tr class="odd">
@@ -263,7 +263,7 @@ filtered call returns empty</td>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># RREO Anexo 01 for Tocantins, 6th bimester of 2022</span></span>
-<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo.html">get_budget_report</a></span><span class="op">(</span></span>
+<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo_ufs.html">get_budget_report_ufs</a></span><span class="op">(</span></span>
 <span>  fiscal_year <span class="op">=</span> <span class="fl">2022</span>, period <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  report_type <span class="op">=</span> <span class="st">"RREO"</span>,</span>
 <span>  appendix <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>,</span>
@@ -278,7 +278,7 @@ sphere is supplied. If a sphere-filtered call returns nothing, drop
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Federal District constitutional fund (id_ente = 1), RREO-Anexo 04.2 —</span></span>
 <span><span class="co"># only returns rows when co_esfera is NOT passed</span></span>
-<span><span class="va">fcdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo.html">get_rreo</a></span><span class="op">(</span></span>
+<span><span class="va">fcdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo_ufs.html">get_rreo_ufs</a></span><span class="op">(</span></span>
 <span>  an_exercicio <span class="op">=</span> <span class="fl">2023</span>, nr_periodo <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  co_tipo_demonstrativo <span class="op">=</span> <span class="st">"RREO"</span>,</span>
 <span>  no_anexo <span class="op">=</span> <span class="st">"RREO-Anexo 04.2"</span>,</span>
@@ -290,7 +290,7 @@ sphere is supplied. If a sphere-filtered call returns nothing, drop
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># RGF Anexo 01 for the executive branch of Tocantins</span></span>
-<span><span class="va">rgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rgf.html">get_fiscal_report</a></span><span class="op">(</span></span>
+<span><span class="va">rgf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rgf_ufs.html">get_fiscal_report_ufs</a></span><span class="op">(</span></span>
 <span>  fiscal_year <span class="op">=</span> <span class="fl">2022</span>, periodicity <span class="op">=</span> <span class="st">"Q"</span>, period <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  report_type <span class="op">=</span> <span class="st">"RGF"</span>, appendix <span class="op">=</span> <span class="st">"RGF-Anexo 01"</span>,</span>
 <span>  sphere <span class="op">=</span> <span class="st">"E"</span>, branch <span class="op">=</span> <span class="st">"E"</span>, entity_id <span class="op">=</span> <span class="fl">17</span></span>
@@ -300,7 +300,7 @@ sphere is supplied. If a sphere-filtered call returns nothing, drop
 <h3 id="dca-annual-accounts">DCA – Annual Accounts<a class="anchor" aria-label="anchor" href="#dca-annual-accounts"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dca</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_dca.html">get_annual_accounts</a></span><span class="op">(</span>fiscal_year <span class="op">=</span> <span class="fl">2022</span>, entity_id <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dca</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_dca_ufs.html">get_annual_accounts_ufs</a></span><span class="op">(</span>fiscal_year <span class="op">=</span> <span class="fl">2022</span>, entity_id <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="msc-accounting-balances-matrix">MSC – Accounting Balances Matrix<a class="anchor" aria-label="anchor" href="#msc-accounting-balances-matrix"></a>

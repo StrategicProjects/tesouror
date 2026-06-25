@@ -11,18 +11,18 @@ functions with English parameter names.
 - [`get_anexos()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)
   [`get_annexes()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)
   : Get report appendix reference table
-- [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)
-  [`get_annual_accounts()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)
-  : Get annual accounts data (DCA)
+- [`get_dca_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md)
+  [`get_annual_accounts_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md)
+  : Get annual accounts data (DCA) for a single entity
 - [`get_extrato()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)
   [`get_delivery_status()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)
   : Get delivery status extract
-- [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
-  [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
-  : Get Budget Execution Summary Report data (RREO)
-- [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)
-  [`get_fiscal_report()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)
-  : Get Fiscal Management Report data (RGF)
+- [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
+  [`get_budget_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
+  : Get Budget Execution Summary Report data (RREO) for a single entity
+- [`get_rgf_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)
+  [`get_fiscal_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)
+  : Get Fiscal Management Report data (RGF) for a single entity
 - [`get_msc_patrimonial()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)
   [`get_msc_equity()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)
   : Get MSC equity/asset accounts data
@@ -40,14 +40,14 @@ Failures are captured in `attr(result, "failed")` and entities that have
 not homologated the report in `attr(result, "no_data")`, instead of
 aborting the whole call.
 
-- [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md)
-  [`get_budget_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md)
+- [`get_rreo_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md)
+  [`get_budget_report_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md)
   : Get RREO data for all municipalities of a Brazilian state
-- [`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md)
-  [`get_annual_accounts_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md)
+- [`get_dca_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_dca_municipios.md)
+  [`get_annual_accounts_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_dca_municipios.md)
   : Get DCA data for all municipalities of a Brazilian state
-- [`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
-  [`get_fiscal_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
+- [`get_rgf_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_municipios.md)
+  [`get_fiscal_report_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_municipios.md)
   : Get RGF data for all municipalities of a Brazilian state
 
 ## SICONFI – RREO tidy layer
@@ -77,18 +77,18 @@ Functions with Portuguese names matching the SICONFI API parameters.
 - [`get_anexos()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)
   [`get_annexes()`](https://strategicprojects.github.io/tesouror/reference/get_anexos.md)
   : Get report appendix reference table
-- [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)
-  [`get_annual_accounts()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md)
-  : Get annual accounts data (DCA)
+- [`get_dca_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md)
+  [`get_annual_accounts_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md)
+  : Get annual accounts data (DCA) for a single entity
 - [`get_extrato()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)
   [`get_delivery_status()`](https://strategicprojects.github.io/tesouror/reference/get_extrato.md)
   : Get delivery status extract
-- [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
-  [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
-  : Get Budget Execution Summary Report data (RREO)
-- [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)
-  [`get_fiscal_report()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md)
-  : Get Fiscal Management Report data (RGF)
+- [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
+  [`get_budget_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
+  : Get Budget Execution Summary Report data (RREO) for a single entity
+- [`get_rgf_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)
+  [`get_fiscal_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)
+  : Get Fiscal Management Report data (RGF) for a single entity
 - [`get_msc_patrimonial()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)
   [`get_msc_equity()`](https://strategicprojects.github.io/tesouror/reference/get_msc_patrimonial.md)
   : Get MSC equity/asset accounts data

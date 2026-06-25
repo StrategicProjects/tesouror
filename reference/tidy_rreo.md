@@ -1,7 +1,7 @@
 # Tidy a RREO tibble by topic, reconciling layout drift across years
 
 Filters a long RREO tibble (typically produced by
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md))
+[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md))
 down to the rows that match a known indicator for `topic` (and
 optionally `regime`), using the rules in
 [`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md).
@@ -21,9 +21,9 @@ tidy_rreo(data, topic, regime = NULL)
 - data:
 
   A tibble returned by
-  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
+  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
   or
-  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
+  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
   with at least the columns `exercicio`, `conta`, `coluna`, `valor`.
 
 - topic:

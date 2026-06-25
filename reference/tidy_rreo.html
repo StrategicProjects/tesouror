@@ -17,7 +17,7 @@ across years even when SICONFI relabelled the appendix or account."><meta proper
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@ across years even when SICONFI relabelled the appendix or account."><meta proper
     </div>
 
     <div class="ref-description section level2">
-    <p>Filters a long RREO tibble (typically produced by <code><a href="get_rreo.html">get_rreo()</a></code>) down to the
+    <p>Filters a long RREO tibble (typically produced by <code><a href="tesouror-deprecated.html">get_rreo()</a></code>) down to the
 rows that match a known indicator for <code>topic</code> (and optionally <code>regime</code>),
 using the rules in <code><a href="rreo_layout.html">rreo_layout()</a></code>. Account labels are matched on a
 year-stable, accent-folded key (Roman numerals and formula text are
@@ -79,7 +79,7 @@ across years even when SICONFI relabelled the appendix or account.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A tibble returned by <code><a href="get_rreo.html">get_rreo()</a></code> or <code><a href="get_rreo_for_state.html">get_rreo_for_state()</a></code>,
+<dd><p>A tibble returned by <code><a href="tesouror-deprecated.html">get_rreo()</a></code> or <code><a href="tesouror-deprecated.html">get_rreo_for_state()</a></code>,
 with at least the columns <code>exercicio</code>, <code>conta</code>, <code>coluna</code>, <code>valor</code>.</p></dd>
 
 
@@ -123,7 +123,7 @@ welcome.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="fl">2019</span><span class="op">:</span><span class="fl">2023</span>, \<span class="op">(</span><span class="va">yr</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="get_rreo.html">get_rreo</a></span><span class="op">(</span>an_exercicio <span class="op">=</span> <span class="va">yr</span>, nr_periodo <span class="op">=</span> <span class="fl">6</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="tesouror-deprecated.html">get_rreo</a></span><span class="op">(</span>an_exercicio <span class="op">=</span> <span class="va">yr</span>, nr_periodo <span class="op">=</span> <span class="fl">6</span>,</span></span>
 <span class="r-in"><span>           co_tipo_demonstrativo <span class="op">=</span> <span class="st">"RREO"</span>,</span></span>
 <span class="r-in"><span>           no_anexo <span class="op">=</span> <span class="fu"><a href="rreo_layout.html">rreo_layout</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">no_anexo</span><span class="op">[</span></span></span>
 <span class="r-in"><span>             <span class="fu"><a href="rreo_layout.html">rreo_layout</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">topic</span> <span class="op">==</span> <span class="st">"previdencia"</span> <span class="op">&amp;</span></span></span>

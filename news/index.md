@@ -1,11 +1,58 @@
 # Changelog
 
+## tesouror 0.3.0
+
+### Clearer SICONFI function names
+
+The SICONFI report getters were renamed so their scope is explicit:
+
+- The single-entity getters gained the `_ufs` suffix:
+  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
+  →
+  [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md),
+  [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
+  →
+  [`get_dca_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md),
+  [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
+  →
+  [`get_rgf_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)
+  (and the English aliases
+  [`get_budget_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md),
+  [`get_annual_accounts_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md),
+  [`get_fiscal_report_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md)).
+- The state-wide sweeps over all municipalities moved from `_for_state`
+  to `_municipios` (PT) / `_municipalities` (EN):
+  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
+  →
+  [`get_rreo_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md)
+  /
+  [`get_budget_report_municipalities()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md),
+  and likewise for DCA and RGF.
+
+The **old names still work** but are deprecated and emit a
+[`.Deprecated()`](https://rdrr.io/r/base/Deprecated.html) warning; they
+forward to the new names and will be kept for at least one release
+cycle. See
+[`?"tesouror-deprecated"`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md).
+
+### New SIOPE entity-type filter
+
+- All `get_siope_*()` functions gained a `tipo` argument (`type` in the
+  English aliases) that filters by entity type **on the server** via the
+  `DS_TIPO` column. Pass `tipo = "estado"` (or `"uf"`) to fetch only the
+  state-level row, or `tipo = "municipio"` for the municipalities,
+  instead of downloading the whole UF + municipalities payload. Accepts
+  PT/EN synonyms (accent- and case-insensitive) and combines with an
+  existing `filter` via `and`.
+
 ## tesouror 0.2.3
 
+CRAN release: 2026-06-09
+
 - **`co_esfera` is now optional in
-  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)**
+  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)**
   (and the `sphere` argument of
-  [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)),
+  [`get_budget_report()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)),
   defaulting to `NULL`. When `NULL` the sphere filter is omitted from
   the request. Some SICONFI entities — notably the Federal District
   constitutional fund (`id_ente = 1`) — only return data when
@@ -64,14 +111,14 @@ CRAN auto-check fixes for the 0.2.1 submission:
 ### New features
 
 - **Fault-tolerant batch fetchers for SICONFI**. New helpers
-  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
-  [`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md),
+  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
+  [`get_dca_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
   and
-  [`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md)
+  [`get_rgf_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
   (plus English aliases
-  [`get_budget_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md),
-  [`get_annual_accounts_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_dca_for_state.md),
-  [`get_fiscal_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_for_state.md))
+  [`get_budget_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
+  [`get_annual_accounts_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
+  [`get_fiscal_report_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md))
   fetch data for every municipality of a Brazilian state in a single
   call. They loop over the underlying SICONFI endpoint per municipality
   and tolerate per-entity failures: when an individual call cannot be

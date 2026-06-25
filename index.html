@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
 <td align="left"><strong>SICONFI</strong></td>
 <td align="left">Fiscal reports (RREO, RGF, DCA, MSC), entities</td>
 <td align="left">
-<code><a href="reference/get_rreo.html">get_rreo()</a></code>, <code><a href="reference/get_rgf.html">get_rgf()</a></code>, <code><a href="reference/get_dca.html">get_dca()</a></code>, …</td>
+<code><a href="reference/get_rreo_ufs.html">get_rreo_ufs()</a></code>, <code><a href="reference/get_rgf_ufs.html">get_rgf_ufs()</a></code>, <code><a href="reference/get_dca_ufs.html">get_dca_ufs()</a></code>, …</td>
 </tr>
 <tr>
 <td align="left"><strong>CUSTOS</strong></td>
@@ -136,7 +136,7 @@
 <p>All functions return tidy tibbles and have both <strong>Portuguese</strong> (matching API parameter names) and <strong>English</strong> aliases.</p>
 <table class="table important-banner"><tr>
 <td>
-❕ <strong class="important-title">Disclaimer</strong><br> This package acts as a wrapper for Brazilian public APIs provided by the Secretaria do Tesouro Nacional (STN), which is the institution responsible for the data. To maintain consistency with R package development standards, all wrapper functions are available with English names and English parameter names. However, because the source APIs are natively in Portuguese, some <strong>parameter values</strong> must still be passed in Portuguese (e.g., <code>report_type = “RREO Simplificado”</code>, <code>appendix = “RREO-Anexo 01”</code>), and <strong>response column names</strong> are in Portuguese (e.g., <code>cod_ibge</code>, <code>exercicio</code>, <code>valor</code>). For example: you may use <code><a href="reference/get_rreo.html">get_budget_report()</a></code>, but you need to pass values like <code>appendix = “RREO-Anexo 01”</code>. The original Portuguese-named functions (e.g., <code>get_rreo(an_exercicio = 2022)</code>) are also fully supported. You can find the original list of endpoints and their respective parameters in the official API documentation: <a href="https://apidatalake.tesouro.gov.br/docs/siconfi/" class="external-link">SICONFI</a>, <a href="https://apidatalake.tesouro.gov.br/docs/custos/" class="external-link">CUSTOS</a>, <a href="https://apidatalake.tesouro.gov.br/docs/sadipem/" class="external-link">SADIPEM</a>, <a href="https://api.siorg.economia.gov.br/" class="external-link">SIORG</a>, and <a href="https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs" class="external-link">Transferências Constitucionais</a>, and SIOPE (FNDE/MEC).
+❕ <strong class="important-title">Disclaimer</strong><br> This package acts as a wrapper for Brazilian public APIs provided by the Secretaria do Tesouro Nacional (STN), which is the institution responsible for the data. To maintain consistency with R package development standards, all wrapper functions are available with English names and English parameter names. However, because the source APIs are natively in Portuguese, some <strong>parameter values</strong> must still be passed in Portuguese (e.g., <code>report_type = “RREO Simplificado”</code>, <code>appendix = “RREO-Anexo 01”</code>), and <strong>response column names</strong> are in Portuguese (e.g., <code>cod_ibge</code>, <code>exercicio</code>, <code>valor</code>). For example: you may use <code><a href="reference/get_rreo_ufs.html">get_budget_report_ufs()</a></code>, but you need to pass values like <code>appendix = “RREO-Anexo 01”</code>. The original Portuguese-named functions (e.g., <code>get_rreo_ufs(an_exercicio = 2022)</code>) are also fully supported. You can find the original list of endpoints and their respective parameters in the official API documentation: <a href="https://apidatalake.tesouro.gov.br/docs/siconfi/" class="external-link">SICONFI</a>, <a href="https://apidatalake.tesouro.gov.br/docs/custos/" class="external-link">CUSTOS</a>, <a href="https://apidatalake.tesouro.gov.br/docs/sadipem/" class="external-link">SADIPEM</a>, <a href="https://api.siorg.economia.gov.br/" class="external-link">SIORG</a>, and <a href="https://apiapex.tesouro.gov.br/aria/v1/transferencias_constitucionais/docs" class="external-link">Transferências Constitucionais</a>, and SIOPE (FNDE/MEC).
 </td>
 </tr></table>
 <div class="section level2">
@@ -159,7 +159,7 @@
 <span><span class="va">entes</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_entes.html">get_entes</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># RREO for Tocantins</span></span>
-<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_rreo.html">get_budget_report</a></span><span class="op">(</span></span>
+<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_rreo_ufs.html">get_budget_report_ufs</a></span><span class="op">(</span></span>
 <span>  fiscal_year <span class="op">=</span> <span class="fl">2022</span>, period <span class="op">=</span> <span class="fl">6</span>, report_type <span class="op">=</span> <span class="st">"RREO"</span>,</span>
 <span>  appendix <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>, sphere <span class="op">=</span> <span class="st">"E"</span>, entity_id <span class="op">=</span> <span class="fl">17</span></span>
 <span><span class="op">)</span></span>

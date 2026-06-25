@@ -17,9 +17,9 @@ rreo_normalize_columns(data)
 - data:
 
   A tibble returned by
-  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md)
+  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
   or
-  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_for_state.md).
+  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md).
   Must contain a `coluna` column.
 
 ## Value

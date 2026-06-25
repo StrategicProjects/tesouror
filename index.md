@@ -6,7 +6,7 @@ sources:
 
 | API | Data | Functions |
 |:---|:---|:---|
-| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/get_rreo.md), [`get_rgf()`](https://strategicprojects.github.io/tesouror/reference/get_rgf.md), [`get_dca()`](https://strategicprojects.github.io/tesouror/reference/get_dca.md), … |
+| **SICONFI** | Fiscal reports (RREO, RGF, DCA, MSC), entities | [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md), [`get_rgf_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rgf_ufs.md), [`get_dca_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_dca_ufs.md), … |
 | **CUSTOS** | Federal government costs | [`get_custos_pessoal_ativo()`](https://strategicprojects.github.io/tesouror/reference/get_custos_pessoal_ativo.md), … |
 | **SADIPEM** | Public debt & credit operations (PVL) | [`get_pvl()`](https://strategicprojects.github.io/tesouror/reference/get_pvl.md), `get_opc_*()`, `get_res_*()` |
 | **SIORG** | Federal organizational structure (dictionary for CUSTOS) | [`get_siorg_orgaos()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_orgaos.md), [`get_siorg_estrutura()`](https://strategicprojects.github.io/tesouror/reference/get_siorg_estrutura.md) |
@@ -39,7 +39,7 @@ library(tesouror)
 entes <- get_entes()
 
 # RREO for Tocantins
-rreo <- get_budget_report(
+rreo <- get_budget_report_ufs(
   fiscal_year = 2022, period = 6, report_type = "RREO",
   appendix = "RREO-Anexo 01", sphere = "E", entity_id = 17
 )

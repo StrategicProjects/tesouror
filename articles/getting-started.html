@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,7 +164,7 @@ both Portuguese-named (matching the API) and English-named versions.</p>
 <span><span class="va">entes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_entes.html">get_entes</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get RREO data for Tocantins (IBGE code 17)</span></span>
-<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo.html">get_rreo</a></span><span class="op">(</span></span>
+<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo_ufs.html">get_rreo_ufs</a></span><span class="op">(</span></span>
 <span>  an_exercicio <span class="op">=</span> <span class="fl">2022</span>, nr_periodo <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  co_tipo_demonstrativo <span class="op">=</span> <span class="st">"RREO"</span>,</span>
 <span>  no_anexo <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>,</span>
@@ -172,7 +172,7 @@ both Portuguese-named (matching the API) and English-named versions.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Same query using English aliases</span></span>
-<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo.html">get_budget_report</a></span><span class="op">(</span></span>
+<span><span class="va">rreo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_rreo_ufs.html">get_budget_report_ufs</a></span><span class="op">(</span></span>
 <span>  fiscal_year <span class="op">=</span> <span class="fl">2022</span>, period <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  report_type <span class="op">=</span> <span class="st">"RREO"</span>,</span>
 <span>  appendix <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>,</span>
@@ -211,10 +211,10 @@ exact API parameter names, while the English version uses descriptive
 English names:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Portuguese (API-native)</span></span>
-<span><span class="fu"><a href="../reference/get_dca.html">get_dca</a></span><span class="op">(</span>an_exercicio <span class="op">=</span> <span class="fl">2022</span>, id_ente <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/get_dca_ufs.html">get_dca_ufs</a></span><span class="op">(</span>an_exercicio <span class="op">=</span> <span class="fl">2022</span>, id_ente <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># English</span></span>
-<span><span class="fu"><a href="../reference/get_dca.html">get_annual_accounts</a></span><span class="op">(</span>fiscal_year <span class="op">=</span> <span class="fl">2022</span>, entity_id <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_dca_ufs.html">get_annual_accounts_ufs</a></span><span class="op">(</span>fiscal_year <span class="op">=</span> <span class="fl">2022</span>, entity_id <span class="op">=</span> <span class="fl">17</span><span class="op">)</span></span></code></pre></div>
 <p>Both call the same endpoint and return the same data. See the
 <code><a href="../articles/siconfi.html">vignette("siconfi")</a></code>, <code><a href="../articles/custos.html">vignette("custos")</a></code>,
 <code><a href="../articles/sadipem.html">vignette("sadipem")</a></code>, <code><a href="../articles/siorg.html">vignette("siorg")</a></code>,

@@ -12,6 +12,7 @@ get_siope_remuneracao(
   periodo,
   mes,
   uf,
+  tipo = NULL,
   use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000L,
@@ -21,7 +22,7 @@ get_siope_remuneracao(
   select = NULL
 )
 
-get_siope_compensation(year, period, month, state,
+get_siope_compensation(year, period, month, state, type = NULL,
   use_cache = TRUE, verbose = FALSE,
   page_size = 1000, max_rows = Inf,
   filter = NULL, orderby = NULL, select = NULL)
@@ -44,6 +45,14 @@ get_siope_compensation(year, period, month, state,
 - uf:
 
   Character. State abbreviation (e.g., `"PE"`). **Required**.
+
+- tipo:
+
+  Character. Convenience filter on the entity type, applied
+  **server-side** via the `DS_TIPO` column. Accepts `"estado"`/`"uf"` or
+  `"municipio"`/`"municipios"` (accent- and case-insensitive). Combined
+  with `filter` via `and`. Defaults to `NULL`. `type` is the English
+  alias.
 
 - use_cache:
 
@@ -98,6 +107,11 @@ get_siope_compensation(year, period, month, state,
 - state:
 
   Character. State abbreviation. **Required**. Maps to `uf`.
+
+- type:
+
+  Character. English alias for `tipo`: `"state"`/`"uf"` or
+  `"municipality"`/`"municipalities"`. Optional, defaults to `NULL`.
 
 ## Value
 

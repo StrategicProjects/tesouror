@@ -9,6 +9,7 @@ get_siope_info_complementares(
   ano,
   periodo,
   uf,
+  tipo = NULL,
   use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000L,
@@ -18,7 +19,7 @@ get_siope_info_complementares(
   select = NULL
 )
 
-get_siope_supplementary(year, period, state, use_cache = TRUE,
+get_siope_supplementary(year, period, state, type = NULL, use_cache = TRUE,
   verbose = FALSE,
   page_size = 1000, max_rows = Inf,
   filter = NULL, orderby = NULL, select = NULL)
@@ -37,6 +38,16 @@ get_siope_supplementary(year, period, state, use_cache = TRUE,
 - uf:
 
   Character. State abbreviation (e.g., `"PE"`). **Required**.
+
+- tipo:
+
+  Character. Convenience filter on the entity type, applied
+  **server-side** via the `DS_TIPO` column so you don't download both
+  the state and all its municipalities. Accepts `"estado"`/`"uf"`
+  (state) or `"municipio"`/`"municipios"` (municipalities), accent- and
+  case-insensitive. Combined with `filter` via `and` when both are
+  given. Defaults to `NULL` (no type filter). `type` is the English
+  alias.
 
 - use_cache:
 
@@ -88,6 +99,11 @@ get_siope_supplementary(year, period, state, use_cache = TRUE,
 - state:
 
   Character. State abbreviation. **Required**. Maps to `uf`.
+
+- type:
+
+  Character. English alias for `tipo`: `"state"`/`"uf"` or
+  `"municipality"`/`"municipalities"`. Optional, defaults to `NULL`.
 
 ## Value
 
