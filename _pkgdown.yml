@@ -54,10 +54,10 @@ reference:
     contents:
       - get_entities
       - get_annexes
-      - get_annual_accounts
+      - get_annual_accounts_ufs
       - get_delivery_status
-      - get_budget_report
-      - get_fiscal_report
+      - get_budget_report_ufs
+      - get_fiscal_report_ufs
       - get_msc_equity
       - get_msc_budget
       - get_msc_control
@@ -69,12 +69,12 @@ reference:
       have not homologated the report in `attr(result, "no_data")`,
       instead of aborting the whole call.
     contents:
-      - get_rreo_for_state
-      - get_budget_report_for_state
-      - get_dca_for_state
-      - get_annual_accounts_for_state
-      - get_rgf_for_state
-      - get_fiscal_report_for_state
+      - get_rreo_municipios
+      - get_budget_report_municipalities
+      - get_dca_municipios
+      - get_annual_accounts_municipalities
+      - get_rgf_municipios
+      - get_fiscal_report_municipalities
 
   - title: "SICONFI – RREO tidy layer"
     desc: >
@@ -92,10 +92,10 @@ reference:
     contents:
       - get_entes
       - get_anexos
-      - get_dca
+      - get_dca_ufs
       - get_extrato
-      - get_rreo
-      - get_rgf
+      - get_rreo_ufs
+      - get_rgf_ufs
       - get_msc_patrimonial
       - get_msc_orcamentaria
       - get_msc_controle
