@@ -2,6 +2,8 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/StrategicProjects/tesouror/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/StrategicProjects/tesouror/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/tesouror)](https://CRAN.R-project.org/package=tesouror)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/tesouror)](https://cran.r-project.org/package=tesouror)
 <!-- badges: end -->
 
 **tesouror** provides a unified R interface to the Brazilian National Treasury
