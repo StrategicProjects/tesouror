@@ -20,7 +20,7 @@ table in \code{inst/extdata/rreo_layout.csv} that maps \verb{(topic, regime, yea
 \details{
 \code{\link[=tidy_rreo]{tidy_rreo()}} uses this table to assemble layout-stable indicators across
 years; you can also use it directly to look up which appendix to fetch
-with \code{\link[=get_rreo]{get_rreo()}} for a given topic.
+with \code{\link[=get_rreo_ufs]{get_rreo_ufs()}} for a given topic.
 }
 \examples{
 rreo_layout()

@@ -59,7 +59,7 @@
 #'
 #' [tidy_rreo()] uses this table to assemble layout-stable indicators across
 #' years; you can also use it directly to look up which appendix to fetch
-#' with [get_rreo()] for a given topic.
+#' with [get_rreo_ufs()] for a given topic.
 #'
 #' @return A [tibble][tibble::tibble] with columns `topic`, `regime`,
 #'   `first_year`, `last_year`, `co_esfera`, `no_anexo`, `conta_match`,
@@ -88,7 +88,7 @@ rreo_layout <- function() {
 #'   when no year was present. Useful for distinguishing the current-year
 #'   column from a comparative previous-year column.
 #'
-#' @param data A tibble returned by [get_rreo()] or [get_rreo_for_state()].
+#' @param data A tibble returned by [get_rreo_ufs()] or [get_rreo_municipios()].
 #'   Must contain a `coluna` column.
 #'
 #' @return The input tibble with `coluna_padrao` and `coluna_ano` appended.
@@ -122,7 +122,7 @@ rreo_normalize_columns <- function(data) {
 
 #' Tidy a RREO tibble by topic, reconciling layout drift across years
 #'
-#' Filters a long RREO tibble (typically produced by [get_rreo()]) down to the
+#' Filters a long RREO tibble (typically produced by [get_rreo_ufs()]) down to the
 #' rows that match a known indicator for `topic` (and optionally `regime`),
 #' using the rules in [rreo_layout()]. Account labels are matched on a
 #' year-stable, accent-folded key (Roman numerals and formula text are
@@ -139,7 +139,7 @@ rreo_normalize_columns <- function(data) {
 #' Pull requests adding new topics to `inst/extdata/rreo_layout.csv` are
 #' welcome.
 #'
-#' @param data A tibble returned by [get_rreo()] or [get_rreo_for_state()],
+#' @param data A tibble returned by [get_rreo_ufs()] or [get_rreo_municipios()],
 #'   with at least the columns `exercicio`, `conta`, `coluna`, `valor`.
 #' @param topic Character. Topic name (e.g., `"previdencia"`). See
 #'   [rreo_layout()] for the supported set.
@@ -160,15 +160,15 @@ rreo_normalize_columns <- function(data) {
 #' \dontrun{
 #' library(dplyr)
 #' rreo <- purrr::map_dfr(2019:2023, \(yr) {
-#'   get_rreo(an_exercicio = yr, nr_periodo = 6,
-#'            co_tipo_demonstrativo = "RREO",
-#'            no_anexo = rreo_layout()$no_anexo[
-#'              rreo_layout()$topic == "previdencia" &
-#'              rreo_layout()$regime == "rgps" &
-#'              yr >= rreo_layout()$first_year &
-#'              yr <= rreo_layout()$last_year
-#'            ][1],
-#'            co_esfera = "U", id_ente = 1)
+#'   get_rreo_ufs(an_exercicio = yr, nr_periodo = 6,
+#'                co_tipo_demonstrativo = "RREO",
+#'                no_anexo = rreo_layout()$no_anexo[
+#'                  rreo_layout()$topic == "previdencia" &
+#'                  rreo_layout()$regime == "rgps" &
+#'                  yr >= rreo_layout()$first_year &
+#'                  yr <= rreo_layout()$last_year
+#'                ][1],
+#'                co_esfera = "U", id_ente = 1)
 #' })
 #' tidy_rreo(rreo, topic = "previdencia", regime = "rgps") |>
 #'   filter(coluna_padrao == "DESPESAS LIQUIDADAS ATÉ O BIMESTRE",
@@ -181,7 +181,7 @@ tidy_rreo <- function(data, topic, regime = NULL) {
   if (length(missing_cols) > 0) {
     cli::cli_abort(c(
       "x" = "Input is missing required column{?s}: {.field {missing_cols}}.",
-      "i" = "Did you pass the raw output of {.fun get_rreo}?"
+      "i" = "Did you pass the raw output of {.fun get_rreo_ufs}?"
     ))
   }
 

@@ -7,7 +7,7 @@
 rreo_normalize_columns(data)
 }
 \arguments{
-\item{data}{A tibble returned by \code{\link[=get_rreo]{get_rreo()}} or \code{\link[=get_rreo_for_state]{get_rreo_for_state()}}.
+\item{data}{A tibble returned by \code{\link[=get_rreo_ufs]{get_rreo_ufs()}} or \code{\link[=get_rreo_municipios]{get_rreo_municipios()}}.
 Must contain a \code{coluna} column.}
 }
 \value{

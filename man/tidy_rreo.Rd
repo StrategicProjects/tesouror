@@ -7,7 +7,7 @@
 tidy_rreo(data, topic, regime = NULL)
 }
 \arguments{
-\item{data}{A tibble returned by \code{\link[=get_rreo]{get_rreo()}} or \code{\link[=get_rreo_for_state]{get_rreo_for_state()}},
+\item{data}{A tibble returned by \code{\link[=get_rreo_ufs]{get_rreo_ufs()}} or \code{\link[=get_rreo_municipios]{get_rreo_municipios()}},
 with at least the columns \code{exercicio}, \code{conta}, \code{coluna}, \code{valor}.}
 
 \item{topic}{Character. Topic name (e.g., \code{"previdencia"}). See
@@ -28,7 +28,7 @@ columns:
 }
 }
 \description{
-Filters a long RREO tibble (typically produced by \code{\link[=get_rreo]{get_rreo()}}) down to the
+Filters a long RREO tibble (typically produced by \code{\link[=get_rreo_ufs]{get_rreo_ufs()}}) down to the
 rows that match a known indicator for \code{topic} (and optionally \code{regime}),
 using the rules in \code{\link[=rreo_layout]{rreo_layout()}}. Account labels are matched on a
 year-stable, accent-folded key (Roman numerals and formula text are
@@ -51,15 +51,15 @@ welcome.
 \dontrun{
 library(dplyr)
 rreo <- purrr::map_dfr(2019:2023, \(yr) {
-  get_rreo(an_exercicio = yr, nr_periodo = 6,
-           co_tipo_demonstrativo = "RREO",
-           no_anexo = rreo_layout()$no_anexo[
-             rreo_layout()$topic == "previdencia" &
-             rreo_layout()$regime == "rgps" &
-             yr >= rreo_layout()$first_year &
-             yr <= rreo_layout()$last_year
-           ][1],
-           co_esfera = "U", id_ente = 1)
+  get_rreo_ufs(an_exercicio = yr, nr_periodo = 6,
+               co_tipo_demonstrativo = "RREO",
+               no_anexo = rreo_layout()$no_anexo[
+                 rreo_layout()$topic == "previdencia" &
+                 rreo_layout()$regime == "rgps" &
+                 yr >= rreo_layout()$first_year &
+                 yr <= rreo_layout()$last_year
+               ][1],
+               co_esfera = "U", id_ente = 1)
 })
 tidy_rreo(rreo, topic = "previdencia", regime = "rgps") |>
   filter(coluna_padrao == "DESPESAS LIQUIDADAS ATÉ O BIMESTRE",
