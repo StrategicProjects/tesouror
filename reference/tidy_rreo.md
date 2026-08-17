@@ -1,7 +1,7 @@
 # Tidy a RREO tibble by topic, reconciling layout drift across years
 
 Filters a long RREO tibble (typically produced by
-[`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md))
+[`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md))
 down to the rows that match a known indicator for `topic` (and
 optionally `regime`), using the rules in
 [`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md).
@@ -21,9 +21,9 @@ tidy_rreo(data, topic, regime = NULL)
 - data:
 
   A tibble returned by
-  [`get_rreo()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md)
+  [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
   or
-  [`get_rreo_for_state()`](https://strategicprojects.github.io/tesouror/reference/tesouror-deprecated.md),
+  [`get_rreo_municipios()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_municipios.md),
   with at least the columns `exercicio`, `conta`, `coluna`, `valor`.
 
 - topic:
@@ -76,15 +76,15 @@ Other RREO tidy:
 if (FALSE) { # \dontrun{
 library(dplyr)
 rreo <- purrr::map_dfr(2019:2023, \(yr) {
-  get_rreo(an_exercicio = yr, nr_periodo = 6,
-           co_tipo_demonstrativo = "RREO",
-           no_anexo = rreo_layout()$no_anexo[
-             rreo_layout()$topic == "previdencia" &
-             rreo_layout()$regime == "rgps" &
-             yr >= rreo_layout()$first_year &
-             yr <= rreo_layout()$last_year
-           ][1],
-           co_esfera = "U", id_ente = 1)
+  get_rreo_ufs(an_exercicio = yr, nr_periodo = 6,
+               co_tipo_demonstrativo = "RREO",
+               no_anexo = rreo_layout()$no_anexo[
+                 rreo_layout()$topic == "previdencia" &
+                 rreo_layout()$regime == "rgps" &
+                 yr >= rreo_layout()$first_year &
+                 yr <= rreo_layout()$last_year
+               ][1],
+               co_esfera = "U", id_ente = 1)
 })
 tidy_rreo(rreo, topic = "previdencia", regime = "rgps") |>
   filter(coluna_padrao == "DESPESAS LIQUIDADAS ATÉ O BIMESTRE",

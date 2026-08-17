@@ -57,7 +57,7 @@ pe_code <- estados |>
 anos <- 2015:2026
 
 tc_pe_raw <- get_tc_by_municipality_detail(
-  state = pe_code,
+  state_code = pe_code,
   year  = anos
 ) |>
   rename(
