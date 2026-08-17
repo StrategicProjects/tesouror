@@ -3,6 +3,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/StrategicProjects/tesouror/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/StrategicProjects/tesouror/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/tesouror)](https://CRAN.R-project.org/package=tesouror)
+[![Dev version](https://img.shields.io/github/r-package/v/StrategicProjects/tesouror?label=dev)](https://github.com/StrategicProjects/tesouror)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/tesouror)](https://cran.r-project.org/package=tesouror)
 <!-- badges: end -->
 
