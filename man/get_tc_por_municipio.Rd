@@ -41,7 +41,8 @@ Optional.}
 
 \item{p_sn_detalhar}{Character. Set to \code{"S"} to break every transfer
 into its components (for example \code{FUNDEB - FPM}, \code{FUNDEB - ICMS}).
-Optional.}
+Optional. \code{\link[=get_tc_por_municipio_detalhe]{get_tc_por_municipio_detalhe()}} returns the same breakdown
+with the three ten-day instalments.}
 
 \item{page_size}{Integer. Rows requested per page (the server pages
 this endpoint; 10 rows by default on the server side, 1000 here).}

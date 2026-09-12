@@ -14,9 +14,10 @@ which looked like an outage.
   (new arguments `page_size = 1000` and `max_rows = Inf`). A page failing
   after the first returns the rows fetched so far with
   `attr(x, "partial") = TRUE`.
-* `p_sn_detalhar = "S"` on `get_tc_por_municipio()` is documented as the
-  working way to get the transfer breakdown, since
-  `/por_estado_municipio_detalhe` currently times out on the server.
+* `get_tc_por_municipio_detalhe()` / `get_tc_by_municipality_detail()` keep
+  the original contract, which that endpoint still uses: upper-case names,
+  `P_MUNICIPIOS`, no pagination. It now also documents the ten-day
+  instalment columns it returns.
 
 # tesouror 0.3.0
 

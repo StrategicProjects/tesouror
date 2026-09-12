@@ -352,7 +352,8 @@ get_tc_by_state_detail <- function(state_code = NULL, year = NULL,
 #'   Optional.
 #' @param p_sn_detalhar Character. Set to `"S"` to break every transfer
 #'   into its components (for example `FUNDEB - FPM`, `FUNDEB - ICMS`).
-#'   Optional.
+#'   Optional. [get_tc_por_municipio_detalhe()] returns the same breakdown
+#'   with the three ten-day instalments.
 #' @param page_size Integer. Rows requested per page (the server pages
 #'   this endpoint; 10 rows by default on the server side, 1000 here).
 #' @param max_rows Integer. Stop after this many rows. Default `Inf`.
@@ -471,8 +472,6 @@ get_tc_by_municipality <- function(state_code = NULL, municipality = NULL,
 #' @param p_transferencia Transfer type code(s) from
 #'   [get_tc_transferencias()]. Accepts a vector or colon-separated string.
 #'   Optional.
-#' @param page_size Integer. Rows requested per page. Default 1000.
-#' @param max_rows Integer. Stop after this many rows. Default `Inf`.
 #' @param use_cache Logical. If `TRUE` (default), uses an in-memory cache.
 #'
 #' @param verbose Logical. If `TRUE`, prints the full API URL being
@@ -480,12 +479,16 @@ get_tc_by_municipality <- function(state_code = NULL, municipality = NULL,
 #'   `getOption("tesouror.verbose", FALSE)`.
 #'
 #' @details
-#' As of September 2026 this endpoint times out on the server for every
-#' query tried; [get_tc_por_municipio()] with `p_sn_detalhar = "S"` returns
-#' the same breakdown and is the recommended alternative.
+#' This endpoint is not paginated and returns one row per municipality,
+#' month and transfer component (`sg_detalhe`, e.g. `FUNDEB/FPM`), with the
+#' three ten-day instalments (`va_primeiro_dec`, `va_segundo_dec`,
+#' `va_terceiro_dec`) and their `total`. A whole state for one month is
+#' about 2,900 rows and takes around 10 seconds.
 #'
 #' @return A [tibble][tibble::tibble] with detailed municipality transfer
-#'   data.
+#'   data (`sg_uf`, `an_distribuicao`, `me_distribuicao`, `co_siafi`,
+#'   `co_ibge`, `no_municipio`, `sg_detalhe`, `va_primeiro_dec`,
+#'   `va_segundo_dec`, `va_terceiro_dec`, `total`).
 #'
 #' @family Transferencias
 #' @export
@@ -499,19 +502,20 @@ get_tc_por_municipio_detalhe <- function(p_estado = NULL,
                                          p_municipio = NULL,
                                          p_ano = NULL, p_mes = NULL,
                                          p_transferencia = NULL,
-                                         page_size = 1000L, max_rows = Inf,
                                          use_cache = TRUE, verbose = FALSE) {
   .check_not_uf_abbrev(p_estado, "p_estado")
+  # Unlike /por_estado_municipio, this endpoint keeps the ORIGINAL contract:
+  # upper-case, case-sensitive names, P_MUNICIPIOS in the plural, and no
+  # pagination. Lower-case names make the server time out (HTTP 504).
   params <- list(
-    p_estado        = collapse_param(p_estado),
-    p_municipio     = collapse_param(p_municipio),
-    p_ano           = collapse_param(p_ano),
-    p_mes           = collapse_param(p_mes),
-    p_transferencia = collapse_param(p_transferencia)
+    P_ESTADO        = collapse_param(p_estado),
+    P_MUNICIPIOS    = collapse_param(p_municipio),
+    P_ANO           = collapse_param(p_ano),
+    P_MES           = collapse_param(p_mes),
+    P_TRANSFERENCIA = collapse_param(p_transferencia)
   )
-  transferencias_fetch_all("/por_estado_municipio_detalhe", params,
-                           page_size = page_size, max_rows = max_rows,
-                           use_cache = use_cache, verbose = verbose)
+  transferencias_fetch("/por_estado_municipio_detalhe", params,
+                       use_cache = use_cache, verbose = verbose)
 }
 
 #' @rdname get_tc_por_municipio_detalhe
@@ -530,20 +534,17 @@ get_tc_por_municipio_detalhe <- function(p_estado = NULL,
 #'   string. Optional. Maps to `p_transferencia`.
 #' @usage get_tc_by_municipality_detail(state_code = NULL,
 #'   municipality = NULL, year = NULL, month = NULL,
-#'   transfer_type = NULL, page_size = 1000L, max_rows = Inf,
-#'   use_cache = TRUE, verbose = FALSE)
+#'   transfer_type = NULL, use_cache = TRUE, verbose = FALSE)
 #' @export
 get_tc_by_municipality_detail <- function(state_code = NULL,
                                           municipality = NULL,
                                           year = NULL, month = NULL,
                                           transfer_type = NULL,
-                                          page_size = 1000L, max_rows = Inf,
                                           use_cache = TRUE, verbose = FALSE) {
   get_tc_por_municipio_detalhe(
     p_estado = state_code, p_municipio = municipality,
     p_ano = year, p_mes = month,
     p_transferencia = transfer_type,
-    page_size = page_size, max_rows = max_rows,
     use_cache = use_cache, verbose = verbose
   )
 }

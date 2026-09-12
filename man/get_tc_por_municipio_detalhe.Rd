@@ -11,16 +11,13 @@ get_tc_por_municipio_detalhe(
   p_ano = NULL,
   p_mes = NULL,
   p_transferencia = NULL,
-  page_size = 1000L,
-  max_rows = Inf,
   use_cache = TRUE,
   verbose = FALSE
 )
 
 get_tc_by_municipality_detail(state_code = NULL,
   municipality = NULL, year = NULL, month = NULL,
-  transfer_type = NULL, page_size = 1000L, max_rows = Inf,
-  use_cache = TRUE, verbose = FALSE)
+  transfer_type = NULL, use_cache = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{p_estado}{State code(s) from \code{\link[=get_tc_estados]{get_tc_estados()}}. Accepts a vector
@@ -38,10 +35,6 @@ Optional.}
 \item{p_transferencia}{Transfer type code(s) from
 \code{\link[=get_tc_transferencias]{get_tc_transferencias()}}. Accepts a vector or colon-separated string.
 Optional.}
-
-\item{page_size}{Integer. Rows requested per page. Default 1000.}
-
-\item{max_rows}{Integer. Stop after this many rows. Default \code{Inf}.}
 
 \item{use_cache}{Logical. If \code{TRUE} (default), uses an in-memory cache.}
 
@@ -69,7 +62,9 @@ string. Optional. Maps to \code{p_transferencia}.}
 }
 \value{
 A \link[tibble:tibble]{tibble} with detailed municipality transfer
-data.
+data (\code{sg_uf}, \code{an_distribuicao}, \code{me_distribuicao}, \code{co_siafi},
+\code{co_ibge}, \code{no_municipio}, \code{sg_detalhe}, \code{va_primeiro_dec},
+\code{va_segundo_dec}, \code{va_terceiro_dec}, \code{total}).
 }
 \description{
 Retrieves detailed constitutional transfer data by municipality.
@@ -81,9 +76,11 @@ All codes are \strong{internal Treasury codes} (not IBGE). See
 
 \code{get_tc_by_municipality_detail()} is an English alias.
 
-As of September 2026 this endpoint times out on the server for every
-query tried; \code{\link[=get_tc_por_municipio]{get_tc_por_municipio()}} with \code{p_sn_detalhar = "S"} returns
-the same breakdown and is the recommended alternative.
+This endpoint is not paginated and returns one row per municipality,
+month and transfer component (\code{sg_detalhe}, e.g. \code{FUNDEB/FPM}), with the
+three ten-day instalments (\code{va_primeiro_dec}, \code{va_segundo_dec},
+\code{va_terceiro_dec}) and their \code{total}. A whole state for one month is
+about 2,900 rows and takes around 10 seconds.
 }
 \examples{
 \dontrun{

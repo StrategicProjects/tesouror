@@ -113,3 +113,28 @@ test_that("an empty first page returns an empty tibble", {
   )
   expect_equal(nrow(x), 0L)
 })
+
+test_that("the _detalhe endpoint keeps upper-case names and plural P_MUNICIPIOS, unpaginated", {
+  skip_if_no_httptest2()
+  local_fast_retry()
+  rec <- capture_url(function() mock_json_response(body = list(registros = list(
+    list(AN_DISTRIBUICAO = "2024", TOTAL = 1, CO_SIAFI = 2531L, VA_PRIMEIRO_DEC = 1,
+         NO_MUNICIPIO = "Recife", VA_TERCEIRO_DEC = 0, CO_IBGE = 2611606L,
+         ME_DISTRIBUICAO = "01", SG_DETALHE = "FPM", SG_UF = "PE", VA_SEGUNDO_DEC = 0)
+  ), status = "ok")))
+  x <- httr2::with_mocked_responses(
+    rec$mock,
+    suppressMessages(get_tc_by_municipality_detail(state_code = 16, municipality = c(2531, 2631),
+                                                   year = 2024, month = 1, transfer_type = 3,
+                                                   use_cache = FALSE))
+  )
+  url <- rec$urls()[1]
+  expect_match(url, "/por_estado_municipio_detalhe")
+  expect_match(url, "P_ESTADO=16")
+  expect_match(url, "P_MUNICIPIOS=2531(:|%3A)2631")
+  expect_match(url, "P_ANO=2024")
+  expect_match(url, "P_TRANSFERENCIA=3")
+  expect_false(grepl("page=|pageSize=", url))
+  expect_equal(length(rec$urls()), 1L)
+  expect_true(all(c("sg_detalhe", "va_primeiro_dec", "total") %in% names(x)))
+})
