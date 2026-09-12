@@ -726,6 +726,79 @@ transferencias_fetch <- function(endpoint, params = list(),
   result
 }
 
+# -- Transferencias: paginated fetch ------------------------------------------
+
+#' Fetch every page of a paginated Transferencias endpoint
+#'
+#' Since September 2026 the municipal endpoints of the Transferencias API
+#' return pages (`page`, `pageSize`, default 10 rows) and parameter names
+#' are case-sensitive (lower case). This helper requests `page = 1, 2, ...`
+#' with `pageSize = page_size` until a page comes back empty or shorter than
+#' `page_size`, and stacks the rows. The response carries a `next` link even
+#' on the last page, so the row count is the stopping rule.
+#'
+#' Failures after the first page return the rows fetched so far with
+#' `attr(x, "partial") = TRUE` and `attr(x, "last_page_error")`, like
+#' [ords_fetch_all()].
+#'
+#' @noRd
+transferencias_fetch_all <- function(endpoint, params = list(),
+                                     page_size = 1000L, max_rows = Inf,
+                                     use_cache = TRUE, verbose = FALSE) {
+  page_size <- as.integer(page_size)
+  if (is.na(page_size) || page_size < 1L) {
+    cli::cli_abort("{.arg page_size} must be a positive integer.")
+  }
+  url <- paste0(transferencias_base_url(), endpoint)
+  cli::cli_alert_info("Fetching {.field Transferencias{endpoint}} (pages of {page_size})...")
+
+  pages <- list()
+  page <- 1L
+  total <- 0L
+  partial <- FALSE
+  last_error <- NULL
+  repeat {
+    q <- c(params, list(page = page, pageSize = page_size))
+    body <- tryCatch(
+      tnr_request(url, q, use_cache = use_cache, api_name = "Transferencias",
+                  accept = "*/*", verbose = verbose),
+      error = function(e) e
+    )
+    if (inherits(body, "error")) {
+      if (page == 1L) stop(body)
+      partial <- TRUE
+      last_error <- conditionMessage(body)
+      cli::cli_alert_warning("Page {page} failed; returning {total} row{?s} fetched so far.")
+      break
+    }
+    rows <- if (!is.null(body[["registros"]])) body[["registros"]] else body[["items"]]
+    n <- if (is.null(rows)) 0L else NROW(rows)
+    if (n == 0L) break
+    pages[[page]] <- tibble::as_tibble(rows)
+    total <- total + n
+    if (n < page_size || total >= max_rows) break
+    page <- page + 1L
+  }
+
+  if (length(pages) == 0L) {
+    cli::cli_alert_warning("No data returned for {.field Transferencias{endpoint}}.")
+    return(tibble::tibble())
+  }
+  result <- dplyr::bind_rows(pages)
+  if (is.finite(max_rows) && nrow(result) > max_rows) result <- result[seq_len(max_rows), ]
+  result <- tryCatch(
+    dplyr::mutate(result, dplyr::across(dplyr::where(is.character), stringr::str_squish)),
+    error = function(e) result
+  )
+  result <- janitor::clean_names(result)
+  if (partial) {
+    attr(result, "partial") <- TRUE
+    attr(result, "last_page_error") <- last_error
+  }
+  cli::cli_alert_success("Done: {.val {nrow(result)}} rows in {length(pages)} page{?s}.")
+  result
+}
+
 # -- SIOPE fetch (OData-style) ------------------------------------------------
 
 #' Build an OData URL for the SIOPE API

@@ -1,3 +1,23 @@
+# tesouror 0.3.1
+
+## Transferencias: municipal endpoints follow the new server contract
+
+The Transferencias Constitucionais API changed on the server side: parameter
+names became case-sensitive (lower case) and the municipal endpoints became
+paginated (`page`/`pageSize`, 10 rows per page by default). With the old
+upper-case names the server ignored every filter and timed out (HTTP 504),
+which looked like an outage.
+
+* `get_tc_por_municipio()` / `get_tc_by_municipality()` and the `_detalhe` /
+  `_detail` variants now send `p_estado`, `p_municipio` (singular), `p_ano`,
+  `p_mes`, `p_transferencia` and `p_sn_detalhar`, and fetch every page
+  (new arguments `page_size = 1000` and `max_rows = Inf`). A page failing
+  after the first returns the rows fetched so far with
+  `attr(x, "partial") = TRUE`.
+* `p_sn_detalhar = "S"` on `get_tc_por_municipio()` is documented as the
+  working way to get the transfer breakdown, since
+  `/por_estado_municipio_detalhe` currently times out on the server.
+
 # tesouror 0.3.0
 
 ## Clearer SICONFI function names

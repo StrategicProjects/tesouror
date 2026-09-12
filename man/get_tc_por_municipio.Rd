@@ -12,13 +12,15 @@ get_tc_por_municipio(
   p_mes = NULL,
   p_transferencia = NULL,
   p_sn_detalhar = NULL,
+  page_size = 1000L,
+  max_rows = Inf,
   use_cache = TRUE,
   verbose = FALSE
 )
 
 get_tc_by_municipality(state_code = NULL, municipality = NULL,
   year = NULL, month = NULL, transfer_type = NULL, detailed = NULL,
-  use_cache = TRUE, verbose = FALSE)
+  page_size = 1000L, max_rows = Inf, use_cache = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{p_estado}{State code(s) from \code{\link[=get_tc_estados]{get_tc_estados()}}. Accepts a vector
@@ -37,8 +39,14 @@ Optional.}
 \code{\link[=get_tc_transferencias]{get_tc_transferencias()}}. Accepts a vector or colon-separated string.
 Optional.}
 
-\item{p_sn_detalhar}{Character. Set to any value to include detailed
-breakdown. Optional.}
+\item{p_sn_detalhar}{Character. Set to \code{"S"} to break every transfer
+into its components (for example \code{FUNDEB - FPM}, \code{FUNDEB - ICMS}).
+Optional.}
+
+\item{page_size}{Integer. Rows requested per page (the server pages
+this endpoint; 10 rows by default on the server side, 1000 here).}
+
+\item{max_rows}{Integer. Stop after this many rows. Default \code{Inf}.}
 
 \item{use_cache}{Logical. If \code{TRUE} (default), uses an in-memory cache.}
 
@@ -68,7 +76,9 @@ string. Optional. Maps to \code{p_transferencia}.}
 Optional. Maps to \code{p_sn_detalhar}.}
 }
 \value{
-A \link[tibble:tibble]{tibble} with transfer data by municipality.
+A \link[tibble:tibble]{tibble} with transfer data by municipality
+(\code{uf}, \code{ano}, \code{mes}, \code{transferencia}, \code{codigo_siafi}, \code{co_ibge},
+\code{municipio}, \code{valor}).
 }
 \description{
 Retrieves constitutional transfer data for municipalities within states.
@@ -83,6 +93,11 @@ Multi-value parameters accept either a colon-separated string
 (\code{"1:2:3"}) or an R vector (\code{c(1, 2, 3)}).
 
 \code{get_tc_by_municipality()} is an English alias.
+
+The municipal endpoints are paginated: every page is fetched and the
+rows stacked. If a page after the first fails, the rows already fetched
+are returned with \code{attr(x, "partial") = TRUE} and
+\code{attr(x, "last_page_error")}.
 }
 \examples{
 \dontrun{

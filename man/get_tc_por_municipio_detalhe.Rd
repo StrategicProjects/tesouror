@@ -11,13 +11,16 @@ get_tc_por_municipio_detalhe(
   p_ano = NULL,
   p_mes = NULL,
   p_transferencia = NULL,
+  page_size = 1000L,
+  max_rows = Inf,
   use_cache = TRUE,
   verbose = FALSE
 )
 
 get_tc_by_municipality_detail(state_code = NULL,
   municipality = NULL, year = NULL, month = NULL,
-  transfer_type = NULL, use_cache = TRUE, verbose = FALSE)
+  transfer_type = NULL, page_size = 1000L, max_rows = Inf,
+  use_cache = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{p_estado}{State code(s) from \code{\link[=get_tc_estados]{get_tc_estados()}}. Accepts a vector
@@ -35,6 +38,10 @@ Optional.}
 \item{p_transferencia}{Transfer type code(s) from
 \code{\link[=get_tc_transferencias]{get_tc_transferencias()}}. Accepts a vector or colon-separated string.
 Optional.}
+
+\item{page_size}{Integer. Rows requested per page. Default 1000.}
+
+\item{max_rows}{Integer. Stop after this many rows. Default \code{Inf}.}
 
 \item{use_cache}{Logical. If \code{TRUE} (default), uses an in-memory cache.}
 
@@ -73,6 +80,10 @@ All codes are \strong{internal Treasury codes} (not IBGE). See
 \code{\link[=get_tc_transferencias]{get_tc_transferencias()}} for dictionaries.
 
 \code{get_tc_by_municipality_detail()} is an English alias.
+
+As of September 2026 this endpoint times out on the server for every
+query tried; \code{\link[=get_tc_por_municipio]{get_tc_por_municipio()}} with \code{p_sn_detalhar = "S"} returns
+the same breakdown and is the recommended alternative.
 }
 \examples{
 \dontrun{
