@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,13 +62,16 @@
 <span>  p_ano <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_mes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_transferencia <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  page_size <span class="op">=</span> <span class="fl">1000L</span>,</span>
+<span>  max_rows <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_tc_by_municipality_detail</span><span class="op">(</span>state_code <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  municipality <span class="op">=</span> <span class="cn">NULL</span>, year <span class="op">=</span> <span class="cn">NULL</span>, month <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  transfer_type <span class="op">=</span> <span class="cn">NULL</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  transfer_type <span class="op">=</span> <span class="cn">NULL</span>, page_size <span class="op">=</span> <span class="fl">1000L</span>, max_rows <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -99,6 +102,14 @@ Optional.</p></dd>
 <dd><p>Transfer type code(s) from
 <code><a href="get_tc_transferencias.html">get_tc_transferencias()</a></code>. Accepts a vector or colon-separated string.
 Optional.</p></dd>
+
+
+<dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
+<dd><p>Integer. Rows requested per page. Default 1000.</p></dd>
+
+
+<dt id="arg-max-rows">max_rows<a class="anchor" aria-label="anchor" href="#arg-max-rows"></a></dt>
+<dd><p>Integer. Stop after this many rows. Default <code>Inf</code>.</p></dd>
 
 
 <dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
@@ -150,6 +161,9 @@ data.</p>
 <code><a href="get_tc_estados.html">get_tc_estados()</a></code>, <code><a href="get_tc_municipios.html">get_tc_municipios()</a></code>, and
 <code><a href="get_tc_transferencias.html">get_tc_transferencias()</a></code> for dictionaries.</p>
 <p><code>get_tc_by_municipality_detail()</code> is an English alias.</p>
+<p>As of September 2026 this endpoint times out on the server for every
+query tried; <code><a href="get_tc_por_municipio.html">get_tc_por_municipio()</a></code> with <code>p_sn_detalhar = "S"</code> returns
+the same breakdown and is the recommended alternative.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

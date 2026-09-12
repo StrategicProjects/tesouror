@@ -12,13 +12,15 @@ get_tc_por_municipio(
   p_mes = NULL,
   p_transferencia = NULL,
   p_sn_detalhar = NULL,
+  page_size = 1000L,
+  max_rows = Inf,
   use_cache = TRUE,
   verbose = FALSE
 )
 
 get_tc_by_municipality(state_code = NULL, municipality = NULL,
   year = NULL, month = NULL, transfer_type = NULL, detailed = NULL,
-  use_cache = TRUE, verbose = FALSE)
+  page_size = 1000L, max_rows = Inf, use_cache = TRUE, verbose = FALSE)
 ```
 
 ## Arguments
@@ -51,7 +53,17 @@ get_tc_by_municipality(state_code = NULL, municipality = NULL,
 
 - p_sn_detalhar:
 
-  Character. Set to any value to include detailed breakdown. Optional.
+  Character. Set to `"S"` to break every transfer into its components
+  (for example `FUNDEB - FPM`, `FUNDEB - ICMS`). Optional.
+
+- page_size:
+
+  Integer. Rows requested per page (the server pages this endpoint; 10
+  rows by default on the server side, 1000 here).
+
+- max_rows:
+
+  Integer. Stop after this many rows. Default `Inf`.
 
 - use_cache:
 
@@ -102,7 +114,8 @@ get_tc_by_municipality(state_code = NULL, municipality = NULL,
 ## Value
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) with
-transfer data by municipality.
+transfer data by municipality (`uf`, `ano`, `mes`, `transferencia`,
+`codigo_siafi`, `co_ibge`, `municipio`, `valor`).
 
 ## Details
 
@@ -119,6 +132,11 @@ Multi-value parameters accept either a colon-separated string
 (`"1:2:3"`) or an R vector (`c(1, 2, 3)`).
 
 `get_tc_by_municipality()` is an English alias.
+
+The municipal endpoints are paginated: every page is fetched and the
+rows stacked. If a page after the first fails, the rows already fetched
+are returned with `attr(x, "partial") = TRUE` and
+`attr(x, "last_page_error")`.
 
 ## See also
 

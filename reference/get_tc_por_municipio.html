@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,13 +63,15 @@
 <span>  p_mes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_transferencia <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p_sn_detalhar <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  page_size <span class="op">=</span> <span class="fl">1000L</span>,</span>
+<span>  max_rows <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_tc_by_municipality</span><span class="op">(</span>state_code <span class="op">=</span> <span class="cn">NULL</span>, municipality <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  year <span class="op">=</span> <span class="cn">NULL</span>, month <span class="op">=</span> <span class="cn">NULL</span>, transfer_type <span class="op">=</span> <span class="cn">NULL</span>, detailed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  page_size <span class="op">=</span> <span class="fl">1000L</span>, max_rows <span class="op">=</span> <span class="cn">Inf</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -103,8 +105,18 @@ Optional.</p></dd>
 
 
 <dt id="arg-p-sn-detalhar">p_sn_detalhar<a class="anchor" aria-label="anchor" href="#arg-p-sn-detalhar"></a></dt>
-<dd><p>Character. Set to any value to include detailed
-breakdown. Optional.</p></dd>
+<dd><p>Character. Set to <code>"S"</code> to break every transfer
+into its components (for example <code>FUNDEB - FPM</code>, <code>FUNDEB - ICMS</code>).
+Optional.</p></dd>
+
+
+<dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
+<dd><p>Integer. Rows requested per page (the server pages
+this endpoint; 10 rows by default on the server side, 1000 here).</p></dd>
+
+
+<dt id="arg-max-rows">max_rows<a class="anchor" aria-label="anchor" href="#arg-max-rows"></a></dt>
+<dd><p>Integer. Stop after this many rows. Default <code>Inf</code>.</p></dd>
 
 
 <dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
@@ -152,7 +164,9 @@ Optional. Maps to <code>p_sn_detalhar</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> with transfer data by municipality.</p>
+    <p>A <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> with transfer data by municipality
+(<code>uf</code>, <code>ano</code>, <code>mes</code>, <code>transferencia</code>, <code>codigo_siafi</code>, <code>co_ibge</code>,
+<code>municipio</code>, <code>valor</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -163,6 +177,10 @@ functions to look them up: <code><a href="get_tc_estados.html">get_tc_estados()<
 <p>Multi-value parameters accept either a colon-separated string
 (<code>"1:2:3"</code>) or an R vector (<code>c(1, 2, 3)</code>).</p>
 <p><code>get_tc_by_municipality()</code> is an English alias.</p>
+<p>The municipal endpoints are paginated: every page is fetched and the
+rows stacked. If a page after the first fails, the rows already fetched
+are returned with <code>attr(x, "partial") = TRUE</code> and
+<code>attr(x, "last_page_error")</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

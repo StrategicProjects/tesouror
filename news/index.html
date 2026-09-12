@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tesouror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0" id="tesouror-030">tesouror 0.3.0<a class="anchor" aria-label="anchor" href="#tesouror-030"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.1" id="tesouror-031">tesouror 0.3.1<a class="anchor" aria-label="anchor" href="#tesouror-031"></a></h2>
+<div class="section level3">
+<h3 id="transferencias-municipal-endpoints-follow-the-new-server-contract-0-3-1">Transferencias: municipal endpoints follow the new server contract<a class="anchor" aria-label="anchor" href="#transferencias-municipal-endpoints-follow-the-new-server-contract-0-3-1"></a></h3>
+<p>The Transferencias Constitucionais API changed on the server side: parameter names became case-sensitive (lower case) and the municipal endpoints became paginated (<code>page</code>/<code>pageSize</code>, 10 rows per page by default). With the old upper-case names the server ignored every filter and timed out (HTTP 504), which looked like an outage.</p>
+<ul><li>
+<code><a href="../reference/get_tc_por_municipio.html">get_tc_por_municipio()</a></code> / <code><a href="../reference/get_tc_por_municipio.html">get_tc_by_municipality()</a></code> and the <code>_detalhe</code> / <code>_detail</code> variants now send <code>p_estado</code>, <code>p_municipio</code> (singular), <code>p_ano</code>, <code>p_mes</code>, <code>p_transferencia</code> and <code>p_sn_detalhar</code>, and fetch every page (new arguments <code>page_size = 1000</code> and <code>max_rows = Inf</code>). A page failing after the first returns the rows fetched so far with <code>attr(x, "partial") = TRUE</code>.</li>
+<li>
+<code>p_sn_detalhar = "S"</code> on <code><a href="../reference/get_tc_por_municipio.html">get_tc_por_municipio()</a></code> is documented as the working way to get the transfer breakdown, since <code>/por_estado_municipio_detalhe</code> currently times out on the server.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="tesouror-030">tesouror 0.3.0<a class="anchor" aria-label="anchor" href="#tesouror-030"></a></h2><p class="text-muted">CRAN release: 2026-08-19</p>
 <div class="section level3">
 <h3 id="clearer-siconfi-function-names-0-3-0">Clearer SICONFI function names<a class="anchor" aria-label="anchor" href="#clearer-siconfi-function-names-0-3-0"></a></h3>
 <p>The SICONFI report getters were renamed so their scope is explicit:</p>

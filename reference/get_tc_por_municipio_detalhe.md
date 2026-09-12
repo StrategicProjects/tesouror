@@ -11,13 +11,16 @@ get_tc_por_municipio_detalhe(
   p_ano = NULL,
   p_mes = NULL,
   p_transferencia = NULL,
+  page_size = 1000L,
+  max_rows = Inf,
   use_cache = TRUE,
   verbose = FALSE
 )
 
 get_tc_by_municipality_detail(state_code = NULL,
   municipality = NULL, year = NULL, month = NULL,
-  transfer_type = NULL, use_cache = TRUE, verbose = FALSE)
+  transfer_type = NULL, page_size = 1000L, max_rows = Inf,
+  use_cache = TRUE, verbose = FALSE)
 ```
 
 ## Arguments
@@ -47,6 +50,14 @@ get_tc_by_municipality_detail(state_code = NULL,
   Transfer type code(s) from
   [`get_tc_transferencias()`](https://strategicprojects.github.io/tesouror/reference/get_tc_transferencias.md).
   Accepts a vector or colon-separated string. Optional.
+
+- page_size:
+
+  Integer. Rows requested per page. Default 1000.
+
+- max_rows:
+
+  Integer. Stop after this many rows. Default `Inf`.
 
 - use_cache:
 
@@ -104,6 +115,12 @@ and
 for dictionaries.
 
 `get_tc_by_municipality_detail()` is an English alias.
+
+As of September 2026 this endpoint times out on the server for every
+query tried;
+[`get_tc_por_municipio()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio.md)
+with `p_sn_detalhar = "S"` returns the same breakdown and is the
+recommended alternative.
 
 ## See also
 
