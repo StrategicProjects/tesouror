@@ -53,8 +53,9 @@ get_tc_by_municipality(state_code = NULL, municipality = NULL,
 
 - p_sn_detalhar:
 
-  Character. Set to `"S"` to break every transfer into its components
-  (for example `FUNDEB - FPM`, `FUNDEB - ICMS`). Optional.
+  Character. Set to `"sim"` (the documented value; `"S"` also works) to
+  break every transfer into its components (for example `FUNDEB - FPM`,
+  `FUNDEB - ICMS`). Optional.
   [`get_tc_por_municipio_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md)
   returns the same breakdown with the three ten-day instalments.
 
