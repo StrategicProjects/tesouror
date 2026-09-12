@@ -354,7 +354,7 @@ get_tc_by_state_detail <- function(state_code = NULL, year = NULL,
 #'   `"S"` also works) to break every transfer into its components (for
 #'   example `FUNDEB - FPM`, `FUNDEB - ICMS`). Optional.
 #'   [get_tc_por_municipio_detalhe()] returns the same breakdown with the
-#'   three ten-day instalments.
+#'   three ten-day installments.
 #' @param page_size Integer. Rows requested per page (the server pages
 #'   this endpoint; 10 rows by default on the server side, 1000 here).
 #' @param max_rows Integer. Stop after this many rows. Default `Inf`.
@@ -482,7 +482,7 @@ get_tc_by_municipality <- function(state_code = NULL, municipality = NULL,
 #' @details
 #' This endpoint is not paginated and returns one row per municipality,
 #' month and transfer component (`sg_detalhe`, e.g. `FUNDEB/FPM`), with the
-#' three ten-day instalments (`va_primeiro_dec`, `va_segundo_dec`,
+#' three ten-day installments (`va_primeiro_dec`, `va_segundo_dec`,
 #' `va_terceiro_dec`) and their `total`. A whole state for one month is
 #' about 2,900 rows and takes around 10 seconds.
 #'

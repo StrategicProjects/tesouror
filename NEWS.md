@@ -17,7 +17,7 @@ which looked like an outage.
 * `get_tc_por_municipio_detalhe()` / `get_tc_by_municipality_detail()` keep
   the original contract, which that endpoint still uses: upper-case names,
   `P_MUNICIPIOS`, no pagination. It now also documents the ten-day
-  instalment columns it returns.
+  installment columns it returns.
 
 # tesouror 0.3.0
 

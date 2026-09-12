@@ -78,7 +78,7 @@ All codes are \strong{internal Treasury codes} (not IBGE). See
 
 This endpoint is not paginated and returns one row per municipality,
 month and transfer component (\code{sg_detalhe}, e.g. \code{FUNDEB/FPM}), with the
-three ten-day instalments (\code{va_primeiro_dec}, \code{va_segundo_dec},
+three ten-day installments (\code{va_primeiro_dec}, \code{va_segundo_dec},
 \code{va_terceiro_dec}) and their \code{total}. A whole state for one month is
 about 2,900 rows and takes around 10 seconds.
 }

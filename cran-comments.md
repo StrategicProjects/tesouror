@@ -1,26 +1,36 @@
 ## Submission summary
 
-`tesouror 0.3.0` — a feature release following 0.2.3.
+`tesouror 0.3.1` — a bug-fix release following 0.3.0 (published 2026-08-19).
 
-* **Clearer SICONFI function names.** The single-entity report getters were
-  renamed to make their scope explicit (e.g. `get_rreo()` → `get_rreo_ufs()`),
-  and the state-wide municipality sweeps moved from the `_for_state` suffix to
-  `_municipios` / `_municipalities`. **No API was broken:** every old name is
-  retained as an exported, deprecated wrapper that emits a `.Deprecated()`
-  warning and forwards to its replacement (documented under
-  `?"tesouror-deprecated"`).
-* **New SIOPE entity-type filter.** All `get_siope_*()` functions gained an
-  optional `tipo` / `type` argument that applies a server-side filter so
-  callers can fetch only the state row or only the municipalities. Existing
-  calls are unaffected (defaults to `NULL`).
+This update is being submitted less than a month after 0.3.0 because the
+upstream API changed on the server side and one exported function stopped
+working: the Treasury's "Transferências Constitucionais" API renamed its
+municipal endpoint and gave the new one a different contract (lower-case,
+case-sensitive parameter names; singular `p_municipio`; paginated
+responses). With the parameter names the package sent, the server ignored
+every filter and answered HTTP 504 after 60 seconds on every call, so
+`get_tc_por_municipio()` / `get_tc_by_municipality()` were unusable.
 
-The documentation was regenerated with roxygen2 8.0.0 (cosmetic `.Rd`
-changes only).
+* `get_tc_por_municipio()` and `get_tc_by_municipality()` now send the
+  parameter names the server expects and fetch every page of the paginated
+  response (new arguments `page_size` and `max_rows`). If a page after the
+  first fails, the rows already fetched are returned with
+  `attr(x, "partial") = TRUE`, as the SICONFI pagers already do.
+* `get_tc_por_municipio_detalhe()` / `get_tc_by_municipality_detail()`
+  keep the endpoint's original contract, which is unchanged on the server,
+  and now document the ten-day installment columns they return.
+* Documentation aligned with the official API documentation
+  (`p_sn_detalhar = "sim"`).
+
+No function was added, renamed or removed; existing calls keep working with
+the same arguments.
 
 ## Test environments
 
-* local macOS 26.4.1 (arm64), R 4.5.2 — `R CMD check --as-cran`
-* GitHub Actions `R-CMD-check` workflow (Ubuntu, R release)
+* local macOS (arm64), R 4.6.0 — `R CMD check --as-cran`
+* GitHub Actions `R-CMD-check`: macOS (release), Windows (release),
+  Ubuntu (devel, release, oldrel-1)
+* win-builder (R-devel)
 
 ## R CMD check results
 
@@ -28,21 +38,15 @@ changes only).
 0 errors | 0 warnings | 0 notes
 ```
 
-Locally a single NOTE is emitted — "Skipping checking HTML validation:
-'tidy' doesn't look like recent enough HTML Tidy" — which reflects the old
-`tidy` binary on the test machine, not the package, and does not occur on
-CRAN's check machines.
-
 ## Network access in tests and examples
 
-Unchanged from 0.2.x. The package wraps several public Brazilian
-government APIs. Tests under `tests/testthat/` are network-free: HTTP
-responses are mocked through `httr2::with_mocked_responses()` and the
-retry timer is mocked via `testthat::local_mocked_bindings()`, so the
-suite finishes in well under a minute. Examples that need network are
-wrapped in `\dontrun{}` and vignette chunks that call the APIs use
-`eval = FALSE`.
+Unchanged from 0.3.0. Tests are network-free: HTTP responses are mocked
+with `httr2::with_mocked_responses()` (23 new mocked tests cover the URL
+construction and the pagination of the municipal endpoints) and the retry
+timer is mocked via `testthat::local_mocked_bindings()`. Examples that
+need network are wrapped in `\dontrun{}` and vignette chunks that call the
+APIs use `eval = FALSE`.
 
 ## Reverse dependencies
 
-There are no reverse dependencies.
+There are no reverse dependencies on CRAN.
