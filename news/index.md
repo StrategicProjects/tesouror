@@ -2,6 +2,8 @@
 
 ## tesouror 0.3.1
 
+CRAN release: 2026-09-12
+
 ### Transferencias: municipal endpoints follow the new server contract
 
 The Transferencias Constitucionais API changed on the server side:
