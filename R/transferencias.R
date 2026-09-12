@@ -350,10 +350,11 @@ get_tc_by_state_detail <- function(state_code = NULL, year = NULL,
 #' @param p_transferencia Transfer type code(s) from
 #'   [get_tc_transferencias()]. Accepts a vector or colon-separated string.
 #'   Optional.
-#' @param p_sn_detalhar Character. Set to `"S"` to break every transfer
-#'   into its components (for example `FUNDEB - FPM`, `FUNDEB - ICMS`).
-#'   Optional. [get_tc_por_municipio_detalhe()] returns the same breakdown
-#'   with the three ten-day instalments.
+#' @param p_sn_detalhar Character. Set to `"sim"` (the documented value;
+#'   `"S"` also works) to break every transfer into its components (for
+#'   example `FUNDEB - FPM`, `FUNDEB - ICMS`). Optional.
+#'   [get_tc_por_municipio_detalhe()] returns the same breakdown with the
+#'   three ten-day instalments.
 #' @param page_size Integer. Rows requested per page (the server pages
 #'   this endpoint; 10 rows by default on the server side, 1000 here).
 #' @param max_rows Integer. Stop after this many rows. Default `Inf`.
