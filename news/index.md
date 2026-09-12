@@ -24,7 +24,7 @@ and timed out (HTTP 504), which looked like an outage.
   [`get_tc_by_municipality_detail()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md)
   keep the original contract, which that endpoint still uses: upper-case
   names, `P_MUNICIPIOS`, no pagination. It now also documents the
-  ten-day instalment columns it returns.
+  ten-day installment columns it returns.
 
 ## tesouror 0.3.0
 

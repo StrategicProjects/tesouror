@@ -109,7 +109,7 @@ for dictionaries.
 
 This endpoint is not paginated and returns one row per municipality,
 month and transfer component (`sg_detalhe`, e.g. `FUNDEB/FPM`), with the
-three ten-day instalments (`va_primeiro_dec`, `va_segundo_dec`,
+three ten-day installments (`va_primeiro_dec`, `va_segundo_dec`,
 `va_terceiro_dec`) and their `total`. A whole state for one month is
 about 2,900 rows and takes around 10 seconds.
 

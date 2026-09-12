@@ -57,7 +57,7 @@ get_tc_by_municipality(state_code = NULL, municipality = NULL,
   break every transfer into its components (for example `FUNDEB - FPM`,
   `FUNDEB - ICMS`). Optional.
   [`get_tc_por_municipio_detalhe()`](https://strategicprojects.github.io/tesouror/reference/get_tc_por_municipio_detalhe.md)
-  returns the same breakdown with the three ten-day instalments.
+  returns the same breakdown with the three ten-day installments.
 
 - page_size:
 
