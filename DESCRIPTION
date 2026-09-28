@@ -3,12 +3,15 @@ Title: Access Brazilian National Treasury Open Data APIs
 Version: 0.3.1
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
-    person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
+    person("Marcos", "Wasiliew", email = "marcos.wasiliew@gmail.com", role = "aut",
+           comment = c(ORCID = "0009-0004-4694-3159")),
     person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
     person("Carlos", "Amorim", email = "carlos.agaf@ufpe.br", role = "aut"),
     person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"),
     person("Tiago", "Pereira", email = "tiago.pereira@tesouro.gov.br", role = "aut"),
-    person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"))
+    person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"),
+    person("Júlia", "Nascimento Barreto", email = "juliabarreto@gd.seplag.pe.gov.br", role = "aut",
+           comment = c(ORCID = "0009-0004-2851-7770")))
 Description: Provides a unified interface to access open data from the
     Brazilian National Treasury ('Tesouro Nacional') and related government
     APIs. Covers six data sources: 'SICONFI'
