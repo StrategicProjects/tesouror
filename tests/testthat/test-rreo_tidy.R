@@ -3,11 +3,17 @@ test_that("rreo_layout() loads the bundled CSV with expected columns", {
   expect_s3_class(layout, "tbl_df")
   expect_setequal(
     names(layout),
-    c("topic", "regime", "first_year", "last_year",
-      "co_esfera", "no_anexo", "conta_match", "indicador")
+    c("topic", "regime", "first_year", "last_year", "co_esfera",
+      "no_anexo", "conta_match", "cod_conta_match", "indicador")
   )
   expect_true(all(layout$first_year <= layout$last_year))
-  expect_true("previdencia" %in% layout$topic)
+  expect_setequal(
+    unique(layout$topic),
+    c("previdencia", "rcl", "balanco", "resultado")
+  )
+  # exactly one matching key per rule
+  expect_true(all(xor(nzchar(layout$conta_match),
+                      nzchar(layout$cod_conta_match))))
 })
 
 test_that("rreo_normalize_columns extracts coluna_padrao and coluna_ano", {
@@ -169,6 +175,86 @@ test_that("tidy_rreo ignores Anexo 14 duplicates when anexo is present", {
   # without the anexo column the guard is skipped (backward compatible)
   out_no_anexo <- tidy_rreo(dplyr::select(fixture, -anexo), topic = "rcl")
   expect_equal(nrow(out_no_anexo), 2L)
+})
+
+test_that("tidy_rreo matches balanco rows by cod_conta across the 2020 relabeling", {
+  fixture <- tibble::tibble(
+    exercicio = c(2015L, 2015L, 2015L, 2024L, 2024L, 2024L),
+    anexo = "RREO-Anexo 01",
+    conta = c(
+      "SUBTOTAL DAS RECEITAS (III) = (I + II)",
+      # old era: "TOTAL" appears on BOTH sides -> ambiguous label, not matched
+      "TOTAL (VII) = (V + VI)",
+      "TOTAL (XIV) = (XII + XIII)",
+      "SUBTOTAL DAS RECEITAS (III) = (I + II)",
+      "RECEITAS CORRENTES",
+      "RECEITAS CORRENTES"
+    ),
+    cod_conta = c(
+      "SubtotalDasReceitas", "TotalReceitas", "TotalDespesas",
+      "SubtotalDasReceitas",
+      # same label, different codes: main vs intra must not be lumped
+      "ReceitasCorrentes", "ReceitasCorrentesIntra"
+    ),
+    coluna = "RECEITAS REALIZADAS ATÉ O BIMESTRE",
+    valor = c(10, 11, 12, 20, 30, 31)
+  )
+
+  out <- tidy_rreo(fixture, topic = "balanco")
+  expect_setequal(out$valor, c(10, 20, 30))
+  expect_setequal(out$regime, c("receitas", "receitas_correntes"))
+
+  receitas <- tidy_rreo(fixture, topic = "balanco", regime = "receitas")
+  expect_equal(sort(receitas$exercicio), c(2015L, 2024L))
+  expect_true(all(receitas$indicador == "receitas_subtotal"))
+})
+
+test_that("tidy_rreo separates resultado series whose labels collapse (2023+)", {
+  fixture <- tibble::tibble(
+    exercicio = c(2016L, 2016L, 2020L, 2024L, 2024L, 2024L),
+    anexo = "RREO-Anexo 06",
+    conta = c(
+      "RESULTADO PRIMÁRIO (XIX) = (VII - XVIII)",            # E/M, era antiga
+      "RESULTADO PRIMÁRIO DA UNIÃO (X) = (V - VI - VII)",    # União, era antiga
+      "RESULTADO PRIMÁRIO - Acima da Linha (XXIV) = (...)",  # 2018-2022
+      # 2023+: os dois rótulos viram "resultado primario" depois de limpos
+      "RESULTADO PRIMÁRIO (COM RPPS) - Acima da Linha (XXXIV) = (...)",
+      "RESULTADO PRIMÁRIO (SEM RPPS) - Acima da Linha (XXXV) = (...)",
+      "RESULTADO NOMINAL (SEM RPPS) - Acima da Linha (XXXVIII) = (...)"
+    ),
+    cod_conta = c(
+      "RREO6ResultadoPrimarioEstadosMunicipios",
+      "RREO6ResultadoPrimarioDaUniao",
+      "RREO6ResultadoPrimarioEstadosMunicipios",
+      "ResultadoPrimarioComRPPSAcimaDaLinha",
+      "ResultadoPrimarioSemRPPSAcimaDaLinha",
+      "ResultadoNominalAcimaDaLinhaSemRPPS"
+    ),
+    coluna = "Até o Bimestre / 2024",
+    valor = c(1, 2, 3, 40, 50, 60)
+  )
+
+  out <- tidy_rreo(fixture, topic = "resultado")
+  expect_equal(nrow(out), 6L)
+
+  primario <- tidy_rreo(fixture, topic = "resultado", regime = "primario")
+  expect_setequal(primario$valor, c(1, 2, 3))
+  expect_true(all(primario$indicador == "resultado_primario"))
+
+  com <- tidy_rreo(fixture, topic = "resultado", regime = "primario_com_rpps")
+  expect_equal(com$valor, 40)
+  sem <- tidy_rreo(fixture, topic = "resultado", regime = "primario_sem_rpps")
+  expect_equal(sem$valor, 50)
+})
+
+test_that("tidy_rreo aborts when a cod_conta topic gets data without cod_conta", {
+  fixture <- tibble::tibble(
+    exercicio = 2024L,
+    conta = "SUBTOTAL DAS RECEITAS (III) = (I + II)",
+    coluna = "RECEITAS REALIZADAS",
+    valor = 1
+  )
+  expect_error(tidy_rreo(fixture, topic = "balanco"), "cod_conta")
 })
 
 test_that("tidy_rreo aborts when required columns are missing", {

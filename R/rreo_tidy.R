@@ -43,6 +43,8 @@
                          encoding = "UTF-8", strip.white = TRUE)
   tbl$first_year <- as.integer(tbl$first_year)
   tbl$last_year  <- as.integer(tbl$last_year)
+  tbl$conta_match[is.na(tbl$conta_match)] <- ""
+  tbl$cod_conta_match[is.na(tbl$cod_conta_match)] <- ""
   .layout_env$tbl <- tibble::as_tibble(tbl)
   .layout_env$tbl
 }
@@ -57,13 +59,21 @@
 #' table in `inst/extdata/rreo_layout.csv` that maps `(topic, regime,
 #' year_range)` to the correct appendix and account-matching key.
 #'
+#' Each rule matches either on a cleaned account label (`conta_match`) or on
+#' SICONFI's stable semantic account code (`cod_conta_match`, e.g.
+#' `"TotalReceitas"`); exactly one of the two is non-empty per row. Code
+#' matching is used where the free-text label is ambiguous — in Anexo 06,
+#' for instance, `"RESULTADO PRIMÁRIO (COM RPPS) - ..."` and
+#' `"RESULTADO PRIMÁRIO (SEM RPPS) - ..."` collapse to the same cleaned
+#' label, while their `cod_conta` values stay distinct.
+#'
 #' [tidy_rreo()] uses this table to assemble layout-stable indicators across
 #' years; you can also use it directly to look up which appendix to fetch
 #' with [get_rreo_ufs()] for a given topic.
 #'
 #' @return A [tibble][tibble::tibble] with columns `topic`, `regime`,
 #'   `first_year`, `last_year`, `co_esfera`, `no_anexo`, `conta_match`,
-#'   `indicador`.
+#'   `cod_conta_match`, `indicador`.
 #' @family RREO tidy
 #' @export
 #' @examples
@@ -141,6 +151,31 @@ rreo_normalize_columns <- function(data) {
 #'   `"ajustada_pessoal"` (the adjusted RCL used for the debt and personnel
 #'   spending limits; the União does not publish them, and the Roman numerals
 #'   in their labels drifted in 2024 — the match key absorbs that).
+#' * `"balanco"` — Balanço Orçamentário (Anexo 01), all spheres, 2015+.
+#'   Matched on `cod_conta`, which stays stable across the 2020 relabeling
+#'   (`"TOTAL"` became `"TOTAL DAS RECEITAS"` etc.) and disambiguates labels
+#'   that repeat on both sides of the statement. Regimes: `"receitas"` and
+#'   `"despesas"` (the subtotals excluding refinancing operations, the
+#'   stable headline across eras), `"receitas_correntes"`,
+#'   `"receitas_capital"`, `"despesas_correntes"`, `"despesas_capital"`
+#'   (main-budget categories; intra-budget rows carry their own codes and
+#'   are not lumped in), `"superavit"` and `"deficit"` (each present only
+#'   in the years the entity had one).
+#' * `"resultado"` — Resultado Primário e Nominal (Anexo 06), all spheres.
+#'   Matched on `cod_conta`: the 2023 state/municipal reform split the
+#'   primary result into `(COM RPPS)` and `(SEM RPPS)` variants whose
+#'   labels collapse to the same cleaned text. Regimes: `"primario"` (the
+#'   headline above-the-line series: União 2015+, states/municipalities
+#'   2015-2022), `"primario_com_rpps"` / `"primario_sem_rpps"` (its
+#'   state/municipal successors, 2023+), `"primario_abaixo"` (+
+#'   `"primario_abaixo_sem_rpps"`), `"nominal"` (2018+; before 2018 the
+#'   nominal result lived in the old Anexo 05 as a derived debt variation
+#'   and is not covered), `"nominal_sem_rpps"`, `"nominal_abaixo"` (+
+#'   `"nominal_abaixo_sem_rpps"`), and `"nominal_ajustado"` (+
+#'   `"nominal_ajustado_sem_rpps"`).
+#'
+#' Rules that match on `cod_conta` (see [rreo_layout()]) require the input
+#' to carry that column; the raw SICONFI output always does.
 #'
 #' When the input has an `anexo` column (the raw SICONFI output always does),
 #' rows only match the layout rule for their own appendix. This avoids double
@@ -210,6 +245,13 @@ tidy_rreo <- function(data, topic, regime = NULL) {
     ))
   }
 
+  if (any(nzchar(layout$cod_conta_match)) && !"cod_conta" %in% names(data)) {
+    cli::cli_abort(c(
+      "x" = "Topic {.val {topic}} matches on {.field cod_conta}, but the input has no such column.",
+      "i" = "Pass the raw output of {.fun get_rreo_ufs}, which carries {.field cod_conta}."
+    ))
+  }
+
   data <- rreo_normalize_columns(data)
   data$.match_key <- .clean_conta(data$conta)
   data$.exercicio <- suppressWarnings(as.integer(data$exercicio))
@@ -220,8 +262,13 @@ tidy_rreo <- function(data, topic, regime = NULL) {
     rule <- layout[i, ]
     pick <- !is.na(data$.exercicio) &
       data$.exercicio >= rule$first_year &
-      data$.exercicio <= rule$last_year &
-      data$.match_key == rule$conta_match
+      data$.exercicio <= rule$last_year
+    if (nzchar(rule$cod_conta_match)) {
+      pick <- pick & !is.na(data$cod_conta) &
+        data$cod_conta == rule$cod_conta_match
+    } else {
+      pick <- pick & data$.match_key == rule$conta_match
+    }
     if (has_anexo) {
       # Anexo 14 repeats accounts from other appendices under the same labels
       pick <- pick & !is.na(data$anexo) & data$anexo == rule$no_anexo

@@ -80,5 +80,62 @@ for (yr in c(2015, 2019, 2020, 2024, 2025)) {
 #     under the same labels, so tidy_rreo() also matches on the `anexo`
 #     column when the input has one.
 #
+# ----------------------------------------------------------------------------
+# Topics "balanco" (Anexo 01) and "resultado" (Anexo 06) — cod_conta matching
+# ----------------------------------------------------------------------------
+
+probe_codes <- function(year, id_ente, anexo, pattern) {
+  res <- tryCatch(
+    get_rreo_ufs(
+      an_exercicio = year, nr_periodo = 6,
+      co_tipo_demonstrativo = "RREO", no_anexo = anexo,
+      id_ente = id_ente, verbose = FALSE
+    ),
+    error = function(e) NULL
+  )
+  if (is.null(res) || nrow(res) == 0) return(invisible())
+  hits <- unique(res[grepl(pattern, res$cod_conta, ignore.case = TRUE),
+                     c("cod_conta", "conta")])
+  cat("\n[", year, " ente=", id_ente, " ", anexo, "]\n", sep = "")
+  for (i in seq_len(nrow(hits))) {
+    cat("    ", hits$cod_conta[i], " -> ", hits$conta[i], "\n", sep = "")
+  }
+}
+
+for (yr in c(2015, 2017, 2018, 2020, 2023, 2024, 2025)) {
+  for (ente in c(1, 26, 2611606)) {
+    probe_codes(yr, ente, "RREO-Anexo 01", "total|subtotal|superavit|deficit|correntes|decapital")
+    probe_codes(yr, ente, "RREO-Anexo 06", "resultado")
+  }
+}
+
+# Findings (2026-10):
+#   * Anexo 01: the free-text labels are ambiguous (pre-2020, "TOTAL" and
+#     "SUBTOTAL COM REFINANCIAMENTO" appear on BOTH the revenue and the
+#     expenditure sides; "RECEITAS CORRENTES" labels both the main and the
+#     intra-budget rows). `cod_conta` is a stable semantic code that
+#     disambiguates everything and did NOT change in the 2020 relabeling
+#     ("TOTAL" -> "TOTAL DAS RECEITAS" kept cod TotalReceitas). The layout
+#     therefore matches Anexo 01 on cod_conta. TotalReceitas/TotalDespesas
+#     were left out of the layout on purpose: their meaning shifted in 2020
+#     (the old TOTAL included the déficit/superávit closing row, the new
+#     TOTAL DAS RECEITAS does not), so a code-continuous series would splice
+#     two different concepts. Superavit/Deficit rows only exist in the years
+#     the entity actually had one.
+#   * Anexo 06 has three label eras: 2015-2017 (plain "RESULTADO PRIMÁRIO";
+#     União publishes "RESULTADO PRIMÁRIO DA UNIÃO"; the nominal result
+#     lived in the old Anexo 05 as a derived debt variation, conta "VALOR" —
+#     not covered), 2018-2022 ("Acima/Abaixo da Linha" for every sphere),
+#     and 2023+ (states/municipalities split into "(COM RPPS)"/"(SEM RPPS)"
+#     variants while the União keeps the 2018 scheme). The cleaned labels
+#     collapse ("RESULTADO PRIMÁRIO (COM RPPS) - ..." and "(SEM RPPS)" both
+#     clean to "resultado primario"), so this topic also matches on
+#     cod_conta. The code RREO6ResultadoPrimarioEstadosMunicipios is the
+#     continuous headline series: states/municipalities 2015-2022 AND the
+#     União from 2018 on (despite the name).
+#   * Anexo 14 codes carry a "DemonstrativoSimplificado" suffix, so
+#     cod_conta matching never collides with the simplified statement.
+#
 # The CSV inst/extdata/rreo_layout.csv is the single source of truth and is
-# read at runtime by rreo_layout(). Edit it directly to add new topics.
+# read at runtime by rreo_layout(). Edit it directly to add new topics:
+# exactly one of conta_match / cod_conta_match must be non-empty per row.

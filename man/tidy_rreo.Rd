@@ -48,7 +48,32 @@ municipalities from 2020 onwards, \code{"ajustada_endividamento"} and
 \code{"ajustada_pessoal"} (the adjusted RCL used for the debt and personnel
 spending limits; the União does not publish them, and the Roman numerals
 in their labels drifted in 2024 — the match key absorbs that).
+\item \code{"balanco"} — Balanço Orçamentário (Anexo 01), all spheres, 2015+.
+Matched on \code{cod_conta}, which stays stable across the 2020 relabeling
+(\code{"TOTAL"} became \code{"TOTAL DAS RECEITAS"} etc.) and disambiguates labels
+that repeat on both sides of the statement. Regimes: \code{"receitas"} and
+\code{"despesas"} (the subtotals excluding refinancing operations, the
+stable headline across eras), \code{"receitas_correntes"},
+\code{"receitas_capital"}, \code{"despesas_correntes"}, \code{"despesas_capital"}
+(main-budget categories; intra-budget rows carry their own codes and
+are not lumped in), \code{"superavit"} and \code{"deficit"} (each present only
+in the years the entity had one).
+\item \code{"resultado"} — Resultado Primário e Nominal (Anexo 06), all spheres.
+Matched on \code{cod_conta}: the 2023 state/municipal reform split the
+primary result into \verb{(COM RPPS)} and \verb{(SEM RPPS)} variants whose
+labels collapse to the same cleaned text. Regimes: \code{"primario"} (the
+headline above-the-line series: União 2015+, states/municipalities
+2015-2022), \code{"primario_com_rpps"} / \code{"primario_sem_rpps"} (its
+state/municipal successors, 2023+), \code{"primario_abaixo"} (+
+\code{"primario_abaixo_sem_rpps"}), \code{"nominal"} (2018+; before 2018 the
+nominal result lived in the old Anexo 05 as a derived debt variation
+and is not covered), \code{"nominal_sem_rpps"}, \code{"nominal_abaixo"} (+
+\code{"nominal_abaixo_sem_rpps"}), and \code{"nominal_ajustado"} (+
+\code{"nominal_ajustado_sem_rpps"}).
 }
+
+Rules that match on \code{cod_conta} (see \code{\link[=rreo_layout]{rreo_layout()}}) require the input
+to carry that column; the raw SICONFI output always does.
 
 When the input has an \code{anexo} column (the raw SICONFI output always does),
 rows only match the layout rule for their own appendix. This avoids double

@@ -9,7 +9,7 @@ rreo_layout()
 \value{
 A \link[tibble:tibble]{tibble} with columns \code{topic}, \code{regime},
 \code{first_year}, \code{last_year}, \code{co_esfera}, \code{no_anexo}, \code{conta_match},
-\code{indicador}.
+\code{cod_conta_match}, \code{indicador}.
 }
 \description{
 RREO appendix names, account labels, and column suffixes drift across
@@ -18,6 +18,14 @@ fiscal years (e.g., \verb{RREO-Anexo 04.3 - RGPS} for 2019-2022 vs.
 table in \code{inst/extdata/rreo_layout.csv} that maps \verb{(topic, regime, year_range)} to the correct appendix and account-matching key.
 }
 \details{
+Each rule matches either on a cleaned account label (\code{conta_match}) or on
+SICONFI's stable semantic account code (\code{cod_conta_match}, e.g.
+\code{"TotalReceitas"}); exactly one of the two is non-empty per row. Code
+matching is used where the free-text label is ambiguous — in Anexo 06,
+for instance, \code{"RESULTADO PRIMÁRIO (COM RPPS) - ..."} and
+\code{"RESULTADO PRIMÁRIO (SEM RPPS) - ..."} collapse to the same cleaned
+label, while their \code{cod_conta} values stay distinct.
+
 \code{\link[=tidy_rreo]{tidy_rreo()}} uses this table to assemble layout-stable indicators across
 years; you can also use it directly to look up which appendix to fetch
 with \code{\link[=get_rreo_ufs]{get_rreo_ufs()}} for a given topic.
