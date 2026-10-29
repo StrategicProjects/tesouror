@@ -1,3 +1,8 @@
+# tesouror (development version)
+
+* Author metadata: added Júlia Nascimento Barreto as author, ORCID
+  identifiers for the authors, and accents in the maintainer's name.
+
 # tesouror 0.3.1
 
 ## Transferencias: municipal endpoints follow the new server contract
