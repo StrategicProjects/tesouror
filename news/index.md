@@ -1,6 +1,6 @@
 # Changelog
 
-## tesouror (development version)
+## tesouror 0.3.2
 
 ### New `tidy_rreo()` topics: `"balanco"` (Anexo 01) and `"resultado"` (Anexo 06)
 
