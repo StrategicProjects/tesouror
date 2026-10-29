@@ -1,5 +1,19 @@
 # tesouror (development version)
 
+## New `tidy_rreo()` topic: `"rcl"` (Anexo 03)
+
+* `tidy_rreo()` and `rreo_layout()` now cover the Receita Corrente Líquida
+  (RREO Anexo 03) for every sphere: regime `"total"` (2015+) plus
+  `"ajustada_endividamento"` and `"ajustada_pessoal"` (states and
+  municipalities, 2020+). The match key absorbs the Roman-numeral drift the
+  adjusted accounts suffered in 2024.
+* When the input has an `anexo` column, `tidy_rreo()` now only matches rows
+  from the appendix each layout rule refers to. This prevents double counting
+  with `RREO-Anexo 14`, which repeats the Anexo 03 RCL accounts under the
+  same labels. Inputs without an `anexo` column behave as before.
+
+## Other changes
+
 * Author metadata: added Júlia Nascimento Barreto as author, ORCID
   identifiers for the authors, and accents in the maintainer's name.
 

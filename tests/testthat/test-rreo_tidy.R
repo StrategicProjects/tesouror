@@ -122,6 +122,55 @@ test_that("tidy_rreo aborts on unknown topic and warns when nothing matches", {
   expect_equal(nrow(out), 0L)
 })
 
+test_that("tidy_rreo matches RCL rows across years, spheres and label drift", {
+  fixture <- tibble::tibble(
+    exercicio = c(2015L, 2024L, 2024L, 2024L, 2019L),
+    uf = c("BR", "PE", "PE", "PE", "PE"),
+    anexo = "RREO-Anexo 03",
+    conta = c(
+      "RECEITA CORRENTE LÍQUIDA (III) = (I - II)",            # 2015 União
+      "RECEITA CORRENTE LÍQUIDA (III) = (I - II)",            # 2024 state
+      # 2024 drifted Roman numerals (was "(VII) = (V - VI)" before)
+      "RECEITA CORRENTE LÍQUIDA AJUSTADA PARA CÁLCULO DOS LIMITES DA DESPESA COM PESSOAL (IX) = (V - VI - VII - VIII)",
+      "RECEITA CORRENTE LÍQUIDA AJUSTADA PARA CÁLCULO DOS LIMITES DE ENDIVIDAMENTO (V) = (III - IV)",
+      # 2019: adjusted RCL did not exist yet -> must NOT match (first_year 2020)
+      "RECEITA CORRENTE LÍQUIDA AJUSTADA PARA CÁLCULO DOS LIMITES DE ENDIVIDAMENTO (V) = (III - IV)"
+    ),
+    coluna = "TOTAL (ÚLTIMOS 12 MESES)",
+    valor = c(100, 200, 300, 400, 500)
+  )
+
+  out <- tidy_rreo(fixture, topic = "rcl")
+  expect_equal(nrow(out), 4L)
+  expect_setequal(
+    out$indicador,
+    c("receita_corrente_liquida", "rcl_ajustada_pessoal",
+      "rcl_ajustada_endividamento")
+  )
+  expect_false(500 %in% out$valor)
+
+  total <- tidy_rreo(fixture, topic = "rcl", regime = "total")
+  expect_equal(total$valor, c(100, 200))
+})
+
+test_that("tidy_rreo ignores Anexo 14 duplicates when anexo is present", {
+  fixture <- tibble::tibble(
+    exercicio = 2024L,
+    anexo = c("RREO-Anexo 03", "RREO-Anexo 14"),
+    conta = "RECEITA CORRENTE LÍQUIDA (III) = (I - II)",
+    coluna = "TOTAL (ÚLTIMOS 12 MESES)",
+    valor = c(100, 100)
+  )
+
+  out <- tidy_rreo(fixture, topic = "rcl")
+  expect_equal(nrow(out), 1L)
+  expect_equal(out$anexo, "RREO-Anexo 03")
+
+  # without the anexo column the guard is skipped (backward compatible)
+  out_no_anexo <- tidy_rreo(dplyr::select(fixture, -anexo), topic = "rcl")
+  expect_equal(nrow(out_no_anexo), 2L)
+})
+
 test_that("tidy_rreo aborts when required columns are missing", {
   expect_error(
     tidy_rreo(tibble::tibble(exercicio = 1, conta = "x"), topic = "previdencia"),

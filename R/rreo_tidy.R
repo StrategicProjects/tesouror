@@ -135,6 +135,19 @@ rreo_normalize_columns <- function(data) {
 #'   inativos) for the União sphere. Anexos 04.1 / 04.2 / 04.3 / 04.4 of the
 #'   RREO; the layout knows that the RGPS appendix moved from 04.3 (up to 2022) to
 #'   04.4 (2023+) and that civis/FCDF moved from 04.1 (up to 2022) to 04.2 (2023+).
+#' * `"rcl"` — Receita Corrente Líquida (Anexo 03), all spheres. Regimes:
+#'   `"total"` (2015+, União/states/municipalities) and, for states and
+#'   municipalities from 2020 onwards, `"ajustada_endividamento"` and
+#'   `"ajustada_pessoal"` (the adjusted RCL used for the debt and personnel
+#'   spending limits; the União does not publish them, and the Roman numerals
+#'   in their labels drifted in 2024 — the match key absorbs that).
+#'
+#' When the input has an `anexo` column (the raw SICONFI output always does),
+#' rows only match the layout rule for their own appendix. This avoids double
+#' counting with `RREO-Anexo 14` (the simplified statement), which repeats the
+#' RCL accounts of Anexo 03 under the same labels — relevant when you fetched
+#' the whole RREO without `no_anexo`. Inputs without an `anexo` column skip
+#' this guard and match on account label and year alone.
 #'
 #' Pull requests adding new topics to `inst/extdata/rreo_layout.csv` are
 #' welcome.
@@ -200,6 +213,7 @@ tidy_rreo <- function(data, topic, regime = NULL) {
   data <- rreo_normalize_columns(data)
   data$.match_key <- .clean_conta(data$conta)
   data$.exercicio <- suppressWarnings(as.integer(data$exercicio))
+  has_anexo <- "anexo" %in% names(data)
 
   matched <- vector("list", nrow(layout))
   for (i in seq_len(nrow(layout))) {
@@ -208,6 +222,10 @@ tidy_rreo <- function(data, topic, regime = NULL) {
       data$.exercicio >= rule$first_year &
       data$.exercicio <= rule$last_year &
       data$.match_key == rule$conta_match
+    if (has_anexo) {
+      # Anexo 14 repeats accounts from other appendices under the same labels
+      pick <- pick & !is.na(data$anexo) & data$anexo == rule$no_anexo
+    }
     if (any(pick)) {
       rows <- data[pick, , drop = FALSE]
       rows$indicador <- rule$indicador
