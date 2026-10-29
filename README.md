@@ -109,6 +109,11 @@ tesouror_clear_cache()
 - **Clean output**: `janitor::clean_names()` ensures consistent snake_case columns
 - **Friendly errors**: Retries with informative messages; NA validation on required params
 - **Tidy output**: All results are tibbles
+- **RREO tidy layer**: `tidy_rreo()` reconciles layout drift across fiscal
+  years for four topics — previdência (Anexos 04.x), RCL (Anexo 03),
+  balanço orçamentário (Anexo 01) and resultado primário/nominal
+  (Anexo 06) — matching accounts on year-stable keys or on SICONFI's
+  stable account codes. See `vignette("rreo-longitudinal")`
 
 ## Migrating from siconfir
 
