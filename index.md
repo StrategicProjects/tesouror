@@ -87,6 +87,13 @@ tesouror_clear_cache()
 - **Friendly errors**: Retries with informative messages; NA validation
   on required params
 - **Tidy output**: All results are tibbles
+- **RREO tidy layer**:
+  [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
+  reconciles layout drift across fiscal years for four topics —
+  previdência (Anexos 04.x), RCL (Anexo 03), balanço orçamentário
+  (Anexo 01) and resultado primário/nominal (Anexo 06) — matching
+  accounts on year-stable keys or on SICONFI’s stable account codes. See
+  [`vignette("rreo-longitudinal")`](https://strategicprojects.github.io/tesouror/articles/rreo-longitudinal.md)
 
 ## Migrating from siconfir
 
