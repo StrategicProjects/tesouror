@@ -114,7 +114,31 @@ municipalities from 2020 onwards, <code>"ajustada_endividamento"</code> and
 <code>"ajustada_pessoal"</code> (the adjusted RCL used for the debt and personnel
 spending limits; the União does not publish them, and the Roman numerals
 in their labels drifted in 2024 — the match key absorbs that).</p></li>
-</ul><p>When the input has an <code>anexo</code> column (the raw SICONFI output always does),
+<li><p><code>"balanco"</code> — Balanço Orçamentário (Anexo 01), all spheres, 2015+.
+Matched on <code>cod_conta</code>, which stays stable across the 2020 relabeling
+(<code>"TOTAL"</code> became <code>"TOTAL DAS RECEITAS"</code> etc.) and disambiguates labels
+that repeat on both sides of the statement. Regimes: <code>"receitas"</code> and
+<code>"despesas"</code> (the subtotals excluding refinancing operations, the
+stable headline across eras), <code>"receitas_correntes"</code>,
+<code>"receitas_capital"</code>, <code>"despesas_correntes"</code>, <code>"despesas_capital"</code>
+(main-budget categories; intra-budget rows carry their own codes and
+are not lumped in), <code>"superavit"</code> and <code>"deficit"</code> (each present only
+in the years the entity had one).</p></li>
+<li><p><code>"resultado"</code> — Resultado Primário e Nominal (Anexo 06), all spheres.
+Matched on <code>cod_conta</code>: the 2023 state/municipal reform split the
+primary result into <code>(COM RPPS)</code> and <code>(SEM RPPS)</code> variants whose
+labels collapse to the same cleaned text. Regimes: <code>"primario"</code> (the
+headline above-the-line series: União 2015+, states/municipalities
+2015-2022), <code>"primario_com_rpps"</code> / <code>"primario_sem_rpps"</code> (its
+state/municipal successors, 2023+), <code>"primario_abaixo"</code> (+
+<code>"primario_abaixo_sem_rpps"</code>), <code>"nominal"</code> (2018+; before 2018 the
+nominal result lived in the old Anexo 05 as a derived debt variation
+and is not covered), <code>"nominal_sem_rpps"</code>, <code>"nominal_abaixo"</code> (+
+<code>"nominal_abaixo_sem_rpps"</code>), and <code>"nominal_ajustado"</code> (+
+<code>"nominal_ajustado_sem_rpps"</code>).</p></li>
+</ul><p>Rules that match on <code>cod_conta</code> (see <code><a href="rreo_layout.html">rreo_layout()</a></code>) require the input
+to carry that column; the raw SICONFI output always does.</p>
+<p>When the input has an <code>anexo</code> column (the raw SICONFI output always does),
 rows only match the layout rule for their own appendix. This avoids double
 counting with <code>RREO-Anexo 14</code> (the simplified statement), which repeats the
 RCL accounts of Anexo 03 under the same labels — relevant when you fetched

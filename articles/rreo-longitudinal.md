@@ -34,7 +34,12 @@ a single function call.
 [`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md)
 returns the table in `inst/extdata/rreo_layout.csv` that maps
 `(topic, regime, year_range)` to the correct appendix and to a
-year-stable matching key for the account label.
+year-stable matching key. Four topics are covered: `"previdencia"`
+(Anexos 04.x, federal social security), `"rcl"` (Anexo 03, Receita
+Corrente Líquida), `"balanco"` (Anexo 01, budget balance) and
+`"resultado"` (Anexo 06, primary and nominal results). See
+[`?tidy_rreo`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
+for the regimes inside each one.
 
 ``` r
 
@@ -43,16 +48,29 @@ library(tesouror)
 rreo_layout()
 ```
 
-    #> # A tibble: 7 × 8
-    #>   topic        regime     first_year last_year co_esfera no_anexo                conta_match                          indicador
-    #>   <chr>        <chr>           <int>     <int> <chr>     <chr>                   <chr>                                <chr>
-    #> 1 previdencia  civil_rpps       2015      2022 U         RREO-Anexo 04.1         resultado previdenciario rpps civis  resultado_previdenciario_civil
-    #> 2 previdencia  civil_rpps       2023      2099 U         RREO-Anexo 04.2         resultado previdenciario rpps civis  resultado_previdenciario_civil
-    #> 3 previdencia  fcdf             2015      2022 U         RREO-Anexo 04.1         resultado previdenciario - fcdf      resultado_previdenciario_fcdf
-    #> 4 previdencia  fcdf             2023      2099 U         RREO-Anexo 04.2         resultado previdenciario - fcdf      resultado_previdenciario_fcdf
-    #> 5 previdencia  militar          2015      2099 U         RREO-Anexo 04.2         resultado total - militares inativos resultado_militares_inativos
-    #> 6 previdencia  rgps             2015      2022 U         RREO-Anexo 04.3 - RGPS  resultado previdenciario rgps        resultado_previdenciario_rgps
-    #> 7 previdencia  rgps             2023      2099 U         RREO-Anexo 04.4 - RGPS  resultado previdenciario rgps        resultado_previdenciario_rgps
+    #> # A tibble: 30 × 9
+    #>    topic       regime     first_year last_year co_esfera no_anexo               conta_match                           cod_conta_match indicador
+    #>    <chr>       <chr>           <int>     <int> <chr>     <chr>                  <chr>                                 <chr>           <chr>
+    #>  1 previdencia civil_rpps       2015      2022 U         RREO-Anexo 04.1        "resultado previdenciario rpps civis" ""              resultado_previdenciario_civil
+    #>  2 previdencia civil_rpps       2023      2099 U         RREO-Anexo 04.2        "resultado previdenciario rpps civis" ""              resultado_previdenciario_civil
+    #>  3 previdencia fcdf             2015      2022 U         RREO-Anexo 04.1        "resultado previdenciario - fcdf"     ""              resultado_previdenciario_fcdf
+    #>  4 previdencia fcdf             2023      2099 U         RREO-Anexo 04.2        "resultado previdenciario - fcdf"     ""              resultado_previdenciario_fcdf
+    #>  5 previdencia militar          2015      2099 U         RREO-Anexo 04.2        "resultado total - militares inativo…" ""             resultado_militares_inativos
+    #>  6 previdencia rgps             2015      2022 U         RREO-Anexo 04.3 - RGPS "resultado previdenciario rgps"       ""              resultado_previdenciario_rgps
+    #>  7 previdencia rgps             2023      2099 U         RREO-Anexo 04.4 - RGPS "resultado previdenciario rgps"       ""              resultado_previdenciario_rgps
+    #>  8 rcl         total            2015      2099 U/E/M     RREO-Anexo 03          "receita corrente liquida"            ""              receita_corrente_liquida
+    #>  9 balanco     receitas         2015      2099 U/E/M     RREO-Anexo 01          ""                                    SubtotalDasRec… receitas_subtotal
+    #> 10 resultado   primario         2015      2099 U/E/M     RREO-Anexo 06          ""                                    RREO6Resultado… resultado_primario
+    #> # ℹ 20 more rows
+
+Each rule carries exactly one matching key: `conta_match`, a cleaned
+version of the account label, or `cod_conta_match`, SICONFI’s stable
+semantic account code. Code matching is used where labels are ambiguous:
+in Anexo 01 the label `TOTAL` appears on both the revenue and the
+expenditure side, and in Anexo 06 the 2023+ labels
+`RESULTADO PRIMÁRIO (COM RPPS)` and `(SEM RPPS)` collapse to the same
+cleaned text, while codes such as `TotalReceitas` or
+`ResultadoPrimarioSemRPPSAcimaDaLinha` stay unambiguous across years.
 
 Use it directly to look up the right appendix when fetching data with
 [`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md):
@@ -193,19 +211,20 @@ raw_22_23 |>
 ## Adding new topics
 
 `inst/extdata/rreo_layout.csv` is the single source of truth. To extend
-coverage to a new topic — for example, RCL (`Receita Corrente Líquida`)
-or DPF (`Dívida Pública Fundada`) — append rows describing each
-year-range plus the year-stable account stem:
+coverage to a new topic — for example, restos a pagar (Anexo 07) —
+append rows describing each year-range plus one matching key:
 
-    topic,regime,first_year,last_year,co_esfera,no_anexo,conta_match,indicador
-    rcl,total,2015,2099,M,RREO-Anexo 03,receita corrente liquida (iv) = (i - ii - iii),rcl_total
+    topic,regime,first_year,last_year,co_esfera,no_anexo,conta_match,cod_conta_match,indicador
+    rp,processados,2015,2099,U/E/M,RREO-Anexo 07,restos a pagar processados,,rp_processados
 
-The matching key (`conta_match`) is built by lowercasing the account
-label, stripping Latin diacritics, and dropping everything from the
-first `(` onwards. The helper `tesouror:::.clean_conta()` shows the
-exact transformation; running it on a sample row from
-[`get_rreo_ufs()`](https://strategicprojects.github.io/tesouror/reference/get_rreo_ufs.md)
-gives you the value to put into the CSV.
+Use `conta_match` when the account label is unambiguous inside the
+appendix: the key is built by lowercasing the label, stripping Latin
+diacritics, and dropping everything from the first `(` onwards (the
+helper `tesouror:::.clean_conta()` shows the exact transformation). When
+labels repeat or collapse — which you can check by counting rows per
+cleaned label — leave `conta_match` empty and put the row’s `cod_conta`
+value in `cod_conta_match` instead; exactly one of the two must be
+filled per rule.
 
 ## See also
 

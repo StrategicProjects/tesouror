@@ -2,6 +2,31 @@
 
 ## tesouror (development version)
 
+### New `tidy_rreo()` topics: `"balanco"` (Anexo 01) and `"resultado"` (Anexo 06)
+
+- The layout table gained a `cod_conta_match` column: a rule can now
+  match on SICONFI’s stable semantic account code instead of the
+  free-text label. This is what makes the two new topics possible — in
+  Anexo 01 the labels `TOTAL` and `SUBTOTAL COM REFINANCIAMENTO` appear
+  on both sides of the statement (and `RECEITAS CORRENTES` labels both
+  the main and the intra-budget rows), and in Anexo 06 the 2023+
+  state/municipal labels `RESULTADO PRIMÁRIO (COM RPPS)` and
+  `(SEM RPPS)` collapse to the same cleaned text, while their
+  `cod_conta` values stay distinct and stable.
+- `"balanco"`: revenue and expenditure subtotals (excluding
+  refinancing), current/capital categories, superávit and déficit,
+  2015+, every sphere — continuous across the 2020 relabeling of the
+  appendix.
+- `"resultado"`: primary and nominal results across the three label eras
+  of Anexo 06 (2015-2017, 2018-2022, 2023+), including the 2023+ com/sem
+  RPPS split for states and municipalities. The nominal series starts in
+  2018 (before that it lived in the old Anexo 05 as a derived debt
+  variation).
+- Topics that match on `cod_conta` require the input to carry that
+  column (the raw SICONFI output always does);
+  [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)
+  aborts with a clear message otherwise.
+
 ### New `tidy_rreo()` topic: `"rcl"` (Anexo 03)
 
 - [`tidy_rreo()`](https://strategicprojects.github.io/tesouror/reference/tidy_rreo.md)

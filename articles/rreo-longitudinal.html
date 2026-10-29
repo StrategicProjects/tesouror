@@ -128,21 +128,40 @@ special-case each year. This vignette shows how the helpers in
 <p><code><a href="../reference/rreo_layout.html">rreo_layout()</a></code> returns the table in
 <code>inst/extdata/rreo_layout.csv</code> that maps
 <code>(topic, regime, year_range)</code> to the correct appendix and to
-a year-stable matching key for the account label.</p>
+a year-stable matching key. Four topics are covered:
+<code>"previdencia"</code> (Anexos 04.x, federal social security),
+<code>"rcl"</code> (Anexo 03, Receita Corrente Líquida),
+<code>"balanco"</code> (Anexo 01, budget balance) and
+<code>"resultado"</code> (Anexo 06, primary and nominal results). See
+<code><a href="../reference/tidy_rreo.html">?tidy_rreo</a></code> for the regimes inside each one.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/tesouror" class="external-link">tesouror</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/rreo_layout.html">rreo_layout</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; # A tibble: 7 × 8</span></span>
-<span><span class="co">#&gt;   topic        regime     first_year last_year co_esfera no_anexo                conta_match                          indicador</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt;           &lt;int&gt;     &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                   &lt;chr&gt;                                &lt;chr&gt;</span></span>
-<span><span class="co">#&gt; 1 previdencia  civil_rpps       2015      2022 U         RREO-Anexo 04.1         resultado previdenciario rpps civis  resultado_previdenciario_civil</span></span>
-<span><span class="co">#&gt; 2 previdencia  civil_rpps       2023      2099 U         RREO-Anexo 04.2         resultado previdenciario rpps civis  resultado_previdenciario_civil</span></span>
-<span><span class="co">#&gt; 3 previdencia  fcdf             2015      2022 U         RREO-Anexo 04.1         resultado previdenciario - fcdf      resultado_previdenciario_fcdf</span></span>
-<span><span class="co">#&gt; 4 previdencia  fcdf             2023      2099 U         RREO-Anexo 04.2         resultado previdenciario - fcdf      resultado_previdenciario_fcdf</span></span>
-<span><span class="co">#&gt; 5 previdencia  militar          2015      2099 U         RREO-Anexo 04.2         resultado total - militares inativos resultado_militares_inativos</span></span>
-<span><span class="co">#&gt; 6 previdencia  rgps             2015      2022 U         RREO-Anexo 04.3 - RGPS  resultado previdenciario rgps        resultado_previdenciario_rgps</span></span>
-<span><span class="co">#&gt; 7 previdencia  rgps             2023      2099 U         RREO-Anexo 04.4 - RGPS  resultado previdenciario rgps        resultado_previdenciario_rgps</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; # A tibble: 30 × 9</span></span>
+<span><span class="co">#&gt;    topic       regime     first_year last_year co_esfera no_anexo               conta_match                           cod_conta_match indicador</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;           &lt;int&gt;     &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                  &lt;chr&gt;                                 &lt;chr&gt;           &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 previdencia civil_rpps       2015      2022 U         RREO-Anexo 04.1        "resultado previdenciario rpps civis" ""              resultado_previdenciario_civil</span></span>
+<span><span class="co">#&gt;  2 previdencia civil_rpps       2023      2099 U         RREO-Anexo 04.2        "resultado previdenciario rpps civis" ""              resultado_previdenciario_civil</span></span>
+<span><span class="co">#&gt;  3 previdencia fcdf             2015      2022 U         RREO-Anexo 04.1        "resultado previdenciario - fcdf"     ""              resultado_previdenciario_fcdf</span></span>
+<span><span class="co">#&gt;  4 previdencia fcdf             2023      2099 U         RREO-Anexo 04.2        "resultado previdenciario - fcdf"     ""              resultado_previdenciario_fcdf</span></span>
+<span><span class="co">#&gt;  5 previdencia militar          2015      2099 U         RREO-Anexo 04.2        "resultado total - militares inativo…" ""             resultado_militares_inativos</span></span>
+<span><span class="co">#&gt;  6 previdencia rgps             2015      2022 U         RREO-Anexo 04.3 - RGPS "resultado previdenciario rgps"       ""              resultado_previdenciario_rgps</span></span>
+<span><span class="co">#&gt;  7 previdencia rgps             2023      2099 U         RREO-Anexo 04.4 - RGPS "resultado previdenciario rgps"       ""              resultado_previdenciario_rgps</span></span>
+<span><span class="co">#&gt;  8 rcl         total            2015      2099 U/E/M     RREO-Anexo 03          "receita corrente liquida"            ""              receita_corrente_liquida</span></span>
+<span><span class="co">#&gt;  9 balanco     receitas         2015      2099 U/E/M     RREO-Anexo 01          ""                                    SubtotalDasRec… receitas_subtotal</span></span>
+<span><span class="co">#&gt; 10 resultado   primario         2015      2099 U/E/M     RREO-Anexo 06          ""                                    RREO6Resultado… resultado_primario</span></span>
+<span><span class="co">#&gt; # ℹ 20 more rows</span></span></code></pre>
+<p>Each rule carries exactly one matching key: <code>conta_match</code>,
+a cleaned version of the account label, or <code>cod_conta_match</code>,
+SICONFI’s stable semantic account code. Code matching is used where
+labels are ambiguous: in Anexo 01 the label <code>TOTAL</code> appears
+on both the revenue and the expenditure side, and in Anexo 06 the 2023+
+labels <code>RESULTADO PRIMÁRIO (COM RPPS)</code> and
+<code>(SEM RPPS)</code> collapse to the same cleaned text, while codes
+such as <code>TotalReceitas</code> or
+<code>ResultadoPrimarioSemRPPSAcimaDaLinha</code> stay unambiguous
+across years.</p>
 <p>Use it directly to look up the right appendix when fetching data with
 <code><a href="../reference/get_rreo_ufs.html">get_rreo_ufs()</a></code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -268,18 +287,20 @@ topic at once:</p>
 <h2 id="adding-new-topics">Adding new topics<a class="anchor" aria-label="anchor" href="#adding-new-topics"></a>
 </h2>
 <p><code>inst/extdata/rreo_layout.csv</code> is the single source of
-truth. To extend coverage to a new topic — for example, RCL
-(<code>Receita Corrente Líquida</code>) or DPF
-(<code>Dívida Pública Fundada</code>) — append rows describing each
-year-range plus the year-stable account stem:</p>
-<pre><code>topic,regime,first_year,last_year,co_esfera,no_anexo,conta_match,indicador
-rcl,total,2015,2099,M,RREO-Anexo 03,receita corrente liquida (iv) = (i - ii - iii),rcl_total</code></pre>
-<p>The matching key (<code>conta_match</code>) is built by lowercasing
-the account label, stripping Latin diacritics, and dropping everything
-from the first <code>(</code> onwards. The helper
-<code>tesouror:::.clean_conta()</code> shows the exact transformation;
-running it on a sample row from <code><a href="../reference/get_rreo_ufs.html">get_rreo_ufs()</a></code> gives you
-the value to put into the CSV.</p>
+truth. To extend coverage to a new topic — for example, restos a pagar
+(Anexo 07) — append rows describing each year-range plus one matching
+key:</p>
+<pre><code>topic,regime,first_year,last_year,co_esfera,no_anexo,conta_match,cod_conta_match,indicador
+rp,processados,2015,2099,U/E/M,RREO-Anexo 07,restos a pagar processados,,rp_processados</code></pre>
+<p>Use <code>conta_match</code> when the account label is unambiguous
+inside the appendix: the key is built by lowercasing the label,
+stripping Latin diacritics, and dropping everything from the first
+<code>(</code> onwards (the helper
+<code>tesouror:::.clean_conta()</code> shows the exact transformation).
+When labels repeat or collapse — which you can check by counting rows
+per cleaned label — leave <code>conta_match</code> empty and put the
+row’s <code>cod_conta</code> value in <code>cod_conta_match</code>
+instead; exactly one of the two must be filled per rule.</p>
 </div>
 <div class="section level2">
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>

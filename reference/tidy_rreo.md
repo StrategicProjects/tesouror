@@ -69,6 +69,35 @@ Currently supported topics:
   numerals in their labels drifted in 2024 — the match key absorbs
   that).
 
+- `"balanco"` — Balanço Orçamentário (Anexo 01), all spheres, 2015+.
+  Matched on `cod_conta`, which stays stable across the 2020 relabeling
+  (`"TOTAL"` became `"TOTAL DAS RECEITAS"` etc.) and disambiguates
+  labels that repeat on both sides of the statement. Regimes:
+  `"receitas"` and `"despesas"` (the subtotals excluding refinancing
+  operations, the stable headline across eras), `"receitas_correntes"`,
+  `"receitas_capital"`, `"despesas_correntes"`, `"despesas_capital"`
+  (main-budget categories; intra-budget rows carry their own codes and
+  are not lumped in), `"superavit"` and `"deficit"` (each present only
+  in the years the entity had one).
+
+- `"resultado"` — Resultado Primário e Nominal (Anexo 06), all spheres.
+  Matched on `cod_conta`: the 2023 state/municipal reform split the
+  primary result into `(COM RPPS)` and `(SEM RPPS)` variants whose
+  labels collapse to the same cleaned text. Regimes: `"primario"` (the
+  headline above-the-line series: União 2015+, states/municipalities
+  2015-2022), `"primario_com_rpps"` / `"primario_sem_rpps"` (its
+  state/municipal successors, 2023+), `"primario_abaixo"` (+
+  `"primario_abaixo_sem_rpps"`), `"nominal"` (2018+; before 2018 the
+  nominal result lived in the old Anexo 05 as a derived debt variation
+  and is not covered), `"nominal_sem_rpps"`, `"nominal_abaixo"` (+
+  `"nominal_abaixo_sem_rpps"`), and `"nominal_ajustado"` (+
+  `"nominal_ajustado_sem_rpps"`).
+
+Rules that match on `cod_conta` (see
+[`rreo_layout()`](https://strategicprojects.github.io/tesouror/reference/rreo_layout.md))
+require the input to carry that column; the raw SICONFI output always
+does.
+
 When the input has an `anexo` column (the raw SICONFI output always
 does), rows only match the layout rule for their own appendix. This
 avoids double counting with `RREO-Anexo 14` (the simplified statement),

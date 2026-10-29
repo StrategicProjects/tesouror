@@ -72,11 +72,18 @@ table in <code>inst/extdata/rreo_layout.csv</code> that maps <code>(topic, regim
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> with columns <code>topic</code>, <code>regime</code>,
 <code>first_year</code>, <code>last_year</code>, <code>co_esfera</code>, <code>no_anexo</code>, <code>conta_match</code>,
-<code>indicador</code>.</p>
+<code>cod_conta_match</code>, <code>indicador</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code><a href="tidy_rreo.html">tidy_rreo()</a></code> uses this table to assemble layout-stable indicators across
+    <p>Each rule matches either on a cleaned account label (<code>conta_match</code>) or on
+SICONFI's stable semantic account code (<code>cod_conta_match</code>, e.g.
+<code>"TotalReceitas"</code>); exactly one of the two is non-empty per row. Code
+matching is used where the free-text label is ambiguous — in Anexo 06,
+for instance, <code>"RESULTADO PRIMÁRIO (COM RPPS) - ..."</code> and
+<code>"RESULTADO PRIMÁRIO (SEM RPPS) - ..."</code> collapse to the same cleaned
+label, while their <code>cod_conta</code> values stay distinct.</p>
+<p><code><a href="tidy_rreo.html">tidy_rreo()</a></code> uses this table to assemble layout-stable indicators across
 years; you can also use it directly to look up which appendix to fetch
 with <code><a href="get_rreo_ufs.html">get_rreo_ufs()</a></code> for a given topic.</p>
     </div>
@@ -90,19 +97,21 @@ with <code><a href="get_rreo_ufs.html">get_rreo_ufs()</a></code> for a given top
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">rreo_layout</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    topic    regime first_year last_year co_esfera no_anexo conta_match indicador</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> previde… civil…       <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> previde… civil…       <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> previde… fcdf         <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> previde… fcdf         <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> previde… milit…       <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> previde… rgps         <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> previde… rgps         <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado … resultad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> rcl      total        <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>099 U/E/M     RREO-An… receita co… receita_…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> rcl      ajust…       <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">2</span>099 E/M       RREO-An… receita co… rcl_ajus…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> rcl      ajust…       <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">2</span>099 E/M       RREO-An… receita co… rcl_ajus…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 30 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    topic       regime        first_year last_year co_esfera no_anexo conta_match</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> previdencia civil_rpps          <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> previdencia civil_rpps          <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> previdencia fcdf                <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> previdencia fcdf                <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> previdencia militar             <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> previdencia rgps                <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>022 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> previdencia rgps                <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">2</span>099 U         RREO-An… resultado …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> rcl         total               <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">2</span>099 U/E/M     RREO-An… receita co…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> rcl         ajustada_end…       <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">2</span>099 E/M       RREO-An… receita co…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> rcl         ajustada_pes…       <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">2</span>099 E/M       RREO-An… receita co…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: cod_conta_match &lt;chr&gt;, indicador &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

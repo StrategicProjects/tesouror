@@ -52,6 +52,15 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tesouror-development-version">tesouror (development version)<a class="anchor" aria-label="anchor" href="#tesouror-development-version"></a></h2>
 <div class="section level3">
+<h3 id="new-tidy_rreo-topics-balanco-anexo-and-resultado-anexo-development-version">New <code>tidy_rreo()</code> topics: <code>"balanco"</code> (Anexo 01) and <code>"resultado"</code> (Anexo 06)<a class="anchor" aria-label="anchor" href="#new-tidy_rreo-topics-balanco-anexo-and-resultado-anexo-development-version"></a></h3>
+<ul><li>The layout table gained a <code>cod_conta_match</code> column: a rule can now match on SICONFI’s stable semantic account code instead of the free-text label. This is what makes the two new topics possible — in Anexo 01 the labels <code>TOTAL</code> and <code>SUBTOTAL COM REFINANCIAMENTO</code> appear on both sides of the statement (and <code>RECEITAS CORRENTES</code> labels both the main and the intra-budget rows), and in Anexo 06 the 2023+ state/municipal labels <code>RESULTADO PRIMÁRIO (COM RPPS)</code> and <code>(SEM RPPS)</code> collapse to the same cleaned text, while their <code>cod_conta</code> values stay distinct and stable.</li>
+<li>
+<code>"balanco"</code>: revenue and expenditure subtotals (excluding refinancing), current/capital categories, superávit and déficit, 2015+, every sphere — continuous across the 2020 relabeling of the appendix.</li>
+<li>
+<code>"resultado"</code>: primary and nominal results across the three label eras of Anexo 06 (2015-2017, 2018-2022, 2023+), including the 2023+ com/sem RPPS split for states and municipalities. The nominal series starts in 2018 (before that it lived in the old Anexo 05 as a derived debt variation).</li>
+<li>Topics that match on <code>cod_conta</code> require the input to carry that column (the raw SICONFI output always does); <code><a href="../reference/tidy_rreo.html">tidy_rreo()</a></code> aborts with a clear message otherwise.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="new-tidy_rreo-topic-rcl-anexo-development-version">New <code>tidy_rreo()</code> topic: <code>"rcl"</code> (Anexo 03)<a class="anchor" aria-label="anchor" href="#new-tidy_rreo-topic-rcl-anexo-development-version"></a></h3>
 <ul><li>
 <code><a href="../reference/tidy_rreo.html">tidy_rreo()</a></code> and <code><a href="../reference/rreo_layout.html">rreo_layout()</a></code> now cover the Receita Corrente Líquida (RREO Anexo 03) for every sphere: regime <code>"total"</code> (2015+) plus <code>"ajustada_endividamento"</code> and <code>"ajustada_pessoal"</code> (states and municipalities, 2020+). The match key absorbs the Roman-numeral drift the adjusted accounts suffered in 2024.</li>
